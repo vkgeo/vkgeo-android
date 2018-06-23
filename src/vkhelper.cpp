@@ -174,7 +174,7 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
 void VKHelper::initialize()
 {
     if (!Initialized) {
-        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VkGeoActivity",
+        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
                                                   "initVK");
 
         connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(RequestQueueTimerTimeout()));
@@ -216,7 +216,7 @@ void VKHelper::cleanup()
             ContextTrackerDelRequest(request);
         }
 
-        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VkGeoActivity",
+        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
                                                   "cancelAllVKRequests");
 
         FriendsData.clear();
@@ -232,7 +232,7 @@ void VKHelper::login()
     if (Initialized) {
         QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
 
-        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VkGeoActivity",
+        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
                                                   "loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
     }
 }
@@ -240,7 +240,7 @@ void VKHelper::login()
 void VKHelper::logout()
 {
     if (Initialized) {
-        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VkGeoActivity",
+        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
                                                   "logoutVK");
 
         setAuthState(VKAuthState::StateNotAuthorized);

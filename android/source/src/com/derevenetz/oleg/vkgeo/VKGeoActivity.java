@@ -40,35 +40,28 @@ import com.vk.sdk.VKSdk;
 
 public class VKGeoActivity extends QtActivity
 {
-    private static final String                     ADMOB_APP_ID                 = "ca-app-pub-2455088855015693~7279538773";
-    private static final String                     ADMOB_ADVIEW_UNIT_ID         = "ca-app-pub-3940256099942544/6300978111";
-    private static final String                     ADMOB_INTERSTITIALAD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712";
-    private static final String                     ADMOB_TEST_DEVICE_ID         = "";
-
-    private static final AdSize                     ADMOB_ADVIEW_ADSIZE          = AdSize.SMART_BANNER;
-
-    private static boolean                          statusBarVisible             = false,
-                                                    mobileAdsInitialized         = false;
-    private static int                              statusBarHeight              = 0;
-    private static VKGeoActivity                    instance                     = null;
-    private static AdView                           adView                       = null;
-    private static InterstitialAd                   interstitialAd               = null;
-    private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker        = new HashMap<VKBatchRequest, Boolean>();
+    private static boolean                          statusBarVisible      = false;
+    private static int                              statusBarHeight       = 0;
+    private static VKGeoActivity                    instance              = null;
+    private static AdView                           bannerView            = null;
+    private static InterstitialAd                   interstitial          = null;
+    private static HashMap<VKRequest,      Boolean> vkRequestTracker      = new HashMap<VKRequest,      Boolean>();
+    private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker = new HashMap<VKBatchRequest, Boolean>();
 
     private static VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
             if (newToken != null) {
-                vkTokenChanged(true);
+                vkAuthChanged(true);
             } else {
-                vkTokenChanged(false);
+                vkAuthChanged(false);
             }
         }
     };
 
-    private static native void adViewHeightUpdated(int adview_height);
+    private static native void bannerViewHeightUpdated(int height);
 
-    private static native void vkTokenChanged(boolean valid);
+    private static native void vkAuthChanged(boolean authorized);
     private static native void vkRequestComplete(String request, String response);
     private static native void vkRequestError(String request, String error_message);
 
@@ -101,32 +94,26 @@ public class VKGeoActivity extends QtActivity
                 if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
                     statusBarVisible = true;
 
-                    if (adView != null) {
-                        int ad_visibility = adView.getVisibility();
+                    if (bannerView != null) {
+                        int banner_visibility = bannerView.getVisibility();
 
-                        adView.setVisibility(View.GONE);
-                        adView.setY(statusBarHeight);
-                        adView.setVisibility(ad_visibility);
+                        bannerView.setVisibility(View.GONE);
+                        bannerView.setY(statusBarHeight);
+                        bannerView.setVisibility(banner_visibility);
                     }
                 } else {
                     statusBarVisible = false;
 
-                    if (adView != null) {
-                        int ad_visibility = adView.getVisibility();
+                    if (bannerView != null) {
+                        int banner_visibility = bannerView.getVisibility();
 
-                        adView.setVisibility(View.GONE);
-                        adView.setY(0);
-                        adView.setVisibility(ad_visibility);
+                        bannerView.setVisibility(View.GONE);
+                        bannerView.setY(0);
+                        bannerView.setVisibility(banner_visibility);
                     }
                 }
             }
         });
-
-        if (!mobileAdsInitialized) {
-            MobileAds.initialize(this, ADMOB_APP_ID);
-
-            mobileAdsInitialized = true;
-        }
     }
 
     @Override
@@ -134,16 +121,16 @@ public class VKGeoActivity extends QtActivity
     {
         super.onResume();
 
-        if (adView != null) {
-            adView.resume();
+        if (bannerView != null) {
+            bannerView.resume();
         }
     }
 
     @Override
     public void onPause()
     {
-        if (adView != null) {
-            adView.pause();
+        if (bannerView != null) {
+            bannerView.pause();
         }
 
         super.onPause();
@@ -152,10 +139,10 @@ public class VKGeoActivity extends QtActivity
     @Override
     public void onDestroy()
     {
-        if (adView != null) {
-            adView.destroy();
+        if (bannerView != null) {
+            bannerView.destroy();
 
-            adView = null;
+            bannerView = null;
         }
 
         super.onDestroy();
@@ -168,8 +155,62 @@ public class VKGeoActivity extends QtActivity
         return metrics.densityDpi;
     }
 
-    public static void showAdView()
+    public static void initAds(String app_id, String interstitial_unit_id)
     {
+        final String f_app_id               = app_id;
+        final String f_interstitial_unit_id = interstitial_unit_id;
+
+        instance.runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                MobileAds.initialize(instance, f_app_id);
+
+                interstitial = new InterstitialAd(instance);
+
+                interstitial.setAdUnitId(f_interstitial_unit_id);
+
+                interstitial.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdClosed()
+                    {
+                        if (interstitial != null) {
+                            AdRequest.Builder builder = new AdRequest.Builder();
+
+                            interstitial.loadAd(builder.build());
+                        }
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(int errorCode)
+                    {
+                        if (interstitial != null) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run()
+                                {
+                                    if (interstitial != null) {
+                                        AdRequest.Builder builder = new AdRequest.Builder();
+
+                                        interstitial.loadAd(builder.build());
+                                    }
+                                }
+                            }, 60000);
+                        }
+                    }
+                });
+
+                AdRequest.Builder builder = new AdRequest.Builder();
+
+                interstitial.loadAd(builder.build());
+            }
+        });
+    }
+
+    public static void showBannerView(String unit_id)
+    {
+        final String f_unit_id = unit_id;
+
         instance.runOnUiThread(new Runnable() {
             @Override
             public void run()
@@ -179,46 +220,46 @@ public class VKGeoActivity extends QtActivity
                 if (view instanceof ViewGroup) {
                     ViewGroup view_group = (ViewGroup)view;
 
-                    if (adView != null) {
-                        view_group.removeView(adView);
+                    if (bannerView != null) {
+                        view_group.removeView(bannerView);
 
-                        adView.destroy();
+                        bannerView.destroy();
 
-                        adViewHeightUpdated(0);
+                        bannerViewHeightUpdated(0);
 
-                        adView = null;
+                        bannerView = null;
                     }
 
                     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                                                                                    FrameLayout.LayoutParams.WRAP_CONTENT,
                                                                                    Gravity.CENTER_HORIZONTAL);
 
-                    adView = new AdView(instance);
+                    bannerView = new AdView(instance);
 
-                    adView.setAdSize(ADMOB_ADVIEW_ADSIZE);
-                    adView.setAdUnitId(ADMOB_ADVIEW_UNIT_ID);
-                    adView.setLayoutParams(params);
-                    adView.setVisibility(View.GONE);
+                    bannerView.setAdSize(AdSize.SMART_BANNER);
+                    bannerView.setAdUnitId(f_unit_id);
+                    bannerView.setLayoutParams(params);
+                    bannerView.setVisibility(View.GONE);
 
                     if (statusBarVisible) {
-                        adView.setY(statusBarHeight);
+                        bannerView.setY(statusBarHeight);
                     } else {
-                        adView.setY(0);
+                        bannerView.setY(0);
                     }
 
-                    adView.setAdListener(new AdListener() {
+                    bannerView.setAdListener(new AdListener() {
                         @Override
                         public void onAdLoaded()
                         {
-                            if (adView != null) {
-                                adView.setVisibility(View.VISIBLE);
+                            if (bannerView != null) {
+                                bannerView.setVisibility(View.VISIBLE);
 
-                                adView.post(new Runnable() {
+                                bannerView.post(new Runnable() {
                                     @Override
                                     public void run()
                                     {
-                                        if (adView != null) {
-                                            adViewHeightUpdated(adView.getHeight());
+                                        if (bannerView != null) {
+                                            bannerViewHeightUpdated(bannerView.getHeight());
                                         }
                                     }
                                 });
@@ -228,15 +269,15 @@ public class VKGeoActivity extends QtActivity
                         @Override
                         public void onAdFailedToLoad(int errorCode)
                         {
-                            if (adView != null) {
-                                adView.setVisibility(View.VISIBLE);
+                            if (bannerView != null) {
+                                bannerView.setVisibility(View.VISIBLE);
 
-                                adView.post(new Runnable() {
+                                bannerView.post(new Runnable() {
                                     @Override
                                     public void run()
                                     {
-                                        if (adView != null) {
-                                            adViewHeightUpdated(adView.getHeight());
+                                        if (bannerView != null) {
+                                            bannerViewHeightUpdated(bannerView.getHeight());
                                         }
                                     }
                                 });
@@ -244,21 +285,17 @@ public class VKGeoActivity extends QtActivity
                         }
                     });
 
-                    view_group.addView(adView);
+                    view_group.addView(bannerView);
 
                     AdRequest.Builder builder = new AdRequest.Builder();
 
-                    if (!ADMOB_TEST_DEVICE_ID.equals("")) {
-                        builder.addTestDevice(ADMOB_TEST_DEVICE_ID);
-                    }
-
-                    adView.loadAd(builder.build());
+                    bannerView.loadAd(builder.build());
                 }
             }
         });
     }
 
-    public static void hideAdView()
+    public static void hideBannerView()
     {
         instance.runOnUiThread(new Runnable() {
             @Override
@@ -269,89 +306,28 @@ public class VKGeoActivity extends QtActivity
                 if (view instanceof ViewGroup) {
                     ViewGroup view_group = (ViewGroup)view;
 
-                    if (adView != null) {
-                        view_group.removeView(adView);
+                    if (bannerView != null) {
+                        view_group.removeView(bannerView);
 
-                        adView.destroy();
+                        bannerView.destroy();
 
-                        adViewHeightUpdated(0);
+                        bannerViewHeightUpdated(0);
 
-                        adView = null;
+                        bannerView = null;
                     }
                 }
             }
         });
     }
 
-    public static void createInterstitialAd()
+    public static void showInterstitial()
     {
         instance.runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
-                if (interstitialAd == null) {
-                    interstitialAd = new InterstitialAd(instance);
-
-                    interstitialAd.setAdUnitId(ADMOB_INTERSTITIALAD_UNIT_ID);
-
-                    interstitialAd.setAdListener(new AdListener() {
-                        @Override
-                        public void onAdClosed()
-                        {
-                            if (interstitialAd != null) {
-                                AdRequest.Builder builder = new AdRequest.Builder();
-
-                                if (!ADMOB_TEST_DEVICE_ID.equals("")) {
-                                    builder.addTestDevice(ADMOB_TEST_DEVICE_ID);
-                                }
-
-                                interstitialAd.loadAd(builder.build());
-                            }
-                        }
-
-                        @Override
-                        public void onAdFailedToLoad(int errorCode)
-                        {
-                            if (interstitialAd != null) {
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run()
-                                    {
-                                        if (interstitialAd != null) {
-                                            AdRequest.Builder builder = new AdRequest.Builder();
-
-                                            if (!ADMOB_TEST_DEVICE_ID.equals("")) {
-                                                builder.addTestDevice(ADMOB_TEST_DEVICE_ID);
-                                            }
-
-                                            interstitialAd.loadAd(builder.build());
-                                        }
-                                    }
-                                }, 60000);
-                            }
-                        }
-                    });
-
-                    AdRequest.Builder builder = new AdRequest.Builder();
-
-                    if (!ADMOB_TEST_DEVICE_ID.equals("")) {
-                        builder.addTestDevice(ADMOB_TEST_DEVICE_ID);
-                    }
-
-                    interstitialAd.loadAd(builder.build());
-                }
-            }
-        });
-    }
-
-    public static void showInterstitialAd()
-    {
-        instance.runOnUiThread(new Runnable() {
-            @Override
-            public void run()
-            {
-                if (interstitialAd != null && interstitialAd.isLoaded()) {
-                    interstitialAd.show();
+                if (interstitial != null && interstitial.isLoaded()) {
+                    interstitial.show();
                 }
             }
         });
@@ -365,7 +341,11 @@ public class VKGeoActivity extends QtActivity
             {
                 vkAccessTokenTracker.startTracking();
 
-                VKSdk.initialize(instance);
+                if (VKSdk.isLoggedIn()) {
+                    vkAuthChanged(true);
+                } else {
+                    vkAuthChanged(false);
+                }
             }
         });
     }
@@ -435,19 +415,36 @@ public class VKGeoActivity extends QtActivity
                                 }
                             }
 
-                            VKRequest vk_request = new VKRequest(json_request.getString("method"), VKParameters.from((Object[])vk_parameters.toArray(new String[vk_parameters.size()])));
+                            final VKRequest vk_request = new VKRequest(json_request.getString("method"),
+                                                                       VKParameters.from((Object[])vk_parameters.toArray(new String[vk_parameters.size()])));
 
                             vk_request.setRequestListener(new VKRequestListener() {
                                 @Override
                                 public void onComplete(VKResponse response) {
-                                    vkRequestComplete(json_request.toString(), response.json.toString());
+                                    if (vkRequestTracker.containsKey(vk_request)) {
+                                        vkRequestTracker.remove(vk_request);
+
+                                        String response_str = "";
+
+                                        if (response != null && response.json != null) {
+                                            response_str = response.json.toString();
+                                        }
+
+                                        vkRequestComplete(json_request.toString(), response_str);
+                                    }
                                 }
 
                                 @Override
                                 public void onError(VKError error) {
-                                    vkRequestError(json_request.toString(), error.errorMessage);
+                                    if (vkRequestTracker.containsKey(vk_request)) {
+                                        vkRequestTracker.remove(vk_request);
+
+                                        vkRequestError(json_request.toString(), error.toString());
+                                    }
                                 }
                             });
+
+                            vkRequestTracker.put(vk_request, true);
 
                             vk_requests.add(vk_request);
                         } else {
@@ -505,7 +502,7 @@ public class VKGeoActivity extends QtActivity
 
             @Override
             public void onError(VKError error) {
-                Log.w("VKGeoActivity", error.errorMessage);
+                Log.w("VKGeoActivity", error.toString());
             }
         });
     }

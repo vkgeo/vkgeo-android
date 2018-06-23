@@ -5,9 +5,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += src/main.cpp \
     src/androidgw.cpp \
+    src/admobhelper.cpp \
+    src/uihelper.cpp \
     src/vkhelper.cpp
 
 HEADERS += \
+    src/admobhelper.h \
+    src/uihelper.h \
     src/vkhelper.h
 
 RESOURCES += \
@@ -35,9 +39,16 @@ android {
         android/source/res/drawable-xxhdpi/ic_launcher.png \
         android/source/res/values/integers.xml \
         android/source/res/values/strings.xml \
-        android/source/src/com/derevenetz/oleg/vkgeo/VkGeoActivity.java
+        android/source/src/com/derevenetz/oleg/vkgeo/VKGeoActivity.java \
+        android/source/src/com/derevenetz/oleg/vkgeo/VKGeoApplication.java
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android/source
+
+    contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+        ANDROID_EXTRA_LIBS = \
+            $$PWD/android/source/lib/armeabi-v7a/libcrypto.so \
+            $$PWD/android/source/lib/armeabi-v7a/libssl.so
+    }
 }
 
 # Default rules for deployment.

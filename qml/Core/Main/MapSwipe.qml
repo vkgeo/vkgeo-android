@@ -73,7 +73,7 @@ Item {
 
         if (map.mapItems.length > 1) {
             if (Math.random() < 0.10) {
-                StoreHelper.requestReview();
+                //StoreHelper.requestReview();
             }
         }
     }

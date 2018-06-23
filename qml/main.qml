@@ -121,7 +121,7 @@ Window {
     }
 
     function showInterstitial() {
-        if (!disableAds && AdMobHelper.interstitialReady) {
+        if (!disableAds) {
             AdMobHelper.showInterstitial();
         }
     }
@@ -248,7 +248,6 @@ Window {
         updateFeatures();
 
         AdMobHelper.initialize();
-        NotificationHelper.initialize();
         VKHelper.initialize();
 
         mainStackView.push(mainPage);

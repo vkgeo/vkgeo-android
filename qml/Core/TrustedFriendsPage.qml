@@ -11,8 +11,7 @@ Page {
     id: trustedFriendsPage
 
     header: Rectangle {
-        height: Math.max(trustedFriendsPage.safeAreaTopMargin, trustedFriendsPage.bannerViewHeight) +
-                headerControlsLayout.height
+        height: trustedFriendsPage.bannerViewHeight + headerControlsLayout.height
         color:  "lightsteelblue"
 
         RowLayout {
@@ -80,25 +79,10 @@ Page {
         }
     }
 
-    footer: Rectangle {
-        height: trustedFriendsPage.safeAreaBottomMargin
-        color:  "lightsteelblue"
-    }
+    property int bannerViewHeight:    AdMobHelper.bannerViewHeight
+    property int trustedFriendsCount: 0
 
-    property int safeAreaTopMargin:    0
-    property int safeAreaBottomMargin: 0
-    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
-    property int trustedFriendsCount:  0
-
-    property var friendsList:          []
-
-    StackView.onStatusChanged: {
-        if (StackView.status === StackView.Activating ||
-            StackView.status === StackView.Active) {
-            safeAreaTopMargin    = UIHelper.safeAreaTopMargin();
-            safeAreaBottomMargin = UIHelper.safeAreaBottomMargin();
-        }
-    }
+    property var friendsList:         []
 
     function updateModel() {
         trustedFriendsListModel.clear();

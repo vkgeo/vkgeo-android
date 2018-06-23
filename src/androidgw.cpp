@@ -1,15 +1,16 @@
 #include <QtAndroidExtras/QAndroidJniObject>
 
+#include "admobhelper.h"
 #include "vkhelper.h"
 
-static void adViewHeightUpdated(JNIEnv *, jclass, jint adview_height)
+static void bannerViewHeightUpdated(JNIEnv *, jclass, jint height)
 {
-    //emit AndroidGW::instance()->adViewHeightUpdated(adview_height);
+    AdMobHelper::setBannerViewHeight(height);
 }
 
-static void vkTokenChanged(JNIEnv *, jclass, jboolean valid)
+static void vkAuthChanged(JNIEnv *, jclass, jboolean authorized)
 {
-    if (valid) {
+    if (authorized) {
         VKHelper::setAuthState(VKAuthState::StateAuthorized);
     } else {
         VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
@@ -43,10 +44,10 @@ static void vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j
 }
 
 static JNINativeMethod methods[] = {
-    { "adViewHeightUpdated", "(I)V",                                   (void *)adViewHeightUpdated },
-    { "vkTokenChanged",      "(Z)V",                                   (void *)vkTokenChanged },
-    { "vkRequestComplete",   "(Ljava/lang/String;Ljava/lang/String)V", (void *)vkRequestComplete },
-    { "vkRequestError",      "(Ljava/lang/String;Ljava/lang/String)V", (void *)vkRequestError }
+    { "bannerViewHeightUpdated", "(I)V",                                    (void *)bannerViewHeightUpdated },
+    { "vkAuthChanged",           "(Z)V",                                    (void *)vkAuthChanged },
+    { "vkRequestComplete",       "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestComplete },
+    { "vkRequestError",          "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestError }
 };
 
 jint JNICALL JNI_OnLoad(JavaVM *vm, void *)

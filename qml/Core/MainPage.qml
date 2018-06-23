@@ -11,12 +11,12 @@ Page {
     id: mainPage
 
     header: Rectangle {
-        height: Math.max(mainPage.safeAreaTopMargin, mainPage.bannerViewHeight)
+        height: mainPage.bannerViewHeight
         color:  "lightsteelblue"
     }
 
     footer: Rectangle {
-        height: mainPage.safeAreaBottomMargin + tabBar.height
+        height: tabBar.height
         color:  "lightsteelblue"
 
         TabBar {
@@ -75,12 +75,10 @@ Page {
         }
     }
 
-    property bool appInForeground:     Qt.application.active
+    property bool appInForeground: Qt.application.active
 
-    property int safeAreaTopMargin:    0
-    property int safeAreaBottomMargin: 0
-    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
-    property int vkAuthState:          VKHelper.authState
+    property int bannerViewHeight: AdMobHelper.bannerViewHeight
+    property int vkAuthState:      VKHelper.authState
 
     onAppInForegroundChanged: {
         if (appInForeground) {
@@ -95,14 +93,6 @@ Page {
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateAuthorized) {
             VKHelper.updateFriends();
-        }
-    }
-
-    StackView.onStatusChanged: {
-        if (StackView.status === StackView.Activating ||
-            StackView.status === StackView.Active) {
-            safeAreaTopMargin    = UIHelper.safeAreaTopMargin();
-            safeAreaBottomMargin = UIHelper.safeAreaBottomMargin();
         }
     }
 

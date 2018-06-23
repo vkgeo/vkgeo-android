@@ -10,8 +10,7 @@ Page {
     id: storePage
 
     header: Rectangle {
-        height: Math.max(storePage.safeAreaTopMargin, storePage.bannerViewHeight) +
-                headerControlsLayout.height
+        height: storePage.bannerViewHeight + headerControlsLayout.height
         color:  "lightsteelblue"
 
         RowLayout {
@@ -59,22 +58,7 @@ Page {
         }
     }
 
-    footer: Rectangle {
-        height: storePage.safeAreaBottomMargin
-        color:  "lightsteelblue"
-    }
-
-    property int safeAreaTopMargin:    0
-    property int safeAreaBottomMargin: 0
-    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
-
-    StackView.onStatusChanged: {
-        if (StackView.status === StackView.Activating ||
-            StackView.status === StackView.Active) {
-            safeAreaTopMargin    = UIHelper.safeAreaTopMargin();
-            safeAreaBottomMargin = UIHelper.safeAreaBottomMargin();
-        }
-    }
+    property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
     Flickable {
         id:                   storeFlickable
