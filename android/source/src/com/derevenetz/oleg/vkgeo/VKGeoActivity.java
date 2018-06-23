@@ -1,6 +1,8 @@
 package com.derevenetz.oleg.vkgeo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import org.qtproject.qt5.android.bindings.QtActivity;
 
@@ -23,25 +26,34 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
+import com.vk.sdk.api.VKBatchRequest;
+import com.vk.sdk.api.VKBatchRequest.VKBatchRequestListener;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKRequest.VKRequestListener;
+import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
+import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
 
 public class VKGeoActivity extends QtActivity
 {
-    private static final String   ADMOB_APP_ID                 = "ca-app-pub-2455088855015693~7279538773";
-    private static final String   ADMOB_ADVIEW_UNIT_ID         = "ca-app-pub-3940256099942544/6300978111";
-    private static final String   ADMOB_INTERSTITIALAD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712";
-    private static final String   ADMOB_TEST_DEVICE_ID         = "";
+    private static final String                     ADMOB_APP_ID                 = "ca-app-pub-2455088855015693~7279538773";
+    private static final String                     ADMOB_ADVIEW_UNIT_ID         = "ca-app-pub-3940256099942544/6300978111";
+    private static final String                     ADMOB_INTERSTITIALAD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712";
+    private static final String                     ADMOB_TEST_DEVICE_ID         = "";
 
-    private static final AdSize   ADMOB_ADVIEW_ADSIZE          = AdSize.SMART_BANNER;
+    private static final AdSize                     ADMOB_ADVIEW_ADSIZE          = AdSize.SMART_BANNER;
 
-    private static boolean        statusBarVisible             = false,
-                                  mobileAdsInitialized         = false;
-    private static int            statusBarHeight              = 0;
-    private static VKGeoActivity  instance                     = null;
-    private static AdView         adView                       = null;
-    private static InterstitialAd interstitialAd               = null;
+    private static boolean                          statusBarVisible             = false,
+                                                    mobileAdsInitialized         = false;
+    private static int                              statusBarHeight              = 0;
+    private static VKGeoActivity                    instance                     = null;
+    private static AdView                           adView                       = null;
+    private static InterstitialAd                   interstitialAd               = null;
+    private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker        = new HashMap<VKBatchRequest, Boolean>();
 
     private static VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
@@ -368,15 +380,15 @@ public class VKGeoActivity extends QtActivity
             {
                 try {
                     JSONArray         json_auth_scope = new JSONArray(f_auth_scope);
-                    ArrayList<String> list_auth_scope = new ArrayList<String>();
+                    ArrayList<String> vk_auth_scope   = new ArrayList<String>();
 
                     for (int i = 0; i < json_auth_scope.length(); i++) {
-                        list_auth_scope.add(json_auth_scope.get(i).toString());
+                        vk_auth_scope.add(json_auth_scope.get(i).toString());
                     }
 
-                    VKSdk.login(instance, list_auth_scope.toArray(new String[list_auth_scope.size()]));
+                    VKSdk.login(instance, vk_auth_scope.toArray(new String[vk_auth_scope.size()]));
                 } catch (Exception ex) {
-                    Log.e("VKGeoActivity", ex.toString());
+                    Log.w("VKGeoActivity", "loginVK() : " + ex.toString());
                 }
             }
         });
@@ -393,8 +405,108 @@ public class VKGeoActivity extends QtActivity
         });
     }
 
+    public static void executeVKBatch(String request_list)
+    {
+        final String f_request_list = request_list;
+
+        instance.runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                try {
+                    JSONArray            json_request_list = new JSONArray(f_request_list);
+                    ArrayList<VKRequest> vk_requests       = new ArrayList<VKRequest>();
+
+                    for (int i = 0; i < json_request_list.length(); i++) {
+                        final JSONObject json_request = json_request_list.getJSONObject(i);
+
+                        if (json_request.has("method")) {
+                            ArrayList<String> vk_parameters = new ArrayList<String>();
+
+                            if (json_request.has("parameters")) {
+                                JSONObject       json_parameters      = json_request.getJSONObject("parameters");
+                                Iterator<String> json_parameters_keys = json_parameters.keys();
+
+                                while (json_parameters_keys.hasNext()) {
+                                    String key = json_parameters_keys.next();
+
+                                    vk_parameters.add(key);
+                                    vk_parameters.add(json_parameters.get(key).toString());
+                                }
+                            }
+
+                            VKRequest vk_request = new VKRequest(json_request.getString("method"), VKParameters.from((Object[])vk_parameters.toArray(new String[vk_parameters.size()])));
+
+                            vk_request.setRequestListener(new VKRequestListener() {
+                                @Override
+                                public void onComplete(VKResponse response) {
+                                    vkRequestComplete(json_request.toString(), response.json.toString());
+                                }
+
+                                @Override
+                                public void onError(VKError error) {
+                                    vkRequestError(json_request.toString(), error.errorMessage);
+                                }
+                            });
+
+                            vk_requests.add(vk_request);
+                        } else {
+                            Log.w("VKGeoActivity", "executeVKBatch() : invalid request");
+                        }
+                    }
+
+                    if (vk_requests.size() > 0) {
+                        final VKBatchRequest vk_batch_request = new VKBatchRequest(vk_requests.toArray(new VKRequest[vk_requests.size()]));
+
+                        vkBatchRequestTracker.put(vk_batch_request, true);
+
+                        vk_batch_request.executeWithListener(new VKBatchRequestListener() {
+                            @Override
+                            public void onComplete(VKResponse[] responses) {
+                                vkBatchRequestTracker.remove(vk_batch_request);
+                            }
+
+                            @Override
+                            public void onError(VKError error) {
+                                vkBatchRequestTracker.remove(vk_batch_request);
+                            }
+                        });
+                    }
+                } catch (Exception ex) {
+                    Log.w("VKGeoActivity", "executeVKBatch() : " + ex.toString());
+                }
+            }
+        });
+    }
+
+    public static void cancelAllVKRequests()
+    {
+        instance.runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                Iterator<VKBatchRequest> vk_batch_request_tracker_keys = vkBatchRequestTracker.keySet().iterator();
+
+                while (vk_batch_request_tracker_keys.hasNext()) {
+                    vk_batch_request_tracker_keys.next().cancel();
+                }
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
+            @Override
+            public void onResult(VKAccessToken token) {
+            }
+
+            @Override
+            public void onError(VKError error) {
+                Log.w("VKGeoActivity", error.errorMessage);
+            }
+        });
     }
 }
