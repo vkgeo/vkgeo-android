@@ -4,10 +4,6 @@
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
 
-#include "admobhelper.h"
-#include "storehelper.h"
-#include "uihelper.h"
-#include "notificationhelper.h"
 #include "vkhelpershared.h"
 
 VKHelper *VKHelperShared = NULL;
@@ -25,16 +21,9 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), new AdMobHelper(&app));
-    engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), new StoreHelper(&app));
-    engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), new UIHelper(&app));
-    engine.rootContext()->setContextProperty(QStringLiteral("NotificationHelper"), new NotificationHelper(&app));
+    VKHelperShared = new VKHelper(&app);
 
-    if (VKHelperShared != NULL) {
-        VKHelperShared->setParent(&app);
-
-        engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), VKHelperShared);
-    }
+    engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), VKHelperShared);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 

@@ -6,18 +6,19 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>
+#include <QtAndroidExtras/QAndroidJniObject>
 
 #include "vkhelper.h"
 
+const QString VKHelper::AUTH_SCOPE               ("[ \"friends\", \"notes\", \"messages\", \"groups\", \"offline\" ]");
 const QString VKHelper::DEFAULT_PHOTO_URL        ("https://vk.com/images/camera_100.png");
 const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
 
-static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"messages", @"groups", @"offline" ];
-
 VKHelper *VKHelper::Instance = NULL;
 
+/*
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
 - (id)init;
@@ -127,6 +128,7 @@ VKHelper *VKHelper::Instance = NULL;
 }
 
 @end
+*/
 
 bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 {
@@ -182,14 +184,10 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     PhotoUrl                              = DEFAULT_PHOTO_URL;
     BigPhotoUrl                           = DEFAULT_PHOTO_URL;
     Instance                              = this;
-    VKDelegateInstance                    = NULL;
 }
 
 VKHelper::~VKHelper()
 {
-    if (Initialized) {
-        [VKDelegateInstance release];
-    }
 }
 
 bool VKHelper::locationValid() const
@@ -288,7 +286,8 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
 void VKHelper::initialize()
 {
     if (!Initialized) {
-        VKDelegateInstance = [[VKDelegate alloc] init];
+        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VkGeoActivity",
+                                                  "initVK");
 
         connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(RequestQueueTimerTimeout()));
 
@@ -329,9 +328,8 @@ void VKHelper::cleanup()
             ContextTrackerDelRequest(request);
         }
 
-        foreach (VKBatchRequest *vk_batch_request, VKBatchRequestTracker.keys()) {
-            [vk_batch_request cancel];
-        }
+        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VkGeoActivity",
+                                                  "cancelAllVKRequests");
 
         FriendsData.clear();
         FriendsDataTmp.clear();
@@ -344,14 +342,18 @@ void VKHelper::cleanup()
 void VKHelper::login()
 {
     if (Initialized) {
-        [VKSdk authorize:AUTH_SCOPE];
+        QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
+
+        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VkGeoActivity",
+                                                  "loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
     }
 }
 
 void VKHelper::logout()
 {
     if (Initialized) {
-        [VKSdk forceLogout];
+        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VkGeoActivity",
+                                                  "logoutVK");
 
         setAuthState(VKAuthState::StateNotAuthorized);
     }
@@ -595,6 +597,7 @@ void VKHelper::setAuthState(int state)
     emit Instance->authStateChanged(Instance->AuthState);
 
     if (Instance->AuthState == VKAuthState::StateAuthorized) {
+        /*
         VKAccessToken *token = [VKSdk accessToken];
 
         if (token != nil && token.localUser != nil && token.localUser.id != nil) {
@@ -636,6 +639,7 @@ void VKHelper::setAuthState(int state)
         }
 
         emit Instance->bigPhotoUrlChanged(Instance->BigPhotoUrl);
+        */
     } else if (Instance->AuthState == VKAuthState::StateNotAuthorized) {
         Instance->cleanup();
     }
@@ -644,44 +648,23 @@ void VKHelper::setAuthState(int state)
 void VKHelper::RequestQueueTimerTimeout()
 {
     if (!RequestQueue.isEmpty()) {
-        NSMutableArray *vk_request_array = [NSMutableArray arrayWithCapacity:MAX_BATCH_SIZE];
+        QVariantList request_list;
 
         for (int i = 0; i < MAX_BATCH_SIZE && !RequestQueue.isEmpty(); i++) {
             QVariantMap request = RequestQueue.dequeue();
 
-            ContextTrackerDelRequest(request);
-
             if (AuthState == VKAuthState::StateAuthorized) {
-                VKRequest *vk_request = ProcessRequest(request);
-
-                if (vk_request != nil) {
-                    [vk_request_array addObject:vk_request];
-                }
+                request_list.append(request);
+            } else {
+                ContextTrackerDelRequest(request);
             }
         }
 
-        if (vk_request_array.count > 0) {
-            VKBatchRequest *vk_batch_request = [[VKBatchRequest alloc] initWithRequestsArray:vk_request_array];
+        if (request_list.count() > 0) {
+            QAndroidJniObject j_request_list = QAndroidJniObject::fromString(QJsonDocument::fromVariant(request_list).toJson(QJsonDocument::Compact));
 
-            VKBatchRequestTracker[vk_batch_request] = true;
-
-            [vk_batch_request executeWithResultBlock:^(NSArray *responses) {
-                Q_UNUSED(responses)
-
-                if (VKBatchRequestTracker.contains(vk_batch_request)) {
-                    VKBatchRequestTracker.remove(vk_batch_request);
-
-                    [vk_batch_request autorelease];
-                }
-            } errorBlock:^(NSError *error) {
-                Q_UNUSED(error)
-
-                if (VKBatchRequestTracker.contains(vk_batch_request)) {
-                    VKBatchRequestTracker.remove(vk_batch_request);
-
-                    [vk_batch_request autorelease];
-                }
-            }];
+            QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
+                                                      "executeVKBatch", "(Ljava/lang/String;)V", j_request_list.object<jstring>());
         }
     }
 }
@@ -786,8 +769,9 @@ void VKHelper::EnqueueRequest(QVariantMap request)
     ContextTrackerAddRequest(request);
 }
 
-VKRequest *VKHelper::ProcessRequest(QVariantMap request)
+void *VKHelper::ProcessRequest(QVariantMap request)
 {
+    /*
     if (request.contains("method") && request.contains("context")) {
         NSMutableDictionary *vk_parameters = nil;
 
@@ -1113,6 +1097,9 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
 
         return nil;
     }
+    */
+
+    return NULL;
 }
 
 void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_request)

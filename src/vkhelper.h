@@ -1,10 +1,6 @@
 #ifndef VKHELPER_H
 #define VKHELPER_H
 
-#ifdef __OBJC__
-#import <VKSdkFramework/VKSdkFramework.h>
-#endif
-
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QQueue>
@@ -12,10 +8,6 @@
 #include <QtCore/QMap>
 #include <QtCore/QVariantMap>
 #include <QtCore/QTimer>
-
-#ifdef __OBJC__
-@class VKDelegate;
-#endif
 
 class VKAuthState : public QObject
 {
@@ -62,7 +54,8 @@ public:
                      MAX_NOTES_GET_COUNT                       = 100,
                      MAX_FRIENDS_GET_COUNT                     = 5000;
 
-    static const QString DEFAULT_PHOTO_URL,
+    static const QString AUTH_SCOPE,
+                         DEFAULT_PHOTO_URL,
                          DATA_NOTE_TITLE,
                          TRUSTED_FRIENDS_LIST_NAME,
                          TRACKED_FRIENDS_LIST_NAME;
@@ -178,31 +171,16 @@ private:
     void ProcessGroupsJoinResponse(QString response, QVariantMap resp_request);
     void ProcessGroupsJoinError(QVariantMap err_request);
 
-    bool                         Initialized;
-    int                          AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
-    qint64                       LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;
-    QString                      UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
-                                 TrustedFriendsListId, TrackedFriendsListId;
-    QQueue<QVariantMap>          RequestQueue;
-    QTimer                       RequestQueueTimer, ReportLocationTimer;
-    QMap<QString, int>           ContextTracker;
-#ifdef __OBJC__
-    QMap<VKRequest *, bool>      VKRequestTracker;
-#else
-    QMap<void *, bool>           VKRequestTracker;
-#endif
-#ifdef __OBJC__
-    QMap<VKBatchRequest *, bool> VKBatchRequestTracker;
-#else
-    QMap<void *, bool>           VKBatchRequestTracker;
-#endif
-    QVariantMap                  LastLocationInfo, FriendsData, FriendsDataTmp;
-    static VKHelper             *Instance;
-#ifdef __OBJC__
-    VKDelegate                  *VKDelegateInstance;
-#else
-    void                        *VKDelegateInstance;
-#endif
+    bool                Initialized;
+    int                 AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
+    qint64              LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;
+    QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
+                        TrustedFriendsListId, TrackedFriendsListId;
+    QQueue<QVariantMap> RequestQueue;
+    QTimer              RequestQueueTimer, ReportLocationTimer;
+    QMap<QString, int>  ContextTracker;
+    QVariantMap         LastLocationInfo, FriendsData, FriendsDataTmp;
+    static VKHelper    *Instance;
 };
 
 #endif // VKHELPER_H
