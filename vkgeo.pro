@@ -3,21 +3,10 @@ CONFIG += c++11
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-SOURCES += src/main.cpp
-
-OBJECTIVE_SOURCES += \
-    src/vkgeoappdelegate.mm \
-    src/admobhelper.mm \
-    src/storehelper.mm \
-    src/uihelper.mm \
-    src/notificationhelper.mm \
-    src/vkhelper.mm
+SOURCES += src/main.cpp \
+    src/vkhelper.cpp
 
 HEADERS += \
-    src/admobhelper.h \
-    src/storehelper.h \
-    src/uihelper.h \
-    src/notificationhelper.h \
     src/vkhelper.h \
     src/vkhelpershared.h
 
@@ -35,36 +24,21 @@ QML_IMPORT_PATH =
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
 
-ios {
-    LIBS += -F $$PWD/ios/frameworks \
-            -framework GoogleMobileAds \
-            -framework VKSdkFramework \
-            -framework AdSupport \
-            -framework AvFoundation \
-            -framework CFNetwork \
-            -framework CoreMedia \
-            -framework CoreMotion \
-            -framework CoreTelephony \
-            -framework CoreVideo \
-            -framework GameKit \
-            -framework GLKit \
-            -framework MediaPlayer \
-            -framework MessageUI \
-            -framework SafariServices \
-            -framework StoreKit \
-            -framework SystemConfiguration \
-            -framework UserNotifications
+android {
+    QT += androidextras
 
-    VK_SDK_FRAMEWORK.files = ios/Frameworks/VKSdkFramework.framework
-    VK_SDK_FRAMEWORK.path = Frameworks
+    OTHER_FILES += \
+        android/source/AndroidManifest.xml \
+        android/source/res/drawable-hdpi/ic_launcher.png \
+        android/source/res/drawable-mdpi/ic_launcher.png \
+        android/source/res/drawable-xhdpi/ic_launcher.png \
+        android/source/res/drawable-xxhdpi/ic_launcher.png \
+        android/source/res/values/integers.xml \
+        android/source/res/values/strings.xml \
+        android/source/src/com/derevenetz/oleg/vkgeo/VkGeoActivity.java
 
-    QMAKE_BUNDLE_DATA += VK_SDK_FRAMEWORK
-
-    QMAKE_APPLE_DEVICE_ARCHS = arm64
-    QMAKE_INFO_PLIST = ios/Info.plist
+    ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android/source
 }
 
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+include(deployment.pri)
