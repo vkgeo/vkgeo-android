@@ -1,0 +1,12 @@
+--- library/Source/Core/VKRequest.m.orig	2018-05-06 03:05:25.000000000 +0300
++++ library/Source/Core/VKRequest.m	2018-05-06 03:06:16.000000000 +0300
+@@ -428,8 +428,8 @@
+                     postRequest.errorBlock(self.error);
+                 }
+             }
++            self.error = nil;
+         };
+-        self.error = nil;
+     } else {
+         block = ^{
+             if (self.completeBlock) {
