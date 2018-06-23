@@ -4,9 +4,7 @@
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
 
-#include "vkhelpershared.h"
-
-VKHelper *VKHelperShared = NULL;
+#include "vkhelper.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,9 +19,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    VKHelperShared = new VKHelper(&app);
-
-    engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), VKHelperShared);
+    engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), new VKHelper(&app));
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 

@@ -7,8 +7,7 @@ SOURCES += src/main.cpp \
     src/vkhelper.cpp
 
 HEADERS += \
-    src/vkhelper.h \
-    src/vkhelpershared.h
+    src/vkhelper.h
 
 RESOURCES += \
     qml.qrc \
