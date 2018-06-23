@@ -105,10 +105,6 @@ public:
 
     Q_INVOKABLE void joinGroup(QString group_id);
 
-    static void setAuthState(int state);
-    static void processResponse(QString response, QString resp_request_str);
-    static void processError(QString error_message, QString err_request_str);
-
 signals:
     void authStateChanged(int authState);
     void friendsCountChanged(int friendsCount);
@@ -123,6 +119,11 @@ signals:
     void locationReported();
     void friendsUpdated();
     void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
+
+public slots:
+    void setAuthState(int state);
+    void processResponse(QString response, QString resp_request_str);
+    void processError(QString error_message, QString err_request_str);
 
 private slots:
     void RequestQueueTimerTimeout();
@@ -177,7 +178,6 @@ private:
     QTimer              RequestQueueTimer, ReportLocationTimer;
     QMap<QString, int>  ContextTracker;
     QVariantMap         LastLocationInfo, FriendsData, FriendsDataTmp;
-    static VKHelper    *Instance;
 };
 
 #endif // VKHELPER_H

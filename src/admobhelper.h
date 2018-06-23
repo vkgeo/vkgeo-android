@@ -25,15 +25,15 @@ public:
     Q_INVOKABLE void hideBannerView();
     Q_INVOKABLE void showInterstitial();
 
-    static void setBannerViewHeight(int height);
-
 signals:
     void bannerViewHeightChanged(int bannerViewHeight);
 
+public slots:
+    void setBannerViewHeight(int height);
+
 private:
-    bool                Initialized;
-    int                 BannerViewHeight;
-    static AdMobHelper *Instance;
+    bool Initialized;
+    int  BannerViewHeight;
 };
 
 #endif // ADMOBHELPER_H

@@ -1,19 +1,35 @@
 #include <QtAndroidExtras/QAndroidJniObject>
 
-#include "admobhelper.h"
+#include "androidgw.h"
 #include "vkhelper.h"
+
+AndroidGW *AndroidGW::Instance = NULL;
+
+AndroidGW::AndroidGW(QObject *parent) : QObject(parent)
+{
+    Instance = this;
+}
+
+AndroidGW::~AndroidGW()
+{
+}
+
+AndroidGW *AndroidGW::instance()
+{
+    return Instance;
+}
 
 static void bannerViewHeightUpdated(JNIEnv *, jclass, jint height)
 {
-    AdMobHelper::setBannerViewHeight(height);
+    emit AndroidGW::instance()->setBannerViewHeight(height);
 }
 
 static void vkAuthChanged(JNIEnv *, jclass, jboolean authorized)
 {
     if (authorized) {
-        VKHelper::setAuthState(VKAuthState::StateAuthorized);
+        emit AndroidGW::instance()->setAuthState(VKAuthState::StateAuthorized);
     } else {
-        VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
+        emit AndroidGW::instance()->setAuthState(VKAuthState::StateNotAuthorized);
     }
 }
 
@@ -27,7 +43,7 @@ static void vkRequestComplete(JNIEnv *jni_env, jclass, jstring j_request, jstrin
     jni_env->ReleaseStringUTFChars(j_request,  request_str);
     jni_env->ReleaseStringUTFChars(j_response, response_str);
 
-    VKHelper::processResponse(response, request);
+    emit AndroidGW::instance()->processResponse(response, request);
 }
 
 static void vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j_error_message)
@@ -40,7 +56,7 @@ static void vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j
     jni_env->ReleaseStringUTFChars(j_request,       request_str);
     jni_env->ReleaseStringUTFChars(j_error_message, error_message_str);
 
-    VKHelper::processError(error_message, request);
+    emit AndroidGW::instance()->processError(error_message, request);
 }
 
 static JNINativeMethod methods[] = {

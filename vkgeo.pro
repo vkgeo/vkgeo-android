@@ -10,6 +10,7 @@ SOURCES += src/main.cpp \
     src/vkhelper.cpp
 
 HEADERS += \
+    src/androidgw.h \
     src/admobhelper.h \
     src/uihelper.h \
     src/vkhelper.h

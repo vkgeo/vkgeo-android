@@ -16,8 +16,6 @@ const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
 
-VKHelper *VKHelper::Instance = NULL;
-
 bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 {
     bool friend_1_trusted = friend_1.toMap().contains("trusted") ? (friend_1.toMap())["trusted"].toBool() : false;
@@ -71,7 +69,6 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     LastUpdateTrackedFriendsLocationsTime = 0;
     PhotoUrl                              = DEFAULT_PHOTO_URL;
     BigPhotoUrl                           = DEFAULT_PHOTO_URL;
-    Instance                              = this;
 }
 
 VKHelper::~VKHelper()
@@ -480,11 +477,11 @@ void VKHelper::joinGroup(QString group_id)
 
 void VKHelper::setAuthState(int state)
 {
-    Instance->AuthState = state;
+    AuthState = state;
 
-    emit Instance->authStateChanged(Instance->AuthState);
+    emit authStateChanged(AuthState);
 
-    if (Instance->AuthState == VKAuthState::StateAuthorized) {
+    if (AuthState == VKAuthState::StateAuthorized) {
         /*
         VKAccessToken *token = [VKSdk accessToken];
 
@@ -528,8 +525,8 @@ void VKHelper::setAuthState(int state)
 
         emit Instance->bigPhotoUrlChanged(Instance->BigPhotoUrl);
         */
-    } else if (Instance->AuthState == VKAuthState::StateNotAuthorized) {
-        Instance->cleanup();
+    } else if (AuthState == VKAuthState::StateNotAuthorized) {
+        cleanup();
     }
 }
 
@@ -538,28 +535,28 @@ void VKHelper::processResponse(QString response, QString resp_request_str)
     QVariantMap resp_request = QJsonDocument::fromJson(resp_request_str.toUtf8()).toVariant().toMap();
 
     if (resp_request.contains("method") && resp_request.contains("context")) {
-        Instance->ContextTrackerDelRequest(resp_request);
+        ContextTrackerDelRequest(resp_request);
 
         if (resp_request["method"].toString() == "notes.get") {
-            Instance->ProcessNotesGetResponse(response, resp_request);
+            ProcessNotesGetResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "notes.add") {
-            Instance->ProcessNotesAddResponse(response, resp_request);
+            ProcessNotesAddResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "notes.delete") {
-            Instance->ProcessNotesDeleteResponse(response, resp_request);
+            ProcessNotesDeleteResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "friends.get") {
-            Instance->ProcessFriendsGetResponse(response, resp_request);
+            ProcessFriendsGetResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "friends.getLists") {
-            Instance->ProcessFriendsGetListsResponse(response, resp_request);
+            ProcessFriendsGetListsResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "friends.addList") {
-            Instance->ProcessFriendsAddListResponse(response, resp_request);
+            ProcessFriendsAddListResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "friends.editList") {
-            Instance->ProcessFriendsEditListResponse(response, resp_request);
+            ProcessFriendsEditListResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "messages.send") {
-            Instance->ProcessMessagesSendResponse(response, resp_request);
+            ProcessMessagesSendResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "apps.sendRequest") {
-            Instance->ProcessAppsSendRequestResponse(response, resp_request);
+            ProcessAppsSendRequestResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "groups.join") {
-            Instance->ProcessGroupsJoinResponse(response, resp_request);
+            ProcessGroupsJoinResponse(response, resp_request);
         } else {
             qWarning() << QString("processResponse() : unknown request method: %1").arg(resp_request["method"].toString());
         }
@@ -573,58 +570,58 @@ void VKHelper::processError(QString error_message, QString err_request_str)
     QVariantMap err_request = QJsonDocument::fromJson(err_request_str.toUtf8()).toVariant().toMap();
 
     if (err_request.contains("method") && err_request.contains("context")) {
-        Instance->ContextTrackerDelRequest(err_request);
+        ContextTrackerDelRequest(err_request);
 
         if (err_request["method"].toString() == "notes.get") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessNotesGetError(err_request);
+            ProcessNotesGetError(err_request);
         } else if (err_request["method"].toString() == "notes.add") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessNotesAddError(err_request);
+            ProcessNotesAddError(err_request);
         } else if (err_request["method"].toString() == "notes.delete") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessNotesDeleteError(err_request);
+            ProcessNotesDeleteError(err_request);
         } else if (err_request["method"].toString() == "friends.get") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessFriendsGetError(err_request);
+            ProcessFriendsGetError(err_request);
         } else if (err_request["method"].toString() == "friends.getLists") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessFriendsGetListsError(err_request);
+            ProcessFriendsGetListsError(err_request);
         } else if (err_request["method"].toString() == "friends.addList") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessFriendsAddListError(err_request);
+            ProcessFriendsAddListError(err_request);
         } else if (err_request["method"].toString() == "friends.editList") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessFriendsEditListError(err_request);
+            ProcessFriendsEditListError(err_request);
         } else if (err_request["method"].toString() == "messages.send") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessMessagesSendError(err_request);
+            ProcessMessagesSendError(err_request);
         } else if (err_request["method"].toString() == "apps.sendRequest") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessAppsSendRequestError(err_request);
+            ProcessAppsSendRequestError(err_request);
         } else if (err_request["method"].toString() == "groups.join") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
 
-            Instance->ProcessGroupsJoinError(err_request);
+            ProcessGroupsJoinError(err_request);
         } else {
             qWarning() << QString("processError() : unknown request method: %1").arg(err_request["method"].toString());
         }

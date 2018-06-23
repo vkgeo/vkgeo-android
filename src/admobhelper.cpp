@@ -6,13 +6,10 @@ const QString AdMobHelper::ADMOB_APP_ID              ("ca-app-pub-24550888550156
 const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  ("ca-app-pub-3940256099942544/6300978111");
 const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID("ca-app-pub-3940256099942544/1033173712");
 
-AdMobHelper *AdMobHelper::Instance = NULL;
-
 AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
 {
     Initialized      = false;
     BannerViewHeight = 0;
-    Instance         = this;
 }
 
 AdMobHelper::~AdMobHelper()
@@ -66,7 +63,7 @@ void AdMobHelper::showInterstitial()
 
 void AdMobHelper::setBannerViewHeight(int height)
 {
-    Instance->BannerViewHeight = height;
+    BannerViewHeight = height;
 
-    emit Instance->bannerViewHeightChanged(Instance->BannerViewHeight);
+    emit bannerViewHeightChanged(BannerViewHeight);
 }
