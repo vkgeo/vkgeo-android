@@ -19,16 +19,6 @@ AdMobHelper::~AdMobHelper()
 {
 }
 
-bool AdMobHelper::interstitialReady() const
-{
-    if (Initialized) {
-        return QAndroidJniObject::callStaticMethod<jboolean>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
-                                                             "interstitialReady");
-    } else {
-        return false;
-    }
-}
-
 int AdMobHelper::bannerViewHeight() const
 {
     return BannerViewHeight;
@@ -37,10 +27,12 @@ int AdMobHelper::bannerViewHeight() const
 void AdMobHelper::initialize()
 {
     if (!Initialized) {
-        QAndroidJniObject j_app_id = QAndroidJniObject::fromString(ADMOB_APP_ID);
+        QAndroidJniObject j_app_id               = QAndroidJniObject::fromString(ADMOB_APP_ID);
+        QAndroidJniObject j_interstitial_unit_id = QAndroidJniObject::fromString(ADMOB_INTERSTITIAL_UNIT_ID);
 
         QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
-                                                  "initAds", "(Ljava/lang/String;)V", j_app_id.object<jstring>());
+                                                  "initAds", "(Ljava/lang/String;Ljava/lang/String;)V", j_app_id.object<jstring>(),
+                                                                                                        j_interstitial_unit_id.object<jstring>());
 
         Initialized = true;
     }

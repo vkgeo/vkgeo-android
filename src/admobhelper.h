@@ -8,8 +8,7 @@ class AdMobHelper : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool interstitialReady READ interstitialReady)
-    Q_PROPERTY(int  bannerViewHeight  READ bannerViewHeight NOTIFY bannerViewHeightChanged)
+    Q_PROPERTY(int bannerViewHeight READ bannerViewHeight NOTIFY bannerViewHeightChanged)
 
 public:
     static const QString ADMOB_APP_ID,
@@ -19,7 +18,6 @@ public:
     explicit AdMobHelper(QObject *parent = 0);
     virtual ~AdMobHelper();
 
-    bool interstitialReady() const;
     int bannerViewHeight() const;
 
     Q_INVOKABLE void initialize();
