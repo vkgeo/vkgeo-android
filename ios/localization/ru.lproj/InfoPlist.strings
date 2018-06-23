@@ -1,7 +1,0 @@
-/* 
-  InfoPlist.strings
-*/
-
-CFBundleDisplayName                          = "VKGeo";
-NSLocationAlwaysAndWhenInUseUsageDescription = "Вы должны разрешить доступ к своему местоположению, чтобы находить друзей поблизости и позволить доверенным друзьям видеть вас на карте";
-NSLocationWhenInUseUsageDescription          = "Вы должны разрешить доступ к своему местоположению, чтобы находить друзей поблизости и позволить доверенным друзьям видеть вас на карте";
