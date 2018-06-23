@@ -4,6 +4,7 @@ CONFIG += c++11
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += src/main.cpp \
+    src/androidgw.cpp \
     src/vkhelper.cpp
 
 HEADERS += \

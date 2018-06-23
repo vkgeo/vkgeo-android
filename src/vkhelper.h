@@ -106,6 +106,8 @@ public:
     Q_INVOKABLE void joinGroup(QString group_id);
 
     static void setAuthState(int state);
+    static void processResponse(QString response, QString resp_request_str);
+    static void processError(QString error_message, QString err_request_str);
 
 signals:
     void authStateChanged(int authState);
@@ -134,12 +136,7 @@ private:
 
     bool ContextHaveActiveRequests(QString context);
 
-    void       EnqueueRequest(QVariantMap request);
-#ifdef __OBJC__
-    VKRequest *ProcessRequest(QVariantMap request);
-#else
-    void      *ProcessRequest(QVariantMap request);
-#endif
+    void EnqueueRequest(QVariantMap request);
 
     void ProcessNotesGetResponse(QString response, QVariantMap resp_request);
     void ProcessNotesGetError(QVariantMap err_request);
