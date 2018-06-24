@@ -35,10 +35,15 @@ android {
     OTHER_FILES += \
         android/source/AndroidManifest.xml \
         android/source/res/drawable-hdpi/ic_launcher.png \
+        android/source/res/drawable-hdpi/ic_notification.png \
         android/source/res/drawable-mdpi/ic_launcher.png \
+        android/source/res/drawable-mdpi/ic_notification.png \
         android/source/res/drawable-xhdpi/ic_launcher.png \
+        android/source/res/drawable-xhdpi/ic_notification.png \
         android/source/res/drawable-xxhdpi/ic_launcher.png \
+        android/source/res/drawable-xxhdpi/ic_notification.png \
         android/source/res/drawable-xxxhdpi/ic_launcher.png \
+        android/source/res/drawable-xxxhdpi/ic_notification.png \
         android/source/res/values/numbers.xml \
         android/source/res/values/strings.xml \
         android/source/src/com/derevenetz/oleg/vkgeo/VKGeoActivity.java \

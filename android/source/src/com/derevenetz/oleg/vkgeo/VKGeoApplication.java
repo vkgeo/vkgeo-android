@@ -1,6 +1,7 @@
 package com.derevenetz.oleg.vkgeo;
 
 import android.content.Intent;
+import android.os.Build;
 
 import org.qtproject.qt5.android.bindings.QtApplication;
 
@@ -15,6 +16,10 @@ public class VKGeoApplication extends QtApplication
 
         VKSdk.initialize(this);
 
-        this.startService(new Intent(this, VKGeoService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.startForegroundService(new Intent(this, VKGeoService.class));
+        } else {
+            this.startService(new Intent(this, VKGeoService.class));
+        }
     }
 }

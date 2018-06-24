@@ -4,8 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import android.app.Notification;
+import android.app.Notification.Builder;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -48,6 +54,34 @@ public class VKGeoService extends QtService
 
     public VKGeoService()
     {
+    }
+
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+
+        Notification notification = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(getResources().getString(R.string.service_notification_channel_id),
+                                                                  getResources().getString(R.string.service_notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
+
+            manager.createNotificationChannel(channel);
+
+            notification = new Notification.Builder(this, getResources().getString(R.string.service_notification_channel_id))
+                                                   .setSmallIcon(R.drawable.ic_notification)
+                                                   .setContentTitle(getResources().getString(R.string.service_notification_title))
+                                                   .build();
+        } else {
+            notification = new Notification.Builder(this)
+                                                   .setSmallIcon(R.drawable.ic_notification)
+                                                   .setContentTitle(getResources().getString(R.string.service_notification_title))
+                                                   .build();
+        }
+
+        startForeground(getResources().getInteger(R.integer.service_foreground_notification_id), notification);
     }
 
     @Override

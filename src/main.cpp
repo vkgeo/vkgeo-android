@@ -55,7 +55,9 @@ int main(int argc, char *argv[])
 
         vk_helper->initialize();
 
+        /*
         vk_helper->updateLocation(0, 0);
+        */
 
         return app.exec();
     } else {
