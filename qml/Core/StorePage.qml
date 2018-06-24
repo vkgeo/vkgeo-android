@@ -60,6 +60,14 @@ Page {
 
     property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
+    Keys.onReleased: {
+        if (event.key === Qt.Key_Back) {
+            mainStackView.pop();
+
+            event.accepted = true;
+        }
+    }
+
     Flickable {
         id:                   storeFlickable
         anchors.fill:         parent

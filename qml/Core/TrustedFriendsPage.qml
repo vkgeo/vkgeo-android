@@ -84,6 +84,14 @@ Page {
 
     property var friendsList:         []
 
+    Keys.onReleased: {
+        if (event.key === Qt.Key_Back) {
+            mainStackView.pop();
+
+            event.accepted = true;
+        }
+    }
+
     function updateModel() {
         trustedFriendsListModel.clear();
 

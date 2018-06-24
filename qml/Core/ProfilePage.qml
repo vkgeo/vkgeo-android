@@ -75,6 +75,14 @@ Page {
 
     signal locateOnMap(string user_id)
 
+    Keys.onReleased: {
+        if (event.key === Qt.Key_Back) {
+            mainStackView.pop();
+
+            event.accepted = true;
+        }
+    }
+
     Flickable {
         id:                   profileFlickable
         anchors.fill:         parent
