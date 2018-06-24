@@ -7,6 +7,7 @@ import java.util.Iterator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Process;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -145,7 +146,15 @@ public class VKGeoActivity extends QtActivity
             bannerView = null;
         }
 
-        super.onDestroy();
+       /*
+        * This call hangs when foreground service is running,
+        * so we just kill activity process instead (service
+        * is running in a different process).
+        *
+        * super.onDestroy();
+        */
+
+        Process.killProcess(Process.myPid());
     }
 
     public static int getScreenDPI()
