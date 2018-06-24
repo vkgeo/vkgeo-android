@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -26,7 +28,6 @@ import com.vk.sdk.VKSdk;
 
 public class VKGeoService extends QtService
 {
-    private static VKGeoService                     instance              = null;
     private static HashMap<VKRequest,      Boolean> vkRequestTracker      = new HashMap<VKRequest,      Boolean>();
     private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker = new HashMap<VKBatchRequest, Boolean>();
 
@@ -47,7 +48,6 @@ public class VKGeoService extends QtService
 
     public VKGeoService()
     {
-        instance = this;
     }
 
     @Override
@@ -58,13 +58,19 @@ public class VKGeoService extends QtService
 
     public static void initVK()
     {
-        vkAccessTokenTracker.startTracking();
+        runOnMainThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                vkAccessTokenTracker.startTracking();
 
-        if (VKSdk.isLoggedIn()) {
-            vkAuthChanged(true);
-        } else {
-            vkAuthChanged(false);
-        }
+                if (VKSdk.isLoggedIn()) {
+                    vkAuthChanged(true);
+                } else {
+                    vkAuthChanged(false);
+                }
+            }
+        });
     }
 
     public static void loginVK(String auth_scope)
@@ -77,93 +83,111 @@ public class VKGeoService extends QtService
 
     public static void executeVKBatch(String request_list)
     {
-        try {
-            JSONArray            json_request_list = new JSONArray(request_list);
-            ArrayList<VKRequest> vk_requests       = new ArrayList<VKRequest>();
+        final String f_request_list = request_list;
 
-            for (int i = 0; i < json_request_list.length(); i++) {
-                final JSONObject json_request = json_request_list.getJSONObject(i);
+        runOnMainThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                try {
+                    JSONArray            json_request_list = new JSONArray(f_request_list);
+                    ArrayList<VKRequest> vk_requests       = new ArrayList<VKRequest>();
 
-                if (json_request.has("method")) {
-                    ArrayList<String> vk_parameters = new ArrayList<String>();
+                    for (int i = 0; i < json_request_list.length(); i++) {
+                        final JSONObject json_request = json_request_list.getJSONObject(i);
 
-                    if (json_request.has("parameters")) {
-                        JSONObject       json_parameters      = json_request.getJSONObject("parameters");
-                        Iterator<String> json_parameters_keys = json_parameters.keys();
+                        if (json_request.has("method")) {
+                            ArrayList<String> vk_parameters = new ArrayList<String>();
 
-                        while (json_parameters_keys.hasNext()) {
-                            String key = json_parameters_keys.next();
+                            if (json_request.has("parameters")) {
+                                JSONObject       json_parameters      = json_request.getJSONObject("parameters");
+                                Iterator<String> json_parameters_keys = json_parameters.keys();
 
-                            vk_parameters.add(key);
-                            vk_parameters.add(json_parameters.get(key).toString());
-                        }
-                    }
+                                while (json_parameters_keys.hasNext()) {
+                                    String key = json_parameters_keys.next();
 
-                    final VKRequest vk_request = new VKRequest(json_request.getString("method"),
-                                                               VKParameters.from((Object[])vk_parameters.toArray(new String[vk_parameters.size()])));
+                                    vk_parameters.add(key);
+                                    vk_parameters.add(json_parameters.get(key).toString());
+                                }
+                            }
 
-                    vk_request.setRequestListener(new VKRequestListener() {
-                        @Override
-                        public void onComplete(VKResponse response) {
-                            if (vkRequestTracker.containsKey(vk_request)) {
-                                vkRequestTracker.remove(vk_request);
+                            final VKRequest vk_request = new VKRequest(json_request.getString("method"),
+                                                                       VKParameters.from((Object[])vk_parameters.toArray(new String[vk_parameters.size()])));
 
-                                String response_str = "";
+                            vk_request.setRequestListener(new VKRequestListener() {
+                                @Override
+                                public void onComplete(VKResponse response) {
+                                    if (vkRequestTracker.containsKey(vk_request)) {
+                                        vkRequestTracker.remove(vk_request);
 
-                                if (response != null && response.json != null) {
-                                    response_str = response.json.toString();
+                                        String response_str = "";
+
+                                        if (response != null && response.json != null) {
+                                            response_str = response.json.toString();
+                                        }
+
+                                        vkRequestComplete(json_request.toString(), response_str);
+                                    }
                                 }
 
-                                vkRequestComplete(json_request.toString(), response_str);
-                            }
+                                @Override
+                                public void onError(VKError error) {
+                                    if (vkRequestTracker.containsKey(vk_request)) {
+                                        vkRequestTracker.remove(vk_request);
+
+                                        vkRequestError(json_request.toString(), error.toString());
+                                    }
+                                }
+                            });
+
+                            vkRequestTracker.put(vk_request, true);
+
+                            vk_requests.add(vk_request);
+                        } else {
+                            Log.w("VKGeoActivity", "executeVKBatch() : invalid request");
                         }
+                    }
 
-                        @Override
-                        public void onError(VKError error) {
-                            if (vkRequestTracker.containsKey(vk_request)) {
-                                vkRequestTracker.remove(vk_request);
+                    if (vk_requests.size() > 0) {
+                        final VKBatchRequest vk_batch_request = new VKBatchRequest(vk_requests.toArray(new VKRequest[vk_requests.size()]));
 
-                                vkRequestError(json_request.toString(), error.toString());
+                        vkBatchRequestTracker.put(vk_batch_request, true);
+
+                        vk_batch_request.executeWithListener(new VKBatchRequestListener() {
+                            @Override
+                            public void onComplete(VKResponse[] responses) {
+                                vkBatchRequestTracker.remove(vk_batch_request);
                             }
-                        }
-                    });
 
-                    vkRequestTracker.put(vk_request, true);
-
-                    vk_requests.add(vk_request);
-                } else {
-                    Log.w("VKGeoService", "executeVKBatch() : invalid request");
+                            @Override
+                            public void onError(VKError error) {
+                                vkBatchRequestTracker.remove(vk_batch_request);
+                            }
+                        });
+                    }
+                } catch (Exception ex) {
+                    Log.w("VKGeoActivity", "executeVKBatch() : " + ex.toString());
                 }
             }
-
-            if (vk_requests.size() > 0) {
-                final VKBatchRequest vk_batch_request = new VKBatchRequest(vk_requests.toArray(new VKRequest[vk_requests.size()]));
-
-                vkBatchRequestTracker.put(vk_batch_request, true);
-
-                vk_batch_request.executeWithListener(new VKBatchRequestListener() {
-                    @Override
-                    public void onComplete(VKResponse[] responses) {
-                        vkBatchRequestTracker.remove(vk_batch_request);
-                    }
-
-                    @Override
-                    public void onError(VKError error) {
-                        vkBatchRequestTracker.remove(vk_batch_request);
-                    }
-                });
-            }
-        } catch (Exception ex) {
-            Log.w("VKGeoService", "executeVKBatch() : " + ex.toString());
-        }
+        });
     }
 
     public static void cancelAllVKRequests()
     {
-        Iterator<VKBatchRequest> vk_batch_request_tracker_keys = vkBatchRequestTracker.keySet().iterator();
+        runOnMainThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                Iterator<VKBatchRequest> vk_batch_request_tracker_keys = vkBatchRequestTracker.keySet().iterator();
 
-        while (vk_batch_request_tracker_keys.hasNext()) {
-            vk_batch_request_tracker_keys.next().cancel();
-        }
+                while (vk_batch_request_tracker_keys.hasNext()) {
+                    vk_batch_request_tracker_keys.next().cancel();
+                }
+            }
+        });
+    }
+
+    private static void runOnMainThread(Runnable runnable) {
+        new Handler(Looper.getMainLooper()).post(runnable);
     }
 }

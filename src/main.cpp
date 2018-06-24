@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
         AndroidGW   *android_gw   = new AndroidGW(&app);
         AdMobHelper *admob_helper = new AdMobHelper(&app);
-        VKHelper    *vk_helper    = new VKHelper(&app);
+        VKHelper    *vk_helper    = new VKHelper("ACTIVITY", &app);
 
         QObject::connect(android_gw, SIGNAL(setBannerViewHeight(int)),          admob_helper, SLOT(setBannerViewHeight(int)));
         QObject::connect(android_gw, SIGNAL(setAuthState(int)),                 vk_helper,    SLOT(setAuthState(int)));
@@ -45,6 +45,17 @@ int main(int argc, char *argv[])
         return app.exec();
     } else if (argc == 2 && QString(argv[1]) == "-service") {
         QAndroidService app(argc, argv);
+
+        AndroidGW *android_gw = new AndroidGW(&app);
+        VKHelper  *vk_helper  = new VKHelper("SERVICE", &app);
+
+        QObject::connect(android_gw, SIGNAL(setAuthState(int)),                 vk_helper, SLOT(setAuthState(int)));
+        QObject::connect(android_gw, SIGNAL(processResponse(QString, QString)), vk_helper, SLOT(processResponse(QString, QString)));
+        QObject::connect(android_gw, SIGNAL(processError(QString, QString)),    vk_helper, SLOT(processError(QString, QString)));
+
+        vk_helper->initialize();
+
+        vk_helper->updateLocation(0, 0);
 
         return app.exec();
     } else {

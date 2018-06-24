@@ -60,7 +60,7 @@ public:
                          TRUSTED_FRIENDS_LIST_NAME,
                          TRACKED_FRIENDS_LIST_NAME;
 
-    explicit VKHelper(QObject *parent = 0);
+    explicit VKHelper(QString context, QObject *parent = 0);
     virtual ~VKHelper();
 
     bool locationValid() const;
@@ -176,7 +176,7 @@ private:
     int                 AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64              LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;
     QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
-                        TrustedFriendsListId, TrackedFriendsListId;
+                        TrustedFriendsListId, TrackedFriendsListId, JNIClassName;
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer, ReportLocationTimer;
     QMap<QString, int>  ContextTracker;
