@@ -59,11 +59,16 @@ static void vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j
     emit AndroidGW::instance()->processError(error_message, request);
 }
 
-static JNINativeMethod methods[] = {
+static JNINativeMethod activity_methods[] = {
     { "bannerViewHeightUpdated", "(I)V",                                    (void *)bannerViewHeightUpdated },
     { "vkAuthChanged",           "(Z)V",                                    (void *)vkAuthChanged },
     { "vkRequestComplete",       "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestComplete },
     { "vkRequestError",          "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestError }
+};
+static JNINativeMethod service_methods[] = {
+    { "vkAuthChanged",     "(Z)V",                                    (void *)vkAuthChanged },
+    { "vkRequestComplete", "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestComplete },
+    { "vkRequestError",    "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestError }
 };
 
 jint JNICALL JNI_OnLoad(JavaVM *vm, void *)
@@ -71,9 +76,11 @@ jint JNICALL JNI_OnLoad(JavaVM *vm, void *)
     JNIEnv *env;
 
     if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_4) == JNI_OK) {
-        jclass clazz = env->FindClass("com/derevenetz/oleg/vkgeo/VKGeoActivity");
+        jclass activity_clazz = env->FindClass("com/derevenetz/oleg/vkgeo/VKGeoActivity");
+        jclass service_clazz  = env->FindClass("com/derevenetz/oleg/vkgeo/VKGeoService");
 
-        if (env->RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0])) >= 0) {
+        if (env->RegisterNatives(activity_clazz, activity_methods, sizeof(activity_methods) / sizeof(activity_methods[0])) >= 0 &&
+            env->RegisterNatives(service_clazz,  service_methods,  sizeof(service_methods)  / sizeof(service_methods[0]))  >= 0) {
             return JNI_VERSION_1_4;
         } else {
             return JNI_FALSE;
