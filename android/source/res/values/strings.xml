@@ -3,6 +3,6 @@
     <string name="app_name">VKGeo</string>
     <string name="service_notification_channel_id">VKGeoService</string>
     <string name="service_notification_channel_name">VKGeo service notification channel</string>
-    <string name="service_notification_title">Background service is running</string>
+    <string name="service_notification_title">VKGeo background service is running</string>
     <string name="com_vk_sdk_ApiVersion">5.80</string>
 </resources>
