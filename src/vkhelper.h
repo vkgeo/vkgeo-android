@@ -169,6 +169,9 @@ private:
     void ProcessGroupsJoinResponse(QString response, QVariantMap resp_request);
     void ProcessGroupsJoinError(QVariantMap err_request);
 
+    void ProcessUsersGetResponse(QString response, QVariantMap resp_request);
+    void ProcessUsersGetError(QVariantMap err_request);
+
     bool                Initialized;
     int                 AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64              LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;

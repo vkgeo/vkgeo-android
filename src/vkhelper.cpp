@@ -482,49 +482,15 @@ void VKHelper::setAuthState(int state)
     emit authStateChanged(AuthState);
 
     if (AuthState == VKAuthState::StateAuthorized) {
-        /*
-        VKAccessToken *token = [VKSdk accessToken];
+        QVariantMap request, parameters;
 
-        if (token != nil && token.localUser != nil && token.localUser.id != nil) {
-            Instance->UserId = QString::fromNSString([token.localUser.id stringValue]);
-        } else {
-            Instance->UserId = "";
-        }
+        parameters["fields"] = "photo_100,photo_200";
 
-        emit Instance->userIdChanged(Instance->UserId);
+        request["method"]     = "users.get";
+        request["context"]    = "updateUser";
+        request["parameters"] = parameters;
 
-        if (token != nil && token.localUser != nil && token.localUser.first_name != nil) {
-            Instance->FirstName = QString::fromNSString(token.localUser.first_name);
-        } else {
-            Instance->FirstName = "";
-        }
-
-        emit Instance->firstNameChanged(Instance->FirstName);
-
-        if (token != nil && token.localUser != nil && token.localUser.last_name != nil) {
-            Instance->LastName = QString::fromNSString(token.localUser.last_name);
-        } else {
-            Instance->LastName = "";
-        }
-
-        emit Instance->lastNameChanged(Instance->LastName);
-
-        if (token != nil && token.localUser != nil && token.localUser.photo_100 != nil) {
-            Instance->PhotoUrl = QString::fromNSString(token.localUser.photo_100);
-        } else {
-            Instance->PhotoUrl = DEFAULT_PHOTO_URL;
-        }
-
-        emit Instance->photoUrlChanged(Instance->PhotoUrl);
-
-        if (token != nil && token.localUser != nil && token.localUser.photo_200 != nil) {
-            Instance->BigPhotoUrl = QString::fromNSString(token.localUser.photo_200);
-        } else {
-            Instance->BigPhotoUrl = DEFAULT_PHOTO_URL;
-        }
-
-        emit Instance->bigPhotoUrlChanged(Instance->BigPhotoUrl);
-        */
+        EnqueueRequest(request);
     } else if (AuthState == VKAuthState::StateNotAuthorized) {
         cleanup();
     }
@@ -557,6 +523,8 @@ void VKHelper::processResponse(QString response, QString resp_request_str)
             ProcessAppsSendRequestResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "groups.join") {
             ProcessGroupsJoinResponse(response, resp_request);
+        } else if (resp_request["method"].toString() == "users.get") {
+            ProcessUsersGetResponse(response, resp_request);
         } else {
             qWarning() << QString("processResponse() : unknown request method: %1").arg(resp_request["method"].toString());
         }
@@ -622,6 +590,11 @@ void VKHelper::processError(QString error_message, QString err_request_str)
                                                                             .arg(error_message);
 
             ProcessGroupsJoinError(err_request);
+        } else if (err_request["method"].toString() == "users.get") {
+            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                            .arg(error_message);
+
+            ProcessUsersGetError(err_request);
         } else {
             qWarning() << QString("processError() : unknown request method: %1").arg(err_request["method"].toString());
         }
@@ -1472,6 +1445,70 @@ void VKHelper::ProcessGroupsJoinResponse(QString response, QVariantMap resp_requ
 }
 
 void VKHelper::ProcessGroupsJoinError(QVariantMap err_request)
+{
+    Q_UNUSED(err_request)
+}
+
+void VKHelper::ProcessUsersGetResponse(QString response, QVariantMap resp_request)
+{
+    if (resp_request["context"].toString() == "updateUser") {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains("response")) {
+            QJsonArray json_response = json_document.object().value("response").toArray();
+
+            if (json_response.count() == 1) {
+                QJsonObject json_user = json_response.at(0).toObject();
+
+                if (json_user.contains("id")) {
+                    UserId = QString::number(json_user.value("id").toInt());
+                } else {
+                    UserId = "";
+                }
+
+                emit userIdChanged(UserId);
+
+                if (json_user.contains("first_name")) {
+                    FirstName = json_user.value("first_name").toString();
+                } else {
+                    FirstName = "";
+                }
+
+                emit firstNameChanged(FirstName);
+
+                if (json_user.contains("last_name")) {
+                    LastName = json_user.value("last_name").toString();
+                } else {
+                    LastName = "";
+                }
+
+                emit lastNameChanged(LastName);
+
+                if (json_user.contains("photo_100")) {
+                    PhotoUrl = json_user.value("photo_100").toString();
+                } else {
+                    PhotoUrl = DEFAULT_PHOTO_URL;
+                }
+
+                emit photoUrlChanged(PhotoUrl);
+
+                if (json_user.contains("photo_200")) {
+                    BigPhotoUrl = json_user.value("photo_200").toString();
+                } else {
+                    BigPhotoUrl = DEFAULT_PHOTO_URL;
+                }
+
+                emit bigPhotoUrlChanged(BigPhotoUrl);
+            } else {
+                qWarning() << "ProcessUsersGetResponse() : invalid response";
+            }
+        } else {
+            qWarning() << "ProcessUsersGetResponse() : invalid json";
+        }
+    }
+}
+
+void VKHelper::ProcessUsersGetError(QVariantMap err_request)
 {
     Q_UNUSED(err_request)
 }
