@@ -606,6 +606,11 @@ void VKHelper::processError(QString error_message, QString err_request_str)
     }
 }
 
+void VKHelper::processLocationUpdate(qreal latitude, qreal longitude)
+{
+    updateLocation(latitude, longitude);
+}
+
 void VKHelper::RequestQueueTimerTimeout()
 {
     if (!RequestQueue.isEmpty()) {

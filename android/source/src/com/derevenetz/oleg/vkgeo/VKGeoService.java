@@ -12,9 +12,15 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -33,10 +39,18 @@ import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
-public class VKGeoService extends QtService
+public class VKGeoService extends QtService implements LocationListener
 {
-    private static HashMap<VKRequest,      Boolean> vkRequestTracker      = new HashMap<VKRequest,      Boolean>();
-    private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker = new HashMap<VKBatchRequest, Boolean>();
+    private static final int                        LOCATION_UPDATE_RETRY_INTERVAL = 60000,
+                                                    LOCATION_UPDATE_MIN_TIME_DELTA = 300000;
+    private static final long                       LOCATION_UPDATE_MIN_TIME       = 300000;
+    private static final float                      LOCATION_UPDATE_MIN_DISTANCE   = 100.0f;
+
+    private static VKGeoService                     instance                       = null;
+    private static Location                         lastLocation                   = null;
+    private static LocationManager                  locationManager                = null;
+    private static HashMap<VKRequest,      Boolean> vkRequestTracker               = new HashMap<VKRequest,      Boolean>();
+    private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker          = new HashMap<VKBatchRequest, Boolean>();
 
     private static VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
@@ -49,12 +63,15 @@ public class VKGeoService extends QtService
         }
     };
 
+    private static native void locationUpdated(double latitude, double longitude);
+
     private static native void vkAuthChanged(boolean authorized);
     private static native void vkRequestComplete(String request, String response);
     private static native void vkRequestError(String request, String error_message);
 
     public VKGeoService()
     {
+        instance = this;
     }
 
     @Override
@@ -88,12 +105,51 @@ public class VKGeoService extends QtService
         }
 
         startForeground(getResources().getInteger(R.integer.service_foreground_notification_id), notification);
+
+        locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+
+        runOnMainThreadWithDelay(new Runnable() {
+            @Override
+            public void run()
+            {
+                requestLocationUpdates();
+            }
+        }, LOCATION_UPDATE_RETRY_INTERVAL);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         return Service.START_STICKY;
+    }
+
+    @Override
+    public void onLocationChanged(Location location)
+    {
+        if (lastLocation != null) {
+            if (location.getTime() - lastLocation.getTime() > LOCATION_UPDATE_MIN_TIME_DELTA || location.getAccuracy() > lastLocation.getAccuracy()) {
+                lastLocation = location;
+            }
+        } else {
+            lastLocation = location;
+        }
+
+        locationUpdated(lastLocation.getLatitude(), lastLocation.getLongitude());
+    }
+
+    @Override
+    public void onProviderDisabled(String provider)
+    {
+    }
+
+    @Override
+    public void onProviderEnabled(String provider)
+    {
+    }
+
+    @Override
+    public void onStatusChanged (String provider, int status, Bundle extras)
+    {
     }
 
     public static void initVK()
@@ -184,7 +240,7 @@ public class VKGeoService extends QtService
 
                             vk_requests.add(vk_request);
                         } else {
-                            Log.w("VKGeoActivity", "executeVKBatch() : invalid request");
+                            Log.w("VKGeoService", "executeVKBatch() : invalid request");
                         }
                     }
 
@@ -206,7 +262,7 @@ public class VKGeoService extends QtService
                         });
                     }
                 } catch (Exception ex) {
-                    Log.w("VKGeoActivity", "executeVKBatch() : " + ex.toString());
+                    Log.w("VKGeoService", "executeVKBatch() : " + ex.toString());
                 }
             }
         });
@@ -227,7 +283,44 @@ public class VKGeoService extends QtService
         });
     }
 
-    private static void runOnMainThread(Runnable runnable) {
+    private static void requestLocationUpdates()
+    {
+        if (locationManager != null) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+                ContextCompat.checkSelfPermission(instance, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                try {
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, instance);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,     LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, instance);
+                } catch (Exception ex) {
+                    Log.w("VKGeoService", "requestLocationUpdates() : " + ex.toString());
+
+                    runOnMainThreadWithDelay(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            requestLocationUpdates();
+                        }
+                    }, LOCATION_UPDATE_RETRY_INTERVAL);
+                }
+            } else {
+                runOnMainThreadWithDelay(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        requestLocationUpdates();
+                    }
+                }, LOCATION_UPDATE_RETRY_INTERVAL);
+            }
+        }
+    }
+
+    private static void runOnMainThread(Runnable runnable)
+    {
         new Handler(Looper.getMainLooper()).post(runnable);
+    }
+
+    private static void runOnMainThreadWithDelay(Runnable runnable, int delay)
+    {
+        new Handler(Looper.getMainLooper()).postDelayed(runnable, delay);
     }
 }

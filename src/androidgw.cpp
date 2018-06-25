@@ -24,6 +24,11 @@ static void bannerViewHeightUpdated(JNIEnv *, jclass, jint height)
     emit AndroidGW::instance()->setBannerViewHeight(height);
 }
 
+static void locationUpdated(JNIEnv *, jclass, jdouble latitude, jdouble longitude)
+{
+    emit AndroidGW::instance()->processLocationUpdate(latitude, longitude);
+}
+
 static void vkAuthChanged(JNIEnv *, jclass, jboolean authorized)
 {
     if (authorized) {
@@ -66,6 +71,7 @@ static JNINativeMethod activity_methods[] = {
     { "vkRequestError",          "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestError }
 };
 static JNINativeMethod service_methods[] = {
+    { "locationUpdated",   "(DD)V",                                   (void *)locationUpdated },
     { "vkAuthChanged",     "(Z)V",                                    (void *)vkAuthChanged },
     { "vkRequestComplete", "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestComplete },
     { "vkRequestError",    "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestError }

@@ -49,15 +49,12 @@ int main(int argc, char *argv[])
         AndroidGW *android_gw = new AndroidGW(&app);
         VKHelper  *vk_helper  = new VKHelper("SERVICE", &app);
 
-        QObject::connect(android_gw, SIGNAL(setAuthState(int)),                 vk_helper, SLOT(setAuthState(int)));
-        QObject::connect(android_gw, SIGNAL(processResponse(QString, QString)), vk_helper, SLOT(processResponse(QString, QString)));
-        QObject::connect(android_gw, SIGNAL(processError(QString, QString)),    vk_helper, SLOT(processError(QString, QString)));
+        QObject::connect(android_gw, SIGNAL(setAuthState(int)),                   vk_helper, SLOT(setAuthState(int)));
+        QObject::connect(android_gw, SIGNAL(processResponse(QString, QString)),   vk_helper, SLOT(processResponse(QString, QString)));
+        QObject::connect(android_gw, SIGNAL(processError(QString, QString)),      vk_helper, SLOT(processError(QString, QString)));
+        QObject::connect(android_gw, SIGNAL(processLocationUpdate(qreal, qreal)), vk_helper, SLOT(processLocationUpdate(qreal, qreal)));
 
         vk_helper->initialize();
-
-        /*
-        vk_helper->updateLocation(0, 0);
-        */
 
         return app.exec();
     } else {
