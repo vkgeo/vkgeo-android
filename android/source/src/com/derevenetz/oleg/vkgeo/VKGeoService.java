@@ -74,12 +74,14 @@ public class VKGeoService extends QtService
             notification = new Notification.Builder(this, getResources().getString(R.string.service_notification_channel_id))
                                                    .setSmallIcon(R.drawable.ic_notification)
                                                    .setContentTitle(getResources().getString(R.string.service_notification_title))
+                                                   .setContentText(getResources().getString(R.string.service_notification_text))
                                                    .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0))
                                                    .build();
         } else {
             notification = new Notification.Builder(this)
                                                    .setSmallIcon(R.drawable.ic_notification)
                                                    .setContentTitle(getResources().getString(R.string.service_notification_title))
+                                                   .setContentText(getResources().getString(R.string.service_notification_text))
                                                    .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0))
                                                    .build();
         }
