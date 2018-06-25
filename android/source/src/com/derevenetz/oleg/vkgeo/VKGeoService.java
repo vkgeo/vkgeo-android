@@ -98,6 +98,7 @@ public class VKGeoService extends QtService implements LocationListener
             NotificationChannel channel = new NotificationChannel(getResources().getString(R.string.service_notification_channel_id),
                                                                   getResources().getString(R.string.service_notification_channel_name), NotificationManager.IMPORTANCE_LOW);
 
+            channel.setShowBadge(false);
             manager.createNotificationChannel(channel);
 
             notification = new Notification.Builder(this, getResources().getString(R.string.service_notification_channel_id))
