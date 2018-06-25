@@ -1,3 +1,4 @@
+#include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidJniObject>
 
 #include "admobhelper.h"
@@ -27,9 +28,8 @@ void AdMobHelper::initialize()
         QAndroidJniObject j_app_id               = QAndroidJniObject::fromString(ADMOB_APP_ID);
         QAndroidJniObject j_interstitial_unit_id = QAndroidJniObject::fromString(ADMOB_INTERSTITIAL_UNIT_ID);
 
-        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
-                                                  "initAds", "(Ljava/lang/String;Ljava/lang/String;)V", j_app_id.object<jstring>(),
-                                                                                                        j_interstitial_unit_id.object<jstring>());
+        QtAndroid::androidActivity().callMethod<void>("initAds", "(Ljava/lang/String;Ljava/lang/String;)V", j_app_id.object<jstring>(),
+                                                                                                            j_interstitial_unit_id.object<jstring>());
 
         Initialized = true;
     }
@@ -40,24 +40,21 @@ void AdMobHelper::showBannerView()
     if (Initialized) {
         QAndroidJniObject j_unit_id = QAndroidJniObject::fromString(ADMOB_BANNERVIEW_UNIT_ID);
 
-        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
-                                                  "showBannerView", "(Ljava/lang/String;)V", j_unit_id.object<jstring>());
+        QtAndroid::androidActivity().callMethod<void>("showBannerView", "(Ljava/lang/String;)V", j_unit_id.object<jstring>());
     }
 }
 
 void AdMobHelper::hideBannerView()
 {
     if (Initialized) {
-        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
-                                                  "hideBannerView");
+        QtAndroid::androidActivity().callMethod<void>("hideBannerView");
     }
 }
 
 void AdMobHelper::showInterstitial()
 {
     if (Initialized) {
-        QAndroidJniObject::callStaticMethod<void>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
-                                                  "showInterstitial");
+        QtAndroid::androidActivity().callMethod<void>("showInterstitial");
     }
 }
 

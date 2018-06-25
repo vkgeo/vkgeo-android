@@ -6,7 +6,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>
-#include <QtAndroidExtras/QAndroidJniObject>
+#include <QtAndroidExtras/QtAndroid>
 
 #include "vkhelper.h"
 
@@ -71,9 +71,9 @@ VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
     BigPhotoUrl                           = DEFAULT_PHOTO_URL;
 
     if (context == "SERVICE") {
-        JNIClassName = "com/derevenetz/oleg/vkgeo/VKGeoService";
+        Context = QtAndroid::androidService();
     } else {
-        JNIClassName = "com/derevenetz/oleg/vkgeo/VKGeoActivity";
+        Context = QtAndroid::androidActivity();
     }
 }
 
@@ -177,7 +177,7 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
 void VKHelper::initialize()
 {
     if (!Initialized) {
-        QAndroidJniObject::callStaticMethod<void>(JNIClassName.toLatin1(), "initVK");
+        Context.callMethod<void>("initVK");
 
         connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(RequestQueueTimerTimeout()));
 
@@ -218,7 +218,7 @@ void VKHelper::cleanup()
             ContextTrackerDelRequest(request);
         }
 
-        QAndroidJniObject::callStaticMethod<void>(JNIClassName.toLatin1(), "cancelAllVKRequests");
+        Context.callMethod<void>("cancelAllVKRequests");
 
         FriendsData.clear();
         FriendsDataTmp.clear();
@@ -233,15 +233,14 @@ void VKHelper::login()
     if (Initialized) {
         QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
 
-        QAndroidJniObject::callStaticMethod<void>(JNIClassName.toLatin1(), "loginVK",
-                                                                           "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
+        Context.callMethod<void>("loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
     }
 }
 
 void VKHelper::logout()
 {
     if (Initialized) {
-        QAndroidJniObject::callStaticMethod<void>(JNIClassName.toLatin1(), "logoutVK");
+        Context.callMethod<void>("logoutVK");
 
         setAuthState(VKAuthState::StateNotAuthorized);
     }
@@ -629,8 +628,7 @@ void VKHelper::RequestQueueTimerTimeout()
         if (request_list.count() > 0) {
             QAndroidJniObject j_request_list = QAndroidJniObject::fromString(QJsonDocument::fromVariant(request_list).toJson(QJsonDocument::Compact));
 
-            QAndroidJniObject::callStaticMethod<void>(JNIClassName.toLatin1(), "executeVKBatch",
-                                                                               "(Ljava/lang/String;)V", j_request_list.object<jstring>());
+            Context.callMethod<void>("executeVKBatch", "(Ljava/lang/String;)V", j_request_list.object<jstring>());
         }
     }
 }

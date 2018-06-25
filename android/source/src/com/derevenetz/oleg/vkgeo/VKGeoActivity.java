@@ -47,16 +47,16 @@ import com.vk.sdk.VKSdk;
 
 public class VKGeoActivity extends QtActivity
 {
-    private static boolean                          statusBarVisible      = false;
-    private static int                              statusBarHeight       = 0;
-    private static VKGeoActivity                    instance              = null;
-    private static Messenger                        serviceMessenger      = null;
-    private static AdView                           bannerView            = null;
-    private static InterstitialAd                   interstitial          = null;
-    private static HashMap<VKRequest,      Boolean> vkRequestTracker      = new HashMap<VKRequest,      Boolean>();
-    private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker = new HashMap<VKBatchRequest, Boolean>();
+    private boolean                          statusBarVisible      = false;
+    private int                              statusBarHeight       = 0;
+    private VKGeoActivity                    activity              = null;
+    private Messenger                        serviceMessenger      = null;
+    private AdView                           bannerView            = null;
+    private InterstitialAd                   interstitial          = null;
+    private HashMap<VKRequest,      Boolean> vkRequestTracker      = new HashMap<VKRequest,      Boolean>();
+    private HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker = new HashMap<VKBatchRequest, Boolean>();
 
-    private static ServiceConnection connection = new ServiceConnection() {
+    private ServiceConnection connection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             serviceMessenger = new Messenger(service);
         }
@@ -66,7 +66,7 @@ public class VKGeoActivity extends QtActivity
         }
     };
 
-    private static VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
+    private VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
             if (newToken != null) {
@@ -107,7 +107,7 @@ public class VKGeoActivity extends QtActivity
 
     public VKGeoActivity()
     {
-        instance = this;
+        activity = this;
     }
 
     @Override
@@ -202,25 +202,25 @@ public class VKGeoActivity extends QtActivity
         Process.killProcess(Process.myPid());
     }
 
-    public static int getScreenDPI()
+    public int getScreenDPI()
     {
-        DisplayMetrics metrics = instance.getResources().getDisplayMetrics();
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
 
         return metrics.densityDpi;
     }
 
-    public static void initAds(String app_id, String interstitial_unit_id)
+    public void initAds(String app_id, String interstitial_unit_id)
     {
         final String f_app_id               = app_id;
         final String f_interstitial_unit_id = interstitial_unit_id;
 
-        instance.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
-                MobileAds.initialize(instance, f_app_id);
+                MobileAds.initialize(activity, f_app_id);
 
-                interstitial = new InterstitialAd(instance);
+                interstitial = new InterstitialAd(activity);
 
                 interstitial.setAdUnitId(f_interstitial_unit_id);
 
@@ -261,15 +261,15 @@ public class VKGeoActivity extends QtActivity
         });
     }
 
-    public static void showBannerView(String unit_id)
+    public void showBannerView(String unit_id)
     {
         final String f_unit_id = unit_id;
 
-        instance.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
-                View view = instance.getWindow().getDecorView().getRootView();
+                View view = getWindow().getDecorView().getRootView();
 
                 if (view instanceof ViewGroup) {
                     ViewGroup view_group = (ViewGroup)view;
@@ -288,7 +288,7 @@ public class VKGeoActivity extends QtActivity
                                                                                    FrameLayout.LayoutParams.WRAP_CONTENT,
                                                                                    Gravity.CENTER_HORIZONTAL);
 
-                    bannerView = new AdView(instance);
+                    bannerView = new AdView(activity);
 
                     bannerView.setAdSize(AdSize.SMART_BANNER);
                     bannerView.setAdUnitId(f_unit_id);
@@ -349,13 +349,13 @@ public class VKGeoActivity extends QtActivity
         });
     }
 
-    public static void hideBannerView()
+    public void hideBannerView()
     {
-        instance.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
-                View view = instance.getWindow().getDecorView().getRootView();
+                View view = getWindow().getDecorView().getRootView();
 
                 if (view instanceof ViewGroup) {
                     ViewGroup view_group = (ViewGroup)view;
@@ -374,9 +374,9 @@ public class VKGeoActivity extends QtActivity
         });
     }
 
-    public static void showInterstitial()
+    public void showInterstitial()
     {
-        instance.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
@@ -387,9 +387,9 @@ public class VKGeoActivity extends QtActivity
         });
     }
 
-    public static void initVK()
+    public void initVK()
     {
-        instance.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
@@ -404,11 +404,11 @@ public class VKGeoActivity extends QtActivity
         });
     }
 
-    public static void loginVK(String auth_scope)
+    public void loginVK(String auth_scope)
     {
         final String f_auth_scope = auth_scope;
 
-        instance.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
@@ -420,7 +420,7 @@ public class VKGeoActivity extends QtActivity
                         vk_auth_scope.add(json_auth_scope.get(i).toString());
                     }
 
-                    VKSdk.login(instance, vk_auth_scope.toArray(new String[vk_auth_scope.size()]));
+                    VKSdk.login(activity, vk_auth_scope.toArray(new String[vk_auth_scope.size()]));
                 } catch (Exception ex) {
                     Log.w("VKGeoActivity", "loginVK() : " + ex.toString());
                 }
@@ -428,9 +428,9 @@ public class VKGeoActivity extends QtActivity
         });
     }
 
-    public static void logoutVK()
+    public void logoutVK()
     {
-        instance.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
@@ -447,11 +447,11 @@ public class VKGeoActivity extends QtActivity
         });
     }
 
-    public static void executeVKBatch(String request_list)
+    public void executeVKBatch(String request_list)
     {
         final String f_request_list = request_list;
 
-        instance.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
@@ -538,9 +538,9 @@ public class VKGeoActivity extends QtActivity
         });
     }
 
-    public static void cancelAllVKRequests()
+    public void cancelAllVKRequests()
     {
-        instance.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run()
             {

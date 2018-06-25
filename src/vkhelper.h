@@ -8,6 +8,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QVariantMap>
 #include <QtCore/QTimer>
+#include <QtAndroidExtras/QAndroidJniObject>
 
 class VKAuthState : public QObject
 {
@@ -177,11 +178,12 @@ private:
     int                 AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64              LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;
     QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
-                        TrustedFriendsListId, TrackedFriendsListId, JNIClassName;
+                        TrustedFriendsListId, TrackedFriendsListId;
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer, ReportLocationTimer;
     QMap<QString, int>  ContextTracker;
     QVariantMap         LastLocationInfo, FriendsData, FriendsDataTmp;
+    QAndroidJniObject   Context;
 };
 
 #endif // VKHELPER_H

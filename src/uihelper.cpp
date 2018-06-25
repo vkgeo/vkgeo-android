@@ -1,3 +1,4 @@
+#include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidJniObject>
 
 #include "uihelper.h"
@@ -12,6 +13,5 @@ UIHelper::~UIHelper()
 
 int UIHelper::screenDPI()
 {
-    return QAndroidJniObject::callStaticMethod<jint>("com/derevenetz/oleg/vkgeo/VKGeoActivity",
-                                                     "getScreenDPI");
+    return QtAndroid::androidActivity().callMethod<jint>("getScreenDPI");
 }

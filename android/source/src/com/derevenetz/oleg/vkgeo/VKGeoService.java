@@ -45,7 +45,7 @@ import com.vk.sdk.VKSdk.LoginState;
 
 public class VKGeoService extends QtService implements LocationListener
 {
-    private static class MessageHandler extends Handler {
+    private class MessageHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MESSAGE_NOT_AUTHORIZED) {
@@ -54,7 +54,7 @@ public class VKGeoService extends QtService implements LocationListener
                 Bundle bdl = msg.getData();
 
                 if (bdl != null && bdl.containsKey("VKAccessToken")) {
-                    VKAccessToken.replaceToken(instance.getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
+                    VKAccessToken.replaceToken(getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
 
                     vkAuthChanged(true);
                 } else {
@@ -66,31 +66,25 @@ public class VKGeoService extends QtService implements LocationListener
         }
     }
 
-    public static final int                         MESSAGE_NOT_AUTHORIZED         = 1001,
-                                                    MESSAGE_AUTHORIZED             = 1002;
+    public static final int                  MESSAGE_NOT_AUTHORIZED         = 1001,
+                                             MESSAGE_AUTHORIZED             = 1002;
 
-    private static final int                        LOCATION_UPDATE_RETRY_INTERVAL = 60000,
-                                                    LOCATION_UPDATE_MIN_TIME_DELTA = 300000;
-    private static final long                       LOCATION_UPDATE_MIN_TIME       = 300000;
-    private static final float                      LOCATION_UPDATE_MIN_DISTANCE   = 100.0f;
+    private static final int                 LOCATION_UPDATE_RETRY_INTERVAL = 60000,
+                                             LOCATION_UPDATE_MIN_TIME_DELTA = 300000;
+    private static final long                LOCATION_UPDATE_MIN_TIME       = 300000;
+    private static final float               LOCATION_UPDATE_MIN_DISTANCE   = 100.0f;
 
-    private static VKGeoService                     instance                       = null;
-    private static Location                         lastLocation                   = null;
-    private static LocationManager                  locationManager                = null;
-    private static Messenger                        messenger                      = new Messenger(new MessageHandler());
-    private static HashMap<VKRequest,      Boolean> vkRequestTracker               = new HashMap<VKRequest,      Boolean>();
-    private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker          = new HashMap<VKBatchRequest, Boolean>();
+    private Location                         lastLocation                   = null;
+    private LocationManager                  locationManager                = null;
+    private Messenger                        messenger                      = new Messenger(new MessageHandler());
+    private HashMap<VKRequest,      Boolean> vkRequestTracker               = new HashMap<VKRequest,      Boolean>();
+    private HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker          = new HashMap<VKBatchRequest, Boolean>();
 
     private static native void locationUpdated(double latitude, double longitude);
 
     private static native void vkAuthChanged(boolean authorized);
     private static native void vkRequestComplete(String request, String response);
     private static native void vkRequestError(String request, String error_message);
-
-    public VKGeoService()
-    {
-        instance = this;
-    }
 
     @Override
     public void onCreate()
@@ -100,7 +94,7 @@ public class VKGeoService extends QtService implements LocationListener
         Notification notification = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager manager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(getResources().getString(R.string.service_notification_channel_id),
                                                                   getResources().getString(R.string.service_notification_channel_name), NotificationManager.IMPORTANCE_LOW);
 
@@ -124,7 +118,7 @@ public class VKGeoService extends QtService implements LocationListener
 
         startForeground(getResources().getInteger(R.integer.service_foreground_notification_id), notification);
 
-        locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
         runOnMainThreadWithDelay(new Runnable() {
             @Override
@@ -177,7 +171,7 @@ public class VKGeoService extends QtService implements LocationListener
     {
     }
 
-    public static void initVK()
+    public void initVK()
     {
         runOnMainThread(new Runnable() {
             @Override
@@ -192,15 +186,15 @@ public class VKGeoService extends QtService implements LocationListener
         });
     }
 
-    public static void loginVK(String auth_scope)
+    public void loginVK(String auth_scope)
     {
     }
 
-    public static void logoutVK()
+    public void logoutVK()
     {
     }
 
-    public static void executeVKBatch(String request_list)
+    public void executeVKBatch(String request_list)
     {
         final String f_request_list = request_list;
 
@@ -291,7 +285,7 @@ public class VKGeoService extends QtService implements LocationListener
         });
     }
 
-    public static void cancelAllVKRequests()
+    public void cancelAllVKRequests()
     {
         runOnMainThread(new Runnable() {
             @Override
@@ -306,14 +300,14 @@ public class VKGeoService extends QtService implements LocationListener
         });
     }
 
-    private static void requestLocationUpdates()
+    private void requestLocationUpdates()
     {
         if (locationManager != null) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-                ContextCompat.checkSelfPermission(instance, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 try {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, instance);
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,     LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, instance);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,     LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
                 } catch (Exception ex) {
                     Log.w("VKGeoService", "requestLocationUpdates() : " + ex.toString());
 
@@ -337,12 +331,12 @@ public class VKGeoService extends QtService implements LocationListener
         }
     }
 
-    private static void runOnMainThread(Runnable runnable)
+    private void runOnMainThread(Runnable runnable)
     {
         new Handler(Looper.getMainLooper()).post(runnable);
     }
 
-    private static void runOnMainThreadWithDelay(Runnable runnable, int delay)
+    private void runOnMainThreadWithDelay(Runnable runnable, int delay)
     {
         new Handler(Looper.getMainLooper()).postDelayed(runnable, delay);
     }
