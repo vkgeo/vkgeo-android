@@ -67,7 +67,7 @@ public class VKGeoService extends QtService
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(getResources().getString(R.string.service_notification_channel_id),
-                                                                  getResources().getString(R.string.service_notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
+                                                                  getResources().getString(R.string.service_notification_channel_name), NotificationManager.IMPORTANCE_LOW);
 
             manager.createNotificationChannel(channel);
 
@@ -79,6 +79,7 @@ public class VKGeoService extends QtService
                                                    .build();
         } else {
             notification = new Notification.Builder(this)
+                                                   .setPriority(Notification.PRIORITY_LOW)
                                                    .setSmallIcon(R.drawable.ic_notification)
                                                    .setContentTitle(getResources().getString(R.string.service_notification_title))
                                                    .setContentText(getResources().getString(R.string.service_notification_text))
