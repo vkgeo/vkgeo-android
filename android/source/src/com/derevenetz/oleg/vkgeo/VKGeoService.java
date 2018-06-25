@@ -152,12 +152,14 @@ public class VKGeoService extends QtService implements LocationListener
         if (lastLocation != null) {
             if (location.getTime() - lastLocation.getTime() > LOCATION_UPDATE_MIN_TIME_DELTA || location.getAccuracy() > lastLocation.getAccuracy()) {
                 lastLocation = location;
+
+                locationUpdated(lastLocation.getLatitude(), lastLocation.getLongitude());
             }
         } else {
             lastLocation = location;
-        }
 
-        locationUpdated(lastLocation.getLatitude(), lastLocation.getLongitude());
+            locationUpdated(lastLocation.getLatitude(), lastLocation.getLongitude());
+        }
     }
 
     @Override
