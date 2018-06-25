@@ -8,6 +8,7 @@ import android.app.Notification;
 import android.app.Notification.Builder;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -73,11 +74,13 @@ public class VKGeoService extends QtService
             notification = new Notification.Builder(this, getResources().getString(R.string.service_notification_channel_id))
                                                    .setSmallIcon(R.drawable.ic_notification)
                                                    .setContentTitle(getResources().getString(R.string.service_notification_title))
+                                                   .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0))
                                                    .build();
         } else {
             notification = new Notification.Builder(this)
                                                    .setSmallIcon(R.drawable.ic_notification)
                                                    .setContentTitle(getResources().getString(R.string.service_notification_title))
+                                                   .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0))
                                                    .build();
         }
 
