@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.Process;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -44,17 +50,50 @@ public class VKGeoActivity extends QtActivity
     private static boolean                          statusBarVisible      = false;
     private static int                              statusBarHeight       = 0;
     private static VKGeoActivity                    instance              = null;
+    private static Messenger                        serviceMessenger      = null;
     private static AdView                           bannerView            = null;
     private static InterstitialAd                   interstitial          = null;
     private static HashMap<VKRequest,      Boolean> vkRequestTracker      = new HashMap<VKRequest,      Boolean>();
     private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker = new HashMap<VKBatchRequest, Boolean>();
 
+    private static ServiceConnection connection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            serviceMessenger = new Messenger(service);
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            serviceMessenger = null;
+        }
+    };
+
     private static VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
             if (newToken != null) {
+                if (serviceMessenger != null) {
+                    try {
+                        Message msg = Message.obtain(null, VKGeoService.MESSAGE_AUTHORIZED);
+                        Bundle  bdl = new Bundle();
+
+                        bdl.putString("VKAccessToken", newToken.serialize());
+                        msg.setData(bdl);
+
+                        serviceMessenger.send(msg);
+                    } catch (Exception ex) {
+                        Log.w("VKGeoActivity", ex.toString());
+                    }
+                }
+
                 vkAuthChanged(true);
             } else {
+                if (serviceMessenger != null) {
+                    try {
+                        serviceMessenger.send(Message.obtain(null, VKGeoService.MESSAGE_NOT_AUTHORIZED));
+                    } catch (Exception ex) {
+                        Log.w("VKGeoActivity", ex.toString());
+                    }
+                }
+
                 vkAuthChanged(false);
             }
         }
@@ -115,6 +154,8 @@ public class VKGeoActivity extends QtActivity
                 }
             }
         });
+
+        bindService(new Intent(this, VKGeoService.class), connection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -140,6 +181,10 @@ public class VKGeoActivity extends QtActivity
     @Override
     public void onDestroy()
     {
+        if (serviceMessenger != null) {
+            unbindService(connection);
+        }
+
         if (bannerView != null) {
             bannerView.destroy();
 
@@ -390,6 +435,14 @@ public class VKGeoActivity extends QtActivity
             public void run()
             {
                 VKSdk.logout();
+
+                if (serviceMessenger != null) {
+                    try {
+                        serviceMessenger.send(Message.obtain(null, VKGeoService.MESSAGE_NOT_AUTHORIZED));
+                    } catch (Exception ex) {
+                        Log.w("VKGeoActivity", ex.toString());
+                    }
+                }
             }
         });
     }

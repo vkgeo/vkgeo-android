@@ -19,6 +19,9 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -36,11 +39,36 @@ import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKRequest.VKRequestListener;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKAccessTokenTracker;
+import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKSdk.LoginState;
 
 public class VKGeoService extends QtService implements LocationListener
 {
+    private static class MessageHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == MESSAGE_NOT_AUTHORIZED) {
+                vkAuthChanged(false);
+            } else if (msg.what == MESSAGE_AUTHORIZED) {
+                Bundle bdl = msg.getData();
+
+                if (bdl != null && bdl.containsKey("VKAccessToken")) {
+                    VKAccessToken.replaceToken(instance.getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
+
+                    vkAuthChanged(true);
+                } else {
+                    vkAuthChanged(false);
+                }
+            } else {
+                super.handleMessage(msg);
+            }
+        }
+    }
+
+    public static final int                         MESSAGE_NOT_AUTHORIZED         = 1001,
+                                                    MESSAGE_AUTHORIZED             = 1002;
+
     private static final int                        LOCATION_UPDATE_RETRY_INTERVAL = 60000,
                                                     LOCATION_UPDATE_MIN_TIME_DELTA = 300000;
     private static final long                       LOCATION_UPDATE_MIN_TIME       = 300000;
@@ -49,19 +77,9 @@ public class VKGeoService extends QtService implements LocationListener
     private static VKGeoService                     instance                       = null;
     private static Location                         lastLocation                   = null;
     private static LocationManager                  locationManager                = null;
+    private static Messenger                        messenger                      = new Messenger(new MessageHandler());
     private static HashMap<VKRequest,      Boolean> vkRequestTracker               = new HashMap<VKRequest,      Boolean>();
     private static HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker          = new HashMap<VKBatchRequest, Boolean>();
-
-    private static VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
-        @Override
-        public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
-            if (newToken != null) {
-                vkAuthChanged(true);
-            } else {
-                vkAuthChanged(false);
-            }
-        }
-    };
 
     private static native void locationUpdated(double latitude, double longitude);
 
@@ -124,6 +142,11 @@ public class VKGeoService extends QtService implements LocationListener
     }
 
     @Override
+    public IBinder onBind(Intent intent) {
+        return messenger.getBinder();
+    }
+
+    @Override
     public void onLocationChanged(Location location)
     {
         if (lastLocation != null) {
@@ -158,8 +181,6 @@ public class VKGeoService extends QtService implements LocationListener
             @Override
             public void run()
             {
-                vkAccessTokenTracker.startTracking();
-
                 if (VKSdk.isLoggedIn()) {
                     vkAuthChanged(true);
                 } else {

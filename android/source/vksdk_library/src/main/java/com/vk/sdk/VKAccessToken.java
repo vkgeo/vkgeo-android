@@ -161,7 +161,7 @@ public class VKAccessToken {
      *
      * @return Serialized token string as query-string
      */
-    protected String serialize() {
+    public String serialize() {
         return VKStringJoiner.joinParams(tokenParams());
     }
 
@@ -284,7 +284,7 @@ public class VKAccessToken {
      * @param newToken New access token to set. If null, removes old token from preferences
      * @return old value of access token
      */
-    static VKAccessToken replaceToken(@NonNull Context ctx, @Nullable VKAccessToken newToken) {
+    public static VKAccessToken replaceToken(@NonNull Context ctx, @Nullable VKAccessToken newToken) {
         VKAccessToken oldToken = sCurrentToken;
         sCurrentToken = newToken;
         if (sCurrentToken != null) {
