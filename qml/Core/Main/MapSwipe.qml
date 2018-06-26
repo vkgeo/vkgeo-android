@@ -73,7 +73,9 @@ Item {
 
         if (map.mapItems.length > 1) {
             if (Math.random() < 0.10) {
-                //StoreHelper.requestReview();
+                if (!mainWindow.appRated) {
+                    requestReviewMessageDialog.open();
+                }
             }
         }
     }
@@ -302,6 +304,24 @@ Item {
 
         onYes: {
             VKHelper.reportLocation();
+        }
+    }
+
+    MessageDialog {
+        id:              requestReviewMessageDialog
+        title:           qsTr("Rate VKGeo")
+        icon:            StandardIcon.Question
+        text:            qsTr("If you enjoy VKGeo, please take a moment to rate it. Do you want to do this now?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        onYes: {
+            Qt.openUrlExternally("market://details?id=%1".arg(StoreHelper.getPackageName()));
+
+            mainWindow.appRated = true;
+        }
+
+        onNo: {
+            mainWindow.appRated = true;
         }
     }
 

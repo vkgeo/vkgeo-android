@@ -14,6 +14,7 @@ Window {
     property bool disableAds:             false
     property bool enableTrackedFriends:   false
     property bool increaseTrackingLimits: false
+    property bool appRated:               false
 
     property int vkAuthState:             VKHelper.authState
     property var loginPage:               null
@@ -34,6 +35,10 @@ Window {
         setSetting("IncreaseTrackingLimits", increaseTrackingLimits ? "true" : "false");
 
         updateFeatures();
+    }
+
+    onAppRatedChanged: {
+        setSetting("AppRated", appRated ? "true" : "false");
     }
 
     onVkAuthStateChanged: {
@@ -244,6 +249,7 @@ Window {
         disableAds             = (getSetting("DisableAds",             "false") === "true");
         enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
         increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
+        appRated               = (getSetting("AppRated",               "false") === "true");
 
         updateFeatures();
 

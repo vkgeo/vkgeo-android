@@ -209,6 +209,11 @@ public class VKGeoActivity extends QtActivity
         return metrics.densityDpi;
     }
 
+    public String getPackageName()
+    {
+        return getApplicationContext().getPackageName();
+    }
+
     public void initAds(String app_id, String interstitial_unit_id)
     {
         final String f_app_id               = app_id;

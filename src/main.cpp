@@ -7,6 +7,7 @@
 
 #include "androidgw.h"
 #include "admobhelper.h"
+#include "storehelper.h"
 #include "uihelper.h"
 #include "vkhelper.h"
 
@@ -34,6 +35,7 @@ int main(int argc, char *argv[])
         QQmlApplicationEngine engine;
 
         engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), admob_helper);
+        engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), new StoreHelper(&app));
         engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), new UIHelper(&app));
         engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), vk_helper);
 

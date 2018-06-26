@@ -6,6 +6,6 @@
     <string name="service_notification_title">VKGeo background service is running</string>
     <string name="service_notification_title_high_accuracy">VKGeo background service: high accuracy mode</string>
     <string name="service_notification_title_low_power">VKGeo background service: power saving mode</string>
-    <string name="service_notification_text">Tap to go to the application</string>
+    <string name="service_notification_text">Tap to open the application</string>
     <string name="com_vk_sdk_ApiVersion">5.80</string>
 </resources>
