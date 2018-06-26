@@ -66,7 +66,7 @@
         </service>
     </application>
 
-    <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="27"/>
+    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="27"/>
     <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.
