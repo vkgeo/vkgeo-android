@@ -55,12 +55,14 @@ public class VKGeoService extends QtService implements LocationListener
             } else if (msg.what == MESSAGE_AUTHORIZED) {
                 Bundle bdl = msg.getData();
 
-                if (bdl != null && bdl.containsKey("VKAccessToken")) {
-                    VKAccessToken.replaceToken(getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
+                if (bdl != null && bdl.containsKey("VKAccessToken") && bdl.getString("VKAccessToken") != null) {
+                    try {
+                        VKAccessToken.replaceToken(getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
+                    } catch (Exception ex) {
+                        Log.w("VKGeoService", ex.toString());
+                    }
 
                     vkAuthChanged(true);
-                } else {
-                    vkAuthChanged(false);
                 }
             } else {
                 super.handleMessage(msg);
@@ -81,8 +83,7 @@ public class VKGeoService extends QtService implements LocationListener
     private boolean                          centerLocationChanged              = true;
     private long                             centerLocationChangeRealtimeNanos  = 0;
     private String                           locationProvider                   = null;
-    private Location                         centerLocation                     = null,
-                                             lastLocation                       = null;
+    private Location                         centerLocation                     = null;
     private LocationManager                  locationManager                    = null;
     private NotificationManager              notificationManager                = null;
     private Notification.Builder             notificationBuilder                = null;
@@ -153,20 +154,10 @@ public class VKGeoService extends QtService implements LocationListener
     @Override
     public void onLocationChanged(Location location)
     {
-        if (lastLocation != null) {
-            if (location.getElapsedRealtimeNanos() - lastLocation.getElapsedRealtimeNanos() > LOCATION_UPDATE_MIN_TIME_DELTA * 1000000 ||
-                location.getAccuracy() > lastLocation.getAccuracy()) {
-                lastLocation = location;
+        locationUpdated(location.getLatitude(), location.getLongitude());
 
-                locationUpdated(lastLocation.getLatitude(), lastLocation.getLongitude());
-            }
-        } else {
-            lastLocation = location;
-
-            locationUpdated(lastLocation.getLatitude(), lastLocation.getLongitude());
-        }
-        if (centerLocation == null || centerLocation.distanceTo(lastLocation) > LOCATION_UPDATE_CTR_DISTANCE) {
-            centerLocation        = lastLocation;
+        if (centerLocation == null || centerLocation.distanceTo(location) > LOCATION_UPDATE_CTR_DISTANCE) {
+            centerLocation        = location;
             centerLocationChanged = true;
         }
     }
@@ -344,12 +335,10 @@ public class VKGeoService extends QtService implements LocationListener
                             locationManager.removeUpdates(this);
 
                             try {
-                                if (lastLocation == null) {
-                                    Location location = locationManager.getLastKnownLocation(provider);
+                                Location location = locationManager.getLastKnownLocation(provider);
 
-                                    if (location != null) {
-                                        onLocationChanged(location);
-                                    }
+                                if (location != null) {
+                                    onLocationChanged(location);
                                 }
 
                                 locationManager.requestLocationUpdates(provider, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);

@@ -440,7 +440,7 @@ public class VKGeoActivity extends QtActivity
                     try {
                         serviceMessenger.send(Message.obtain(null, VKGeoService.MESSAGE_NOT_AUTHORIZED));
                     } catch (Exception ex) {
-                        Log.w("VKGeoActivity", ex.toString());
+                        Log.w("VKGeoActivity", "logoutVK() : " + ex.toString());
                     }
                 }
             }
