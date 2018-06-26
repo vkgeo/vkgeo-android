@@ -73,15 +73,19 @@ public class VKGeoService extends QtService implements LocationListener
 
     private static final int                 LOCATION_SOURCE_SELECTION_INTERVAL = 60000;
     private static final long                LOCATION_UPDATE_MIN_TIME_DELTA     = 300000,
-                                             LOCATION_UPDATE_UPG_TIME_DELTA     = 450000,
-                                             LOCATION_UPDATE_DNG_TIME_DELTA     = 750000,
+                                             LOCATION_UPDATE_CTR_TIMEOUT        = 600000,
                                              LOCATION_UPDATE_MIN_TIME           = 300000;
-    private static final float               LOCATION_UPDATE_MIN_DISTANCE       = 100.0f;
+    private static final float               LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
+                                             LOCATION_UPDATE_CTR_DISTANCE       = 500.0f;
 
+    private boolean                          centerLocationChanged              = true;
+    private long                             centerLocationChangeRealtimeNanos  = 0;
     private String                           locationProvider                   = null;
-    private Location                         firstLocation                      = null,
+    private Location                         centerLocation                     = null,
                                              lastLocation                       = null;
     private LocationManager                  locationManager                    = null;
+    private NotificationManager              notificationManager                = null;
+    private Notification.Builder             notificationBuilder                = null;
     private Messenger                        messenger                          = new Messenger(new MessageHandler());
     private HashMap<VKRequest,      Boolean> vkRequestTracker                   = new HashMap<VKRequest,      Boolean>();
     private HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker              = new HashMap<VKBatchRequest, Boolean>();
@@ -97,33 +101,32 @@ public class VKGeoService extends QtService implements LocationListener
     {
         super.onCreate();
 
-        Notification notification = null;
+        notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(getResources().getString(R.string.service_notification_channel_id),
-                                                                  getResources().getString(R.string.service_notification_channel_name), NotificationManager.IMPORTANCE_LOW);
+                                                                  getResources().getString(R.string.service_notification_channel_name),
+                                                                  NotificationManager.IMPORTANCE_LOW);
 
             channel.setShowBadge(false);
-            manager.createNotificationChannel(channel);
 
-            notification = new Notification.Builder(this, getResources().getString(R.string.service_notification_channel_id))
-                                                   .setSmallIcon(R.drawable.ic_notification)
-                                                   .setContentTitle(getResources().getString(R.string.service_notification_title))
-                                                   .setContentText(getResources().getString(R.string.service_notification_text))
-                                                   .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0))
-                                                   .build();
+            notificationManager.createNotificationChannel(channel);
+
+            notificationBuilder = new Notification.Builder(this, getResources().getString(R.string.service_notification_channel_id))
+                                                          .setSmallIcon(R.drawable.ic_notification)
+                                                          .setContentTitle(getResources().getString(R.string.service_notification_title))
+                                                          .setContentText(getResources().getString(R.string.service_notification_text))
+                                                          .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
         } else {
-            notification = new Notification.Builder(this)
-                                                   .setPriority(Notification.PRIORITY_LOW)
-                                                   .setSmallIcon(R.drawable.ic_notification)
-                                                   .setContentTitle(getResources().getString(R.string.service_notification_title))
-                                                   .setContentText(getResources().getString(R.string.service_notification_text))
-                                                   .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0))
-                                                   .build();
+            notificationBuilder = new Notification.Builder(this)
+                                                          .setPriority(Notification.PRIORITY_LOW)
+                                                          .setSmallIcon(R.drawable.ic_notification)
+                                                          .setContentTitle(getResources().getString(R.string.service_notification_title))
+                                                          .setContentText(getResources().getString(R.string.service_notification_text))
+                                                          .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
         }
 
-        startForeground(getResources().getInteger(R.integer.service_foreground_notification_id), notification);
+        startForeground(getResources().getInteger(R.integer.service_foreground_notification_id), notificationBuilder.build());
 
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
@@ -162,8 +165,9 @@ public class VKGeoService extends QtService implements LocationListener
 
             locationUpdated(lastLocation.getLatitude(), lastLocation.getLongitude());
         }
-        if (firstLocation == null) {
-            firstLocation = lastLocation;
+        if (centerLocation == null || centerLocation.distanceTo(lastLocation) > LOCATION_UPDATE_CTR_DISTANCE) {
+            centerLocation        = lastLocation;
+            centerLocationChanged = true;
         }
     }
 
@@ -322,14 +326,10 @@ public class VKGeoService extends QtService implements LocationListener
                 criteria.setBearingRequired(false);
                 criteria.setSpeedRequired(false);
 
-                if (lastLocation == null) {
+                if (centerLocationChanged) {
                     criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
                     criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
-                } else if (firstLocation != null &&
-                           lastLocation.getElapsedRealtimeNanos() - firstLocation.getElapsedRealtimeNanos() > LOCATION_UPDATE_UPG_TIME_DELTA * 1000000) {
-                    criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-                    criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
-                } else if (SystemClock.elapsedRealtimeNanos() - lastLocation.getElapsedRealtimeNanos() > LOCATION_UPDATE_DNG_TIME_DELTA * 1000000) {
+                } else if (SystemClock.elapsedRealtimeNanos() - centerLocationChangeRealtimeNanos > LOCATION_UPDATE_CTR_TIMEOUT * 1000000) {
                     criteria.setHorizontalAccuracy(Criteria.NO_REQUIREMENT);
                     criteria.setPowerRequirement(Criteria.POWER_LOW);
                 } else {
@@ -343,8 +343,6 @@ public class VKGeoService extends QtService implements LocationListener
                         if (locationProvider == null || !locationProvider.equals(provider)) {
                             locationManager.removeUpdates(this);
 
-                            firstLocation = null;
-
                             try {
                                 if (lastLocation == null) {
                                     Location location = locationManager.getLastKnownLocation(provider);
@@ -357,6 +355,23 @@ public class VKGeoService extends QtService implements LocationListener
                                 locationManager.requestLocationUpdates(provider, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
 
                                 locationProvider = provider;
+
+                                if (centerLocationChanged) {
+                                    centerLocationChanged             = false;
+                                    centerLocationChangeRealtimeNanos = SystemClock.elapsedRealtimeNanos();
+                                }
+
+                                if (notificationManager != null && notificationBuilder != null) {
+                                    if (criteria.getHorizontalAccuracy() == Criteria.ACCURACY_HIGH) {
+                                        notificationBuilder.setContentTitle(getResources().getString(R.string.service_notification_title_high_accuracy));
+                                    } else if (criteria.getPowerRequirement() == Criteria.POWER_LOW) {
+                                        notificationBuilder.setContentTitle(getResources().getString(R.string.service_notification_title_low_power));
+                                    } else {
+                                        notificationBuilder.setContentTitle(getResources().getString(R.string.service_notification_title));
+                                    }
+
+                                    notificationManager.notify(getResources().getInteger(R.integer.service_foreground_notification_id), notificationBuilder.build());
+                                }
                             } catch (Exception ex) {
                                 Log.w("VKGeoService", "selectLocationSource() : " + ex.toString());
                             }
