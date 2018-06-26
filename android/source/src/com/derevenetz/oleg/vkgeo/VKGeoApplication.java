@@ -17,9 +17,9 @@ public class VKGeoApplication extends QtApplication
         VKSdk.initialize(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this.startForegroundService(new Intent(this, VKGeoService.class));
+            startForegroundService(new Intent(this, VKGeoService.class));
         } else {
-            this.startService(new Intent(this, VKGeoService.class));
+            startService(new Intent(this, VKGeoService.class));
         }
     }
 }
