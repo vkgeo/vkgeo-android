@@ -232,6 +232,8 @@ public class VKGeoService extends QtService implements LocationListener
                             final VKRequest vk_request = new VKRequest(json_request.getString("method"),
                                                                        VKParameters.from((Object[])vk_parameters.toArray(new String[vk_parameters.size()])));
 
+                            vk_request.shouldInterruptUI = false;
+
                             vk_request.setRequestListener(new VKRequestListener() {
                                 @Override
                                 public void onComplete(VKResponse response) {
