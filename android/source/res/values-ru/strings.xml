@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VKGeo</string>
+    <string name="service_notification_channel_id">BackgroundService</string>
+    <string name="service_notification_channel_name">Фоновый сервис</string>
+    <string name="service_notification_title">Фоновый сервис VKGeo запущен</string>
+    <string name="service_notification_title_high_accuracy">Фоновый сервис VKGeo: повышенная точность</string>
+    <string name="service_notification_title_low_power">Фоновый сервис VKGeo: энергосбережение</string>
+    <string name="service_notification_text">Коснитесь, чтобы перейти в приложение</string>
+    <string name="com_vk_sdk_ApiVersion">5.80</string>
+</resources>

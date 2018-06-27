@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="service_foreground_notification_id">1001</integer>
+    <integer name="com_vk_sdk_AppId">6459902</integer>
+</resources>

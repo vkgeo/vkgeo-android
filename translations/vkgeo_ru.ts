@@ -4,12 +4,16 @@
 <context>
     <name>FriendsSwipe</name>
     <message>
-        <source>Quick search</source>
-        <translation>Быстрый поиск</translation>
+        <source>I invite you to install the VKGeo app and join the community: http://vkgeo.sourceforge.io/</source>
+        <translation>Я приглашаю Вас установить приложение VKGeo и присоединиться к сообществу: http://vk.com/vkgeo_app</translation>
     </message>
     <message>
         <source>Invitation sent</source>
         <translation>Приглашение отправлено</translation>
+    </message>
+    <message>
+        <source>Quick search</source>
+        <translation>Быстрый поиск</translation>
     </message>
     <message>
         <source>Invite friend</source>
@@ -18,18 +22,6 @@
     <message>
         <source>Do you want to send an invitation to this friend?</source>
         <translation>Вы действительно хотите отослать приглашение этому другу?</translation>
-    </message>
-    <message>
-        <source>I invite you to install the VKGeo app and join the community: %1</source>
-        <translation>Я приглашаю Вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
-    </message>
-    <message>
-        <source>New friends nearby</source>
-        <translation>Новые друзья поблизости</translation>
-    </message>
-    <message>
-        <source>%1 is nearby</source>
-        <translation>%1 сейчас поблизости</translation>
     </message>
 </context>
 <context>
@@ -57,6 +49,14 @@
         <source>Do you want to update location data in your VK profile now?</source>
         <translation>Вы действительно хотите сейчас обновить данные о местоположении в вашем профиле ВКонтакте?</translation>
     </message>
+    <message>
+        <source>Rate VKGeo</source>
+        <translation>Оценить VKGeo</translation>
+    </message>
+    <message>
+        <source>If you enjoy VKGeo, please take a moment to rate it. Do you want to do this now?</source>
+        <translation>Если вам нравится VKGeo, пожалуйста, найдите минутку, чтобы оценить его. Вы хотите сделать это сейчас?</translation>
+    </message>
 </context>
 <context>
     <name>ProfilePage</name>
@@ -83,6 +83,10 @@
 </context>
 <context>
     <name>SettingsSwipe</name>
+    <message>
+        <source>Group membership request sent</source>
+        <translation>Запрос на вступление в группу отправлен</translation>
+    </message>
     <message>
         <source>You can see the location of trusted friends, if they also treat you as a trusted friend, and they &lt;b&gt;can see your location&lt;/b&gt;.</source>
         <translation>Вы можете видеть местоположение доверенных друзей, если они также считают вас доверенным другом, и они &lt;b&gt;могут видеть ваше местоположение&lt;/b&gt;.</translation>
@@ -124,12 +128,8 @@
         <translation>Поддержка</translation>
     </message>
     <message>
-        <source>Log out of VK</source>
-        <translation>Выход из ВКонтакте</translation>
-    </message>
-    <message>
-        <source>Group membership request sent</source>
-        <translation>Запрос на вступление в группу отправлен</translation>
+        <source>http://vkgeo.sourceforge.io/</source>
+        <translation>vkgeo_app</translation>
     </message>
     <message>
         <source>Join VKGeo group</source>
@@ -140,16 +140,16 @@
         <translation>Посмотреть мой профиль ВКонтакте</translation>
     </message>
     <message>
+        <source>Log out of VK</source>
+        <translation>Выход из ВКонтакте</translation>
+    </message>
+    <message>
         <source>Join group</source>
         <translation>Вступить в группу</translation>
     </message>
     <message>
         <source>Do you want to join the VKGeo group?</source>
         <translation>Вы действительно хотите вступить в группу VKGeo?</translation>
-    </message>
-    <message>
-        <source>http://vkgeo.sourceforge.io/</source>
-        <translation>vkgeo_app</translation>
     </message>
 </context>
 <context>
