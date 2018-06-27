@@ -1,0 +1,45 @@
+--- build.gradle.orig	2018-06-28 01:02:08.091028285 +0300
++++ build.gradle	2018-06-28 00:59:20.231010899 +0300
+@@ -1,13 +1,8 @@
+ apply plugin: 'com.android.library'
+ 
+ android {
+-    compileSdkVersion 25
+-    buildToolsVersion '25.0.2'
+-
+-    defaultConfig {
+-        minSdkVersion 9
+-        targetSdkVersion 25
+-    }
++    compileSdkVersion androidCompileSdkVersion.toInteger()
++    buildToolsVersion androidBuildToolsVersion
+ }
+ 
+ configurations {
+@@ -19,5 +14,3 @@
+     javadocDeps 'com.android.support:support-annotations:25.1.0'
+     compile 'com.android.support:support-v4:25.1.0'
+ }
+-
+-apply from: '../maven_push.gradle'
+\ No newline at end of file
+--- src/main/java/com/vk/sdk/VKAccessToken.java.orig	2018-06-28 01:02:08.091028285 +0300
++++ src/main/java/com/vk/sdk/VKAccessToken.java	2018-06-28 00:59:20.231010899 +0300
+@@ -161,7 +161,7 @@
+      *
+      * @return Serialized token string as query-string
+      */
+-    protected String serialize() {
++    public String serialize() {
+         return VKStringJoiner.joinParams(tokenParams());
+     }
+ 
+@@ -284,7 +284,7 @@
+      * @param newToken New access token to set. If null, removes old token from preferences
+      * @return old value of access token
+      */
+-    static VKAccessToken replaceToken(@NonNull Context ctx, @Nullable VKAccessToken newToken) {
++    public static VKAccessToken replaceToken(@NonNull Context ctx, @Nullable VKAccessToken newToken) {
+         VKAccessToken oldToken = sCurrentToken;
+         sCurrentToken = newToken;
+         if (sCurrentToken != null) {
