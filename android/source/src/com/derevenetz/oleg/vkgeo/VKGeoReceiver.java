@@ -10,7 +10,8 @@ public class VKGeoReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED") ||
+            intent.getAction().equals("android.intent.action.MY_PACKAGE_REPLACED")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(new Intent(context, VKGeoService.class));
             } else {
