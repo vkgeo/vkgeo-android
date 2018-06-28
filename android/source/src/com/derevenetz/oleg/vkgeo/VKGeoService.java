@@ -82,7 +82,8 @@ public class VKGeoService extends QtService implements LocationListener
     private boolean                          centerLocationChanged              = true;
     private long                             centerLocationChangeRealtimeNanos  = 0;
     private String                           locationProvider                   = null;
-    private Location                         centerLocation                     = null;
+    private Location                         currentLocation                    = null,
+                                             centerLocation                     = null;
     private LocationManager                  locationManager                    = null;
     private NotificationManager              notificationManager                = null;
     private Notification.Builder             notificationBuilder                = null;
@@ -153,11 +154,15 @@ public class VKGeoService extends QtService implements LocationListener
     @Override
     public void onLocationChanged(Location location)
     {
-        locationUpdated(location.getLatitude(), location.getLongitude());
+        if (currentLocation == null || currentLocation.distanceTo(location) > location.getAccuracy()) {
+            currentLocation = location;
 
-        if (centerLocation == null || centerLocation.distanceTo(location) > LOCATION_UPDATE_CTR_DISTANCE) {
-            centerLocation        = location;
-            centerLocationChanged = true;
+            locationUpdated(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+            if (centerLocation == null || centerLocation.distanceTo(currentLocation) > LOCATION_UPDATE_CTR_DISTANCE) {
+                centerLocation        = currentLocation;
+                centerLocationChanged = true;
+            }
         }
     }
 
