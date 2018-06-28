@@ -6,8 +6,8 @@
     <string name="service_notification_title">Friends on Map service is running</string>
     <string name="service_notification_title_provider">Friends on Map service: %s</string>
     <string name="service_notification_text">Tap to open the application</string>
-    <string name="location_provider_gps">GPS</string>
-    <string name="location_provider_network">AGPS/Cellular/Wi-Fi</string>
-    <string name="location_provider_passive">Cellular/Wi-Fi</string>
+    <string name="location_provider_gps">GPS/AGPS</string>
+    <string name="location_provider_network">cellular, Wi-Fi</string>
+    <string name="location_provider_passive">passive mode</string>
     <string name="com_vk_sdk_ApiVersion">5.80</string>
 </resources>
