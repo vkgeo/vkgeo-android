@@ -212,7 +212,7 @@ Item {
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
-                text:             qsTr("Join VKGeo group")
+                text:             qsTr("Join VKGeo Friends on Map group")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
@@ -269,7 +269,7 @@ Item {
         id:              joinVKGeoGroupMessageDialog
         title:           qsTr("Join group")
         icon:            StandardIcon.Question
-        text:            qsTr("Do you want to join the VKGeo group?")
+        text:            qsTr("Do you want to join the VKGeo Friends on Map group?")
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {

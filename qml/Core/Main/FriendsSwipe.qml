@@ -120,7 +120,7 @@ Item {
     }
 
     function inviteFriend(user_id) {
-        VKHelper.sendMessage(user_id, qsTr("I invite you to install the VKGeo app and join the community: http://vkgeo.sourceforge.io/"));
+        VKHelper.sendMessage(user_id, qsTr("I invite you to install the VKGeo Friends on Map app and join the community: http://vkgeo.sourceforge.io/"));
 
         for (var i = 0; i < friendsList.length; i++) {
             var frnd = friendsList[i];

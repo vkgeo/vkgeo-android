@@ -309,9 +309,9 @@ Item {
 
     MessageDialog {
         id:              requestReviewMessageDialog
-        title:           qsTr("Rate VKGeo")
+        title:           qsTr("Rate application")
         icon:            StandardIcon.Question
-        text:            qsTr("If you enjoy VKGeo, please take a moment to rate it. Do you want to do this now?")
+        text:            qsTr("If you enjoy VKGeo Friends on Map, please take a moment to rate it. Do you want to do this now?")
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {

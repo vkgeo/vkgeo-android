@@ -4,10 +4,6 @@
 <context>
     <name>FriendsSwipe</name>
     <message>
-        <source>I invite you to install the VKGeo app and join the community: http://vkgeo.sourceforge.io/</source>
-        <translation>Я приглашаю Вас установить приложение VKGeo и присоединиться к сообществу: http://vk.com/vkgeo_app</translation>
-    </message>
-    <message>
         <source>Invitation sent</source>
         <translation>Приглашение отправлено</translation>
     </message>
@@ -22,6 +18,10 @@
     <message>
         <source>Do you want to send an invitation to this friend?</source>
         <translation>Вы действительно хотите отослать приглашение этому другу?</translation>
+    </message>
+    <message>
+        <source>I invite you to install the VKGeo Friends on Map app and join the community: http://vkgeo.sourceforge.io/</source>
+        <translation>Я приглашаю Вас установить приложение VKGeo Друзья на Карте и присоединиться к сообществу: http://vk.com/vkgeo_app</translation>
     </message>
 </context>
 <context>
@@ -50,12 +50,12 @@
         <translation>Вы действительно хотите сейчас обновить данные о местоположении в вашем профиле ВКонтакте?</translation>
     </message>
     <message>
-        <source>Rate VKGeo</source>
-        <translation>Оценить VKGeo</translation>
+        <source>Rate application</source>
+        <translation>Оценить приложение</translation>
     </message>
     <message>
-        <source>If you enjoy VKGeo, please take a moment to rate it. Do you want to do this now?</source>
-        <translation>Если вам нравится VKGeo, пожалуйста, найдите минутку, чтобы оценить его. Вы хотите сделать это сейчас?</translation>
+        <source>If you enjoy VKGeo Friends on Map, please take a moment to rate it. Do you want to do this now?</source>
+        <translation>Если вам нравится VKGeo Друзья на Карте, пожалуйста, найдите минутку, чтобы оценить его. Вы хотите сделать это сейчас?</translation>
     </message>
 </context>
 <context>
@@ -132,10 +132,6 @@
         <translation>vkgeo_app</translation>
     </message>
     <message>
-        <source>Join VKGeo group</source>
-        <translation>Вступить в группу VKGeo</translation>
-    </message>
-    <message>
         <source>View my VK profile</source>
         <translation>Посмотреть мой профиль ВКонтакте</translation>
     </message>
@@ -148,8 +144,12 @@
         <translation>Вступить в группу</translation>
     </message>
     <message>
-        <source>Do you want to join the VKGeo group?</source>
-        <translation>Вы действительно хотите вступить в группу VKGeo?</translation>
+        <source>Join VKGeo Friends on Map group</source>
+        <translation>Вступить в группу VKGeo Друзья на Карте</translation>
+    </message>
+    <message>
+        <source>Do you want to join the VKGeo Friends on Map group?</source>
+        <translation>Вы действительно хотите вступить в группу VKGeo Друзья на Карте?</translation>
     </message>
 </context>
 <context>
