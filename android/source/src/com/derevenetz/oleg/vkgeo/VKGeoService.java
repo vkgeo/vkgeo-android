@@ -322,7 +322,7 @@ public class VKGeoService extends QtService implements LocationListener
                     criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
                     criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
                 } else if (SystemClock.elapsedRealtimeNanos() - centerLocationChangeRealtimeNanos > LOCATION_UPDATE_CTR_TIMEOUT * 1000000) {
-                    criteria.setHorizontalAccuracy(Criteria.NO_REQUIREMENT);
+                    criteria.setHorizontalAccuracy(Criteria.ACCURACY_MEDIUM);
                     criteria.setPowerRequirement(Criteria.POWER_LOW);
                 } else {
                     criteria = null;
