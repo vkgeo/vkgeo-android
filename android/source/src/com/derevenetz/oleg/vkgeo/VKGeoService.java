@@ -74,8 +74,8 @@ public class VKGeoService extends QtService implements LocationListener
                                              MESSAGE_AUTHORIZED                 = 1002;
 
     private static final int                 LOCATION_SOURCE_SELECTION_INTERVAL = 60000;
-    private static final long                LOCATION_UPDATE_MIN_TIME           = 60000,
-                                             LOCATION_UPDATE_CTR_TIMEOUT        = 300000;
+    private static final long                LOCATION_UPDATE_MIN_TIME           = 30000,
+                                             LOCATION_UPDATE_CTR_TIMEOUT        = 900000;
     private static final float               LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
                                              LOCATION_UPDATE_CTR_DISTANCE       = 500.0f;
 
