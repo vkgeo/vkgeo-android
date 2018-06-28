@@ -48,6 +48,8 @@ android {
         android/source/res/drawable-xxxhdpi/ic_notification.png \
         android/source/res/values/numbers.xml \
         android/source/res/values/strings.xml \
+        android/source/res/values-ru/numbers.xml \
+        android/source/res/values-ru/strings.xml \
         android/source/src/com/derevenetz/oleg/vkgeo/VKGeoActivity.java \
         android/source/src/com/derevenetz/oleg/vkgeo/VKGeoApplication.java \
         android/source/src/com/derevenetz/oleg/vkgeo/VKGeoReceiver.java \

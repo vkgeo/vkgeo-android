@@ -4,8 +4,10 @@
     <string name="service_notification_channel_id">BackgroundService</string>
     <string name="service_notification_channel_name">Background service</string>
     <string name="service_notification_title">Friends on Map service is running</string>
-    <string name="service_notification_title_high_accuracy">Friends on Map service: high accuracy mode</string>
-    <string name="service_notification_title_low_power">Friends on Map service: power saving mode</string>
+    <string name="service_notification_title_provider">Friends on Map service: %s</string>
     <string name="service_notification_text">Tap to open the application</string>
+    <string name="location_provider_gps">GPS</string>
+    <string name="location_provider_network">AGPS/Cellular/Wi-Fi</string>
+    <string name="location_provider_passive">Cellular/Wi-Fi</string>
     <string name="com_vk_sdk_ApiVersion">5.80</string>
 </resources>

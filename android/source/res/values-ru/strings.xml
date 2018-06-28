@@ -4,8 +4,10 @@
     <string name="service_notification_channel_id">BackgroundService</string>
     <string name="service_notification_channel_name">Фоновый сервис</string>
     <string name="service_notification_title">Сервис Друзья на Карте запущен</string>
-    <string name="service_notification_title_high_accuracy">Сервис Друзья на Карте: повышенная точность</string>
-    <string name="service_notification_title_low_power">Сервис Друзья на Карте: энергосбережение</string>
+    <string name="service_notification_title_provider">Сервис Друзья на Карте: %s</string>
     <string name="service_notification_text">Коснитесь, чтобы перейти в приложение</string>
+    <string name="location_provider_gps">GPS</string>
+    <string name="location_provider_network">AGPS/Сеть/Wi-Fi</string>
+    <string name="location_provider_passive">Сеть/Wi-Fi</string>
     <string name="com_vk_sdk_ApiVersion">5.80</string>
 </resources>
