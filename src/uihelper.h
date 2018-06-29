@@ -11,7 +11,7 @@ public:
     explicit UIHelper(QObject *parent = 0);
     virtual ~UIHelper();
 
-    Q_INVOKABLE int screenDPI();
+    Q_INVOKABLE int getScreenDPI();
 };
 
 #endif // UIHELPER_H
