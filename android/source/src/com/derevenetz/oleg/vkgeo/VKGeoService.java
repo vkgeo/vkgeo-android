@@ -157,8 +157,9 @@ public class VKGeoService extends QtService implements LocationListener
             locationUpdated(currentLocation.getLatitude(), currentLocation.getLongitude());
 
             if (centerLocation == null || centerLocation.distanceTo(currentLocation) > LOCATION_UPDATE_CTR_DISTANCE) {
-                centerLocation        = currentLocation;
-                centerLocationChanged = true;
+                centerLocation                    = currentLocation;
+                centerLocationChanged             = true;
+                centerLocationChangeRealtimeNanos = SystemClock.elapsedRealtimeNanos();
             }
         }
     }
@@ -350,12 +351,8 @@ public class VKGeoService extends QtService implements LocationListener
                             try {
                                 manager.requestLocationUpdates(provider, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
 
-                                locationProvider = provider;
-
-                                if (centerLocationChanged) {
-                                    centerLocationChanged             = false;
-                                    centerLocationChangeRealtimeNanos = SystemClock.elapsedRealtimeNanos();
-                                }
+                                centerLocationChanged = false;
+                                locationProvider      = provider;
 
                                 if (notificationManager != null && notificationBuilder != null) {
                                     if (locationProvider.equals(LocationManager.GPS_PROVIDER)) {
@@ -378,10 +375,7 @@ public class VKGeoService extends QtService implements LocationListener
                                 Log.w("VKGeoService", "selectLocationSource() : " + ex.toString());
                             }
                         } else {
-                            if (centerLocationChanged) {
-                                centerLocationChanged             = false;
-                                centerLocationChangeRealtimeNanos = SystemClock.elapsedRealtimeNanos();
-                            }
+                            centerLocationChanged = false;
                         }
                     }
                 }
