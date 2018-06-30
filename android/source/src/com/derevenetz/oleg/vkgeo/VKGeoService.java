@@ -58,11 +58,11 @@ public class VKGeoService extends QtService implements LocationListener
                 if (bdl != null && bdl.containsKey("VKAccessToken") && bdl.getString("VKAccessToken") != null) {
                     try {
                         VKAccessToken.replaceToken(getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
+
+                        vkAuthChanged(true);
                     } catch (Exception ex) {
                         Log.w("VKGeoService", ex.toString());
                     }
-
-                    vkAuthChanged(true);
                 }
             } else {
                 super.handleMessage(msg);
@@ -260,7 +260,13 @@ public class VKGeoService extends QtService implements LocationListener
                                     if (vkRequestTracker.containsKey(vk_request)) {
                                         vkRequestTracker.remove(vk_request);
 
-                                        vkRequestError(json_request.toString(), error.toString());
+                                        String error_str = "";
+
+                                        if (error != null) {
+                                            error_str = error.toString();
+                                        }
+
+                                        vkRequestError(json_request.toString(), error_str);
                                     }
                                 }
                             });

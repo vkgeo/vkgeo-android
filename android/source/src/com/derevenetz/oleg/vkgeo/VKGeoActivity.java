@@ -506,7 +506,13 @@ public class VKGeoActivity extends QtActivity
                                     if (vkRequestTracker.containsKey(vk_request)) {
                                         vkRequestTracker.remove(vk_request);
 
-                                        vkRequestError(json_request.toString(), error.toString());
+                                        String error_str = "";
+
+                                        if (error != null) {
+                                            error_str = error.toString();
+                                        }
+
+                                        vkRequestError(json_request.toString(), error_str);
                                     }
                                 }
                             });
@@ -570,7 +576,13 @@ public class VKGeoActivity extends QtActivity
 
             @Override
             public void onError(VKError error) {
-                Log.w("VKGeoActivity", error.toString());
+                String error_str = "";
+
+                if (error != null) {
+                    error_str = error.toString();
+                }
+
+                Log.w("VKGeoActivity", error_str);
             }
         });
     }
