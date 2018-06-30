@@ -193,6 +193,7 @@ Item {
                 visible:                  listViewContentY < listViewOriginY
 
                 property bool timerStarted:     false
+
                 property real listViewOriginY:  friendsListView.originY
                 property real listViewContentY: friendsListView.contentY
 
