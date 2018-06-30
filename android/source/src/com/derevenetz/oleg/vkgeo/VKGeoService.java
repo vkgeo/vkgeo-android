@@ -80,7 +80,7 @@ public class VKGeoService extends QtService implements LocationListener
                                              LOCATION_UPDATE_CTR_DISTANCE       = 500.0f;
 
     private boolean                          centerLocationChanged              = true;
-    private long                             centerLocationChangeRealtimeNanos  = 0;
+    private long                             centerLocationChangeHandleRtNanos  = 0;
     private String                           locationProvider                   = null;
     private Location                         currentLocation                    = null,
                                              centerLocation                     = null;
@@ -331,7 +331,7 @@ public class VKGeoService extends QtService implements LocationListener
                 if (centerLocationChanged) {
                     criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
                     criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
-                } else if (SystemClock.elapsedRealtimeNanos() - centerLocationChangeRealtimeNanos > LOCATION_UPDATE_CTR_TIMEOUT * 1000000) {
+                } else if (SystemClock.elapsedRealtimeNanos() - centerLocationChangeHandleRtNanos > LOCATION_UPDATE_CTR_TIMEOUT * 1000000) {
                     criteria.setHorizontalAccuracy(Criteria.ACCURACY_MEDIUM);
                     criteria.setPowerRequirement(Criteria.POWER_LOW);
                 } else {
@@ -354,7 +354,7 @@ public class VKGeoService extends QtService implements LocationListener
 
                                 if (centerLocationChanged) {
                                     centerLocationChanged             = false;
-                                    centerLocationChangeRealtimeNanos = SystemClock.elapsedRealtimeNanos();
+                                    centerLocationChangeHandleRtNanos = SystemClock.elapsedRealtimeNanos();
                                 }
 
                                 if (notificationManager != null && notificationBuilder != null) {
@@ -380,7 +380,7 @@ public class VKGeoService extends QtService implements LocationListener
                         } else {
                             if (centerLocationChanged) {
                                 centerLocationChanged             = false;
-                                centerLocationChangeRealtimeNanos = SystemClock.elapsedRealtimeNanos();
+                                centerLocationChangeHandleRtNanos = SystemClock.elapsedRealtimeNanos();
                             }
                         }
                     }
