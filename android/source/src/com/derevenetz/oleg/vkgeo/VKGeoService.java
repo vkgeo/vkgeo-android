@@ -377,6 +377,11 @@ public class VKGeoService extends QtService implements LocationListener
                             } catch (Exception ex) {
                                 Log.w("VKGeoService", "selectLocationSource() : " + ex.toString());
                             }
+                        } else {
+                            if (centerLocationChanged) {
+                                centerLocationChanged             = false;
+                                centerLocationChangeRealtimeNanos = SystemClock.elapsedRealtimeNanos();
+                            }
                         }
                     }
                 }
