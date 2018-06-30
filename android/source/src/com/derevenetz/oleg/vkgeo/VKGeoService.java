@@ -346,6 +346,8 @@ public class VKGeoService extends QtService implements LocationListener
                         if (locationProvider == null || !locationProvider.equals(provider)) {
                             locationManager.removeUpdates(this);
 
+                            locationProvider = null;
+
                             try {
                                 locationManager.requestLocationUpdates(provider, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
 
