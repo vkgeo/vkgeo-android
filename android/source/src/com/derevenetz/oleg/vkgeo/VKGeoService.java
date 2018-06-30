@@ -84,7 +84,6 @@ public class VKGeoService extends QtService implements LocationListener
     private String                           locationProvider                   = null;
     private Location                         currentLocation                    = null,
                                              centerLocation                     = null;
-    private LocationManager                  locationManager                    = null;
     private NotificationManager              notificationManager                = null;
     private Notification.Builder             notificationBuilder                = null;
     private Messenger                        messenger                          = new Messenger(new MessageHandler());
@@ -128,8 +127,6 @@ public class VKGeoService extends QtService implements LocationListener
         }
 
         startForeground(getResources().getInteger(R.integer.service_foreground_notification_id), notificationBuilder.build());
-
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
         runOnMainThreadWithDelay(new Runnable() {
             @Override
@@ -320,9 +317,11 @@ public class VKGeoService extends QtService implements LocationListener
 
     private void selectLocationSource()
     {
-        if (locationManager != null) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+            ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+            if (manager != null) {
                 Criteria criteria = new Criteria();
 
                 criteria.setAltitudeRequired(false);
@@ -340,16 +339,16 @@ public class VKGeoService extends QtService implements LocationListener
                 }
 
                 if (criteria != null) {
-                    String provider = locationManager.getBestProvider(criteria, true);
+                    String provider = manager.getBestProvider(criteria, true);
 
                     if (provider != null) {
                         if (locationProvider == null || !locationProvider.equals(provider)) {
-                            locationManager.removeUpdates(this);
+                            manager.removeUpdates(this);
 
                             locationProvider = null;
 
                             try {
-                                locationManager.requestLocationUpdates(provider, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
+                                manager.requestLocationUpdates(provider, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
 
                                 locationProvider = provider;
 
