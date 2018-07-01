@@ -36,16 +36,16 @@ android {
 
     OTHER_FILES += \
         android/source/AndroidManifest.xml \
-        android/source/res/drawable-hdpi/ic_launcher.png \
-        android/source/res/drawable-hdpi/ic_notification.png \
-        android/source/res/drawable-mdpi/ic_launcher.png \
-        android/source/res/drawable-mdpi/ic_notification.png \
-        android/source/res/drawable-xhdpi/ic_launcher.png \
-        android/source/res/drawable-xhdpi/ic_notification.png \
-        android/source/res/drawable-xxhdpi/ic_launcher.png \
-        android/source/res/drawable-xxhdpi/ic_notification.png \
-        android/source/res/drawable-xxxhdpi/ic_launcher.png \
-        android/source/res/drawable-xxxhdpi/ic_notification.png \
+        android/source/res/drawable-hdpi/ic_stat_notify_service.png \
+        android/source/res/drawable-mdpi/ic_stat_notify_service.png \
+        android/source/res/drawable-xhdpi/ic_stat_notify_service.png \
+        android/source/res/drawable-xxhdpi/ic_stat_notify_service.png \
+        android/source/res/drawable-xxxhdpi/ic_stat_notify_service.png \
+        android/source/res/mipmap-hdpi/ic_launcher.png \
+        android/source/res/mipmap-mdpi/ic_launcher.png \
+        android/source/res/mipmap-xhdpi/ic_launcher.png \
+        android/source/res/mipmap-xxhdpi/ic_launcher.png \
+        android/source/res/mipmap-xxxhdpi/ic_launcher.png \
         android/source/res/values/numbers.xml \
         android/source/res/values/strings.xml \
         android/source/res/values-ru/numbers.xml \

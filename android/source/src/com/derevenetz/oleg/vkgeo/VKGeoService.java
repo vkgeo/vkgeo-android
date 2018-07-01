@@ -113,14 +113,14 @@ public class VKGeoService extends QtService implements LocationListener
             notificationManager.createNotificationChannel(channel);
 
             notificationBuilder = new Notification.Builder(this, getResources().getString(R.string.service_notification_channel_id))
-                                                          .setSmallIcon(R.drawable.ic_notification)
+                                                          .setSmallIcon(R.drawable.ic_stat_notify_service)
                                                           .setContentTitle(getResources().getString(R.string.service_notification_title))
                                                           .setContentText(getResources().getString(R.string.service_notification_text))
                                                           .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
         } else {
             notificationBuilder = new Notification.Builder(this)
                                                           .setPriority(Notification.PRIORITY_LOW)
-                                                          .setSmallIcon(R.drawable.ic_notification)
+                                                          .setSmallIcon(R.drawable.ic_stat_notify_service)
                                                           .setContentTitle(getResources().getString(R.string.service_notification_title))
                                                           .setContentText(getResources().getString(R.string.service_notification_text))
                                                           .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
