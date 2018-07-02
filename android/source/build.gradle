@@ -56,7 +56,7 @@ android {
     }
 
     lintOptions {
-        abortOnError false
+        disable 'MissingTranslation'
     }
 
     /* Temporary fix for zipalign issue, may be fixed in later Qt versions */
