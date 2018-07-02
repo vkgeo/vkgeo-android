@@ -36,6 +36,12 @@ android {
 
     OTHER_FILES += \
         android/source/AndroidManifest.xml \
+        android/source/build.gradle \
+        android/source/gradlew \
+        android/source/gradlew.bat \
+        android/source/settings.gradle \
+        android/source/gradle/wrapper/gradle-wrapper.jar \
+        android/source/gradle/wrapper/gradle-wrapper.properties \
         android/source/res/drawable-hdpi/ic_stat_notify_service.png \
         android/source/res/drawable-mdpi/ic_stat_notify_service.png \
         android/source/res/drawable-xhdpi/ic_stat_notify_service.png \
@@ -46,6 +52,7 @@ android {
         android/source/res/mipmap-xhdpi/ic_launcher.png \
         android/source/res/mipmap-xxhdpi/ic_launcher.png \
         android/source/res/mipmap-xxxhdpi/ic_launcher.png \
+        android/source/res/values/libs.xml \
         android/source/res/values/numbers.xml \
         android/source/res/values/strings.xml \
         android/source/res/values-ru/numbers.xml \
