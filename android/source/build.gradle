@@ -19,9 +19,9 @@ allprojects {
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.gms:play-services-ads:15.0.1'
-    compile project(':vksdk_library')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+    implementation project(':vksdk_library')
 }
 
 android {

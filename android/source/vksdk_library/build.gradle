@@ -11,5 +11,5 @@ configurations {
 
 dependencies {
     javadocDeps 'com.android.support:support-annotations:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
+    implementation 'com.android.support:support-v4:25.1.0'
 }
