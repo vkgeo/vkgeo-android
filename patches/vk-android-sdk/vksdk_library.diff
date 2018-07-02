@@ -1,7 +1,6 @@
-diff -u -r vksdk_library.orig/build.gradle vksdk_library/build.gradle
---- build.gradle.orig	2018-07-02 15:42:17.272984573 +0300
-+++ build.gradle	2018-07-02 15:42:06.780984702 +0300
-@@ -1,17 +1,11 @@
+--- build.gradle.orig	2018-07-03 00:42:37.855993195 +0300
++++ build.gradle	2018-07-03 00:42:29.839993758 +0300
+@@ -1,23 +1,15 @@
  apply plugin: 'com.android.library'
  
  android {
@@ -21,17 +20,16 @@ diff -u -r vksdk_library.orig/build.gradle vksdk_library/build.gradle
      javadocDeps
  }
  
-@@ -19,5 +13,3 @@
+ dependencies {
      javadocDeps 'com.android.support:support-annotations:25.1.0'
-     compile 'com.android.support:support-v4:25.1.0'
+-    compile 'com.android.support:support-v4:25.1.0'
++    implementation 'com.android.support:support-v4:25.1.0'
  }
 -
 -apply from: '../maven_push.gradle'
 \ No newline at end of file
-Only in vksdk_library.orig: .gitignore
-diff -u -r vksdk_library.orig/src/main/java/com/vk/sdk/api/VKBatchRequest.java vksdk_library/src/main/java/com/vk/sdk/api/VKBatchRequest.java
---- src/main/java/com/vk/sdk/api/VKBatchRequest.java.orig	2018-07-02 15:42:17.275984573 +0300
-+++ src/main/java/com/vk/sdk/api/VKBatchRequest.java	2018-07-02 15:42:06.782984702 +0300
+--- src/main/java/com/vk/sdk/api/VKBatchRequest.java.orig	2018-07-03 00:42:37.856993195 +0300
++++ src/main/java/com/vk/sdk/api/VKBatchRequest.java	2018-07-03 00:42:29.840993758 +0300
 @@ -35,6 +35,7 @@
      private final VKResponse[] mResponses;
      private final VKRequest.VKRequestListener[] mOriginalListeners;
@@ -51,9 +49,8 @@ diff -u -r vksdk_library.orig/src/main/java/com/vk/sdk/api/VKBatchRequest.java v
          for (int i = 0; i < mRequests.length; i++) {
              VKRequest.VKRequestListener l = mOriginalListeners[i];
              if (l != null) {
-diff -u -r vksdk_library.orig/src/main/java/com/vk/sdk/VKAccessToken.java vksdk_library/src/main/java/com/vk/sdk/VKAccessToken.java
---- src/main/java/com/vk/sdk/VKAccessToken.java.orig	2018-07-02 15:42:17.273984573 +0300
-+++ src/main/java/com/vk/sdk/VKAccessToken.java	2018-07-02 15:42:06.780984702 +0300
+--- src/main/java/com/vk/sdk/VKAccessToken.java.orig	2018-07-03 00:42:37.856993195 +0300
++++ src/main/java/com/vk/sdk/VKAccessToken.java	2018-07-03 00:42:29.839993758 +0300
 @@ -161,7 +161,7 @@
       *
       * @return Serialized token string as query-string
@@ -72,5 +69,3 @@ diff -u -r vksdk_library.orig/src/main/java/com/vk/sdk/VKAccessToken.java vksdk_
          VKAccessToken oldToken = sCurrentToken;
          sCurrentToken = newToken;
          if (sCurrentToken != null) {
-Only in vksdk_library.orig/src/main: project.properties
-Only in vksdk_library.orig/src/main: .settings
