@@ -6,7 +6,6 @@ android {
 }
 
 configurations {
-    // Used for correct javadoc generation
     javadocDeps
 }
 
