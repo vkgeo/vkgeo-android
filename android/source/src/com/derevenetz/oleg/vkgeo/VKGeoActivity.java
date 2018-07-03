@@ -57,18 +57,23 @@ public class VKGeoActivity extends QtActivity
     private HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker = new HashMap<VKBatchRequest, Boolean>();
 
     private ServiceConnection connection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service)
+        {
             serviceMessenger = new Messenger(service);
         }
 
-        public void onServiceDisconnected(ComponentName className) {
+        @Override
+        public void onServiceDisconnected(ComponentName className)
+        {
             serviceMessenger = null;
         }
     };
 
     private VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
-        public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
+        public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken)
+        {
             if (newToken != null) {
                 if (serviceMessenger != null) {
                     try {
@@ -487,7 +492,8 @@ public class VKGeoActivity extends QtActivity
 
                             vk_request.setRequestListener(new VKRequestListener() {
                                 @Override
-                                public void onComplete(VKResponse response) {
+                                public void onComplete(VKResponse response)
+                                {
                                     if (vkRequestTracker.containsKey(vk_request)) {
                                         vkRequestTracker.remove(vk_request);
 
@@ -502,7 +508,8 @@ public class VKGeoActivity extends QtActivity
                                 }
 
                                 @Override
-                                public void onError(VKError error) {
+                                public void onError(VKError error)
+                                {
                                     if (vkRequestTracker.containsKey(vk_request)) {
                                         vkRequestTracker.remove(vk_request);
 
@@ -532,12 +539,14 @@ public class VKGeoActivity extends QtActivity
 
                         vk_batch_request.executeWithListener(new VKBatchRequestListener() {
                             @Override
-                            public void onComplete(VKResponse[] responses) {
+                            public void onComplete(VKResponse[] responses)
+                            {
                                 vkBatchRequestTracker.remove(vk_batch_request);
                             }
 
                             @Override
-                            public void onError(VKError error) {
+                            public void onError(VKError error)
+                            {
                                 vkBatchRequestTracker.remove(vk_batch_request);
                             }
                         });
@@ -571,11 +580,13 @@ public class VKGeoActivity extends QtActivity
 
         VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
-            public void onResult(VKAccessToken token) {
+            public void onResult(VKAccessToken token)
+            {
             }
 
             @Override
-            public void onError(VKError error) {
+            public void onError(VKError error)
+            {
                 String error_str = "";
 
                 if (error != null) {

@@ -1,5 +1,6 @@
 package com.derevenetz.oleg.vkgeo;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,9 +48,17 @@ import com.vk.sdk.VKSdk.LoginState;
 
 public class VKGeoService extends QtService implements LocationListener
 {
-    private class MessageHandler extends Handler {
+    private static class MessageHandler extends Handler {
+        private final WeakReference<VKGeoService> serviceWeakRef;
+
+        MessageHandler(VKGeoService service)
+        {
+            serviceWeakRef = new WeakReference<VKGeoService>(service);
+        }
+
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(Message msg)
+        {
             if (msg.what == MESSAGE_NOT_AUTHORIZED) {
                 vkAuthChanged(false);
             } else if (msg.what == MESSAGE_AUTHORIZED) {
@@ -57,7 +66,7 @@ public class VKGeoService extends QtService implements LocationListener
 
                 if (bdl != null && bdl.containsKey("VKAccessToken") && bdl.getString("VKAccessToken") != null) {
                     try {
-                        VKAccessToken.replaceToken(getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
+                        VKAccessToken.replaceToken(serviceWeakRef.get().getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
 
                         vkAuthChanged(true);
                     } catch (Exception ex) {
@@ -86,7 +95,7 @@ public class VKGeoService extends QtService implements LocationListener
                                              centerLocation                     = null;
     private NotificationManager              notificationManager                = null;
     private Notification.Builder             notificationBuilder                = null;
-    private Messenger                        messenger                          = new Messenger(new MessageHandler());
+    private Messenger                        messenger                          = new Messenger(new MessageHandler(this));
     private HashMap<VKRequest,      Boolean> vkRequestTracker                   = new HashMap<VKRequest,      Boolean>();
     private HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker              = new HashMap<VKBatchRequest, Boolean>();
 
@@ -144,7 +153,8 @@ public class VKGeoService extends QtService implements LocationListener
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         return messenger.getBinder();
     }
 
@@ -238,7 +248,8 @@ public class VKGeoService extends QtService implements LocationListener
 
                             vk_request.setRequestListener(new VKRequestListener() {
                                 @Override
-                                public void onComplete(VKResponse response) {
+                                public void onComplete(VKResponse response)
+                                {
                                     if (vkRequestTracker.containsKey(vk_request)) {
                                         vkRequestTracker.remove(vk_request);
 
@@ -253,7 +264,8 @@ public class VKGeoService extends QtService implements LocationListener
                                 }
 
                                 @Override
-                                public void onError(VKError error) {
+                                public void onError(VKError error)
+                                {
                                     if (vkRequestTracker.containsKey(vk_request)) {
                                         vkRequestTracker.remove(vk_request);
 
@@ -283,12 +295,14 @@ public class VKGeoService extends QtService implements LocationListener
 
                         vk_batch_request.executeWithListener(new VKBatchRequestListener() {
                             @Override
-                            public void onComplete(VKResponse[] responses) {
+                            public void onComplete(VKResponse[] responses)
+                            {
                                 vkBatchRequestTracker.remove(vk_batch_request);
                             }
 
                             @Override
-                            public void onError(VKError error) {
+                            public void onError(VKError error)
+                            {
                                 vkBatchRequestTracker.remove(vk_batch_request);
                             }
                         });
