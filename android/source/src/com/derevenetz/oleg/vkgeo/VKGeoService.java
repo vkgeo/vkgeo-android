@@ -26,7 +26,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -332,7 +331,7 @@ public class VKGeoService extends QtService implements LocationListener
     private void selectLocationSource()
     {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-            ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
             if (manager != null) {
