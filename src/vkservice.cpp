@@ -7,7 +7,7 @@
 
 VKService::VKService(QObject *parent) : QObject(parent)
 {
-    connect(&UpdateFriendsTimer, SIGNAL(timeout()), this, SIGNAL(updateFriends()));
+    connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::updateFriends);
 
     UpdateFriendsTimer.setInterval(UPDATE_FRIENDS_TIMER_INTERVAL);
     UpdateFriendsTimer.start();
