@@ -10,6 +10,7 @@
 #include "storehelper.h"
 #include "uihelper.h"
 #include "vkhelper.h"
+#include "vkservice.h"
 
 int main(int argc, char *argv[])
 {
@@ -50,11 +51,19 @@ int main(int argc, char *argv[])
 
         AndroidGW *android_gw = new AndroidGW(&app);
         VKHelper  *vk_helper  = new VKHelper("SERVICE", &app);
+        VKService *vk_service = new VKService(&app);
 
         QObject::connect(android_gw, SIGNAL(setAuthState(int)),                   vk_helper, SLOT(setAuthState(int)));
         QObject::connect(android_gw, SIGNAL(processResponse(QString, QString)),   vk_helper, SLOT(processResponse(QString, QString)));
         QObject::connect(android_gw, SIGNAL(processError(QString, QString)),      vk_helper, SLOT(processError(QString, QString)));
         QObject::connect(android_gw, SIGNAL(processLocationUpdate(qreal, qreal)), vk_helper, SLOT(processLocationUpdate(qreal, qreal)));
+
+        QObject::connect(vk_helper,  &VKHelper::authStateChanged,               vk_service, &VKService::authStateChanged);
+        QObject::connect(vk_helper,  &VKHelper::locationReported,               vk_service, &VKService::locationReported);
+        QObject::connect(vk_helper,  &VKHelper::friendsUpdated,                 vk_service, &VKService::friendsUpdated);
+        QObject::connect(vk_helper,  &VKHelper::trackedFriendLocationUpdated,   vk_service, &VKService::trackedFriendLocationUpdated);
+        QObject::connect(vk_service, &VKService::updateFriends,                 vk_helper,  &VKHelper::updateFriends);
+        QObject::connect(vk_service, &VKService::updateTrackedFriendsLocations, vk_helper,  &VKHelper::updateTrackedFriendsLocations);
 
         vk_helper->initialize();
 

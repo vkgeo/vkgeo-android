@@ -8,14 +8,16 @@ SOURCES += src/main.cpp \
     src/admobhelper.cpp \
     src/storehelper.cpp \
     src/uihelper.cpp \
-    src/vkhelper.cpp
+    src/vkhelper.cpp \
+    src/vkservice.cpp
 
 HEADERS += \
     src/androidgw.h \
     src/admobhelper.h \
     src/storehelper.h \
     src/uihelper.h \
-    src/vkhelper.h
+    src/vkhelper.h \
+    src/vkservice.h
 
 RESOURCES += \
     qml.qrc \

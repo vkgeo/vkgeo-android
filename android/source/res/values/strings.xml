@@ -3,6 +3,8 @@
     <string name="app_name">Friends on Map</string>
     <string name="service_notification_channel_id">BackgroundService</string>
     <string name="service_notification_channel_name">Background service</string>
+    <string name="friends_nearby_notification_channel_id">FriendsNearby</string>
+    <string name="friends_nearby_notification_channel_name">Friends nearby</string>
     <string name="service_notification_title">Friends on Map service is running</string>
     <string name="service_notification_title_provider">Friends on Map service: %s</string>
     <string name="service_notification_text">Tap to open the application</string>
