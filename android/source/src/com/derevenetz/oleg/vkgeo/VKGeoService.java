@@ -217,7 +217,7 @@ public class VKGeoService extends QtService implements LocationListener
                                                            .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
         }
 
-        notification_manager.notify(getResources().getInteger(R.integer.friends_nearby_notification_first_id) + (friend_id.hashCode & 0xFFFF), notification_builder.build());
+        notification_manager.notify(getResources().getInteger(R.integer.friends_nearby_notification_first_id) + (friend_id.hashCode() & 0xFFFF), notification_builder.build());
     }
 
     public void initVK()
