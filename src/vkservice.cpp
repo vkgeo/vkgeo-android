@@ -1,3 +1,4 @@
+#include <QtCore/QDateTime>
 #include <QtPositioning/QGeoCoordinate>
 #include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidJniObject>
@@ -7,6 +8,8 @@
 
 VKService::VKService(QObject *parent) : QObject(parent)
 {
+    LastUpdateFriendsTime = 0;
+
     connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::UpdateFriendsTimerTimeout);
 
     UpdateFriendsTimer.setInterval(UPDATE_FRIENDS_TIMER_INTERVAL);
@@ -97,5 +100,9 @@ void VKService::trackedFriendLocationUpdated(QString id, qint64 updateTime, qrea
 
 void VKService::UpdateFriendsTimerTimeout()
 {
-    emit updateFriends();
+    if (QDateTime::currentSecsSinceEpoch() > LastUpdateFriendsTime + UPDATE_FRIENDS_INTERVAL) {
+        LastUpdateFriendsTime = QDateTime::currentSecsSinceEpoch();
+
+        emit updateFriends();
+    }
 }

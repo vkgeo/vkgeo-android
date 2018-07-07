@@ -11,7 +11,8 @@ class VKService : public QObject
     Q_OBJECT
 
 public:
-    static const int UPDATE_FRIENDS_TIMER_INTERVAL = 900000,
+    static const int UPDATE_FRIENDS_TIMER_INTERVAL = 1000,
+                     UPDATE_FRIENDS_INTERVAL       = 600,
                      NEARBY_DISTANCE               = 500;
 
     explicit VKService(QObject *parent = 0);
@@ -31,6 +32,7 @@ private slots:
     void UpdateFriendsTimerTimeout();
 
 private:
+    qint64      LastUpdateFriendsTime;
     QTimer      UpdateFriendsTimer;
     QVariantMap FriendsData;
 };
