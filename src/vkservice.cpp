@@ -10,7 +10,7 @@ VKService::VKService(QObject *parent) : QObject(parent)
 {
     LastUpdateFriendsTime = 0;
 
-    connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::UpdateFriendsTimerTimeout);
+    connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::updateFriendsTimerTimeout);
 
     UpdateFriendsTimer.setInterval(UPDATE_FRIENDS_TIMER_INTERVAL);
     UpdateFriendsTimer.start();
@@ -98,7 +98,7 @@ void VKService::trackedFriendLocationUpdated(QString id, qint64 updateTime, qrea
     }
 }
 
-void VKService::UpdateFriendsTimerTimeout()
+void VKService::updateFriendsTimerTimeout()
 {
     if (QDateTime::currentSecsSinceEpoch() > LastUpdateFriendsTime + UPDATE_FRIENDS_INTERVAL) {
         LastUpdateFriendsTime = QDateTime::currentSecsSinceEpoch();

@@ -106,6 +106,16 @@ public:
 
     Q_INVOKABLE void joinGroup(QString group_id);
 
+public slots:
+    void setAuthState(int state);
+    void processResponse(QString response, QString resp_request_str);
+    void processError(QString error_message, QString err_request_str);
+    void processLocationUpdate(qreal latitude, qreal longitude);
+
+private slots:
+    void requestQueueTimerTimeout();
+    void reportLocationTimerTimeout();
+
 signals:
     void authStateChanged(int authState);
     void friendsCountChanged(int friendsCount);
@@ -120,16 +130,6 @@ signals:
     void locationReported();
     void friendsUpdated();
     void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
-
-public slots:
-    void setAuthState(int state);
-    void processResponse(QString response, QString resp_request_str);
-    void processError(QString error_message, QString err_request_str);
-    void processLocationUpdate(qreal latitude, qreal longitude);
-
-private slots:
-    void RequestQueueTimerTimeout();
-    void ReportLocationTimerTimeout();
 
 private:
     void ReportLocation(bool expedited);

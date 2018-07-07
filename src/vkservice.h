@@ -18,10 +18,6 @@ public:
     explicit VKService(QObject *parent = 0);
     virtual ~VKService();
 
-signals:
-    void updateFriends();
-    void updateTrackedFriendsLocations(bool expedited);
-
 public slots:
     void authStateChanged(int authState);
     void locationReported();
@@ -29,7 +25,11 @@ public slots:
     void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
 private slots:
-    void UpdateFriendsTimerTimeout();
+    void updateFriendsTimerTimeout();
+
+signals:
+    void updateFriends();
+    void updateTrackedFriendsLocations(bool expedited);
 
 private:
     qint64      LastUpdateFriendsTime;

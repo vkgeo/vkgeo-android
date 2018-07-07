@@ -179,12 +179,12 @@ void VKHelper::initialize()
     if (!Initialized) {
         Context.callMethod<void>("initVK");
 
-        connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::RequestQueueTimerTimeout);
+        connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
 
         RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
         RequestQueueTimer.start();
 
-        connect(&ReportLocationTimer, &QTimer::timeout, this, &VKHelper::ReportLocationTimerTimeout);
+        connect(&ReportLocationTimer, &QTimer::timeout, this, &VKHelper::reportLocationTimerTimeout);
 
         ReportLocationTimer.setInterval(REPORT_LOCATION_TIMER_INTERVAL);
         ReportLocationTimer.start();
@@ -610,7 +610,7 @@ void VKHelper::processLocationUpdate(qreal latitude, qreal longitude)
     updateLocation(latitude, longitude);
 }
 
-void VKHelper::RequestQueueTimerTimeout()
+void VKHelper::requestQueueTimerTimeout()
 {
     if (!RequestQueue.isEmpty()) {
         QVariantList request_list;
@@ -633,7 +633,7 @@ void VKHelper::RequestQueueTimerTimeout()
     }
 }
 
-void VKHelper::ReportLocationTimerTimeout()
+void VKHelper::reportLocationTimerTimeout()
 {
     ReportLocation(false);
 }
