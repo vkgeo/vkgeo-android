@@ -88,7 +88,6 @@ public class VKGeoService extends QtService implements LocationListener
                                              LOCATION_UPDATE_CTR_DISTANCE       = 500.0f;
 
     private boolean                          centerLocationChanged              = true;
-    private int                              friendsNearbyNotificationId        = 0;
     private long                             centerLocationChangeHandleRtNanos  = 0;
     private String                           locationProvider                   = null;
     private Location                         currentLocation                    = null,
@@ -108,8 +107,6 @@ public class VKGeoService extends QtService implements LocationListener
     public void onCreate()
     {
         super.onCreate();
-
-        friendsNearbyNotificationId = getResources().getInteger(R.integer.friends_nearby_notification_first_id);
 
         NotificationManager notification_manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -189,7 +186,7 @@ public class VKGeoService extends QtService implements LocationListener
     {
     }
 
-    public void showFriendsNearbyNotification(String friend_name)
+    public void showFriendsNearbyNotification(String friend_id, String friend_name)
     {
         NotificationManager  notification_manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder notification_builder = null;
@@ -220,7 +217,7 @@ public class VKGeoService extends QtService implements LocationListener
                                                            .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
         }
 
-        notification_manager.notify(getFriendsNearbyNotificationId(), notification_builder.build());
+        notification_manager.notify(getResources().getInteger(R.integer.friends_nearby_notification_first_id) + (friend_id.hashCode & 0xFFFF), notification_builder.build());
     }
 
     public void initVK()
@@ -456,16 +453,5 @@ public class VKGeoService extends QtService implements LocationListener
     private void runOnMainThreadWithDelay(Runnable runnable, int delay)
     {
         new Handler(Looper.getMainLooper()).postDelayed(runnable, delay);
-    }
-
-    private int getFriendsNearbyNotificationId()
-    {
-        friendsNearbyNotificationId++;
-
-        if (friendsNearbyNotificationId > getResources().getInteger(R.integer.friends_nearby_notification_last_id)) {
-            friendsNearbyNotificationId = getResources().getInteger(R.integer.friends_nearby_notification_first_id);
-        }
-
-        return friendsNearbyNotificationId;
     }
 }
