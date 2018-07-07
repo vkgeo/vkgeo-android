@@ -218,17 +218,6 @@
     </message>
 </context>
 <context>
-    <name>VKService</name>
-    <message>
-        <source>New friends nearby</source>
-        <translation type="vanished">Новые друзья поблизости</translation>
-    </message>
-    <message>
-        <source>%1 is nearby</source>
-        <translation type="vanished">%1 сейчас поблизости</translation>
-    </message>
-</context>
-<context>
     <name>main</name>
     <message>
         <source>BUY</source>

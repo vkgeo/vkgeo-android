@@ -6,6 +6,8 @@
     <string name="service_notification_title">Сервис Друзья на Карте запущен</string>
     <string name="service_notification_title_provider">Сервис Друзья на Карте: %s</string>
     <string name="service_notification_text">Коснитесь, чтобы перейти в приложение</string>
+    <string name="friends_nearby_notification_title">Новые друзья поблизости</string>
+    <string name="friends_nearby_notification_text">%s сейчас поблизости</string>
     <string name="location_provider_gps">GPS</string>
     <string name="location_provider_network">сотовая сеть, Wi-Fi</string>
     <string name="location_provider_passive">пассивный режим</string>
