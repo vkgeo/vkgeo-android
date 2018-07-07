@@ -7,7 +7,7 @@
 
 VKService::VKService(QObject *parent) : QObject(parent)
 {
-    connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::updateFriends);
+    connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::UpdateFriendsTimerTimeout);
 
     UpdateFriendsTimer.setInterval(UPDATE_FRIENDS_TIMER_INTERVAL);
     UpdateFriendsTimer.start();
@@ -93,4 +93,9 @@ void VKService::trackedFriendLocationUpdated(QString id, qint64 updateTime, qrea
             FriendsData[id] = frnd;
         }
     }
+}
+
+void VKService::UpdateFriendsTimerTimeout()
+{
+    emit updateFriends();
 }

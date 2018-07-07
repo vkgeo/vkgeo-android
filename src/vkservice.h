@@ -27,6 +27,9 @@ public slots:
     void friendsUpdated();
     void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
+private slots:
+    void UpdateFriendsTimerTimeout();
+
 private:
     QTimer      UpdateFriendsTimer;
     QVariantMap FriendsData;
