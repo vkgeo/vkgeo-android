@@ -77,13 +77,10 @@ void VKService::trackedFriendLocationUpdated(QString id, qint64 updateTime, qrea
                         frnd["nearby"] = true;
 
                         if (frnd.contains("firstName") && frnd.contains("lastName")) {
-                            QAndroidJniObject j_title = QAndroidJniObject::fromString(tr("New friends nearby"));
-                            QAndroidJniObject j_text  = QAndroidJniObject::fromString(tr("%1 is nearby")
-                                                                                        .arg(QString("%1 %2").arg(frnd["firstName"].toString())
-                                                                                                             .arg(frnd["lastName"].toString())));
+                            QAndroidJniObject j_friend_name = QAndroidJniObject::fromString(QString("%1 %2").arg(frnd["firstName"].toString())
+                                                                                                            .arg(frnd["lastName"].toString()));
 
-                            QtAndroid::androidService().callMethod<void>("showFriendsNearbyNotification", "(Ljava/lang/String;Ljava/lang/String;)V", j_title.object<jstring>(),
-                                                                                                                                                     j_text.object<jstring>());
+                            QtAndroid::androidService().callMethod<void>("showFriendsNearbyNotification", "(Ljava/lang/String;)V", j_friend_name.object<jstring>());
                         }
                     }
                 } else {

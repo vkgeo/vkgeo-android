@@ -221,11 +221,11 @@
     <name>VKService</name>
     <message>
         <source>New friends nearby</source>
-        <translation>Новые друзья поблизости</translation>
+        <translation type="vanished">Новые друзья поблизости</translation>
     </message>
     <message>
         <source>%1 is nearby</source>
-        <translation>%1 сейчас поблизости</translation>
+        <translation type="vanished">%1 сейчас поблизости</translation>
     </message>
 </context>
 <context>

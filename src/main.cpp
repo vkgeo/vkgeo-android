@@ -47,12 +47,7 @@ int main(int argc, char *argv[])
 
         return app.exec();
     } else if (argc == 2 && QString(argv[1]) == "-service") {
-        QTranslator     translator;
         QAndroidService app(argc, argv);
-
-        if (translator.load(QString(":/tr/vkgeo_%1").arg(QLocale::system().name()))) {
-            app.installTranslator(&translator);
-        }
 
         AndroidGW *android_gw = new AndroidGW(&app);
         VKHelper  *vk_helper  = new VKHelper("SERVICE", &app);
