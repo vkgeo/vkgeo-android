@@ -212,6 +212,7 @@ public class VKGeoService extends QtService implements LocationListener
         } else {
             notification_builder = new Notification.Builder(this)
                                                            .setPriority(Notification.PRIORITY_DEFAULT)
+                                                           .setDefaults(Notification.DEFAULT_ALL)
                                                            .setAutoCancel(true)
                                                            .setSmallIcon(R.drawable.ic_stat_notify_service)
                                                            .setContentTitle(getResources().getString(R.string.friends_nearby_notification_title))
