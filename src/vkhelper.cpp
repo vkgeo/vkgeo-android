@@ -336,7 +336,7 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
             request["context"]  = "updateTrustedFriendsList";
             request["user_ids"] = user_id_list.join(",");
         } else {
-            parameters["list_id"]  = TrustedFriendsListId.toInt();
+            parameters["list_id"]  = TrustedFriendsListId.toLongLong();
             parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
             parameters["user_ids"] = user_id_list.join(",");
 
@@ -387,7 +387,7 @@ void VKHelper::updateTrackedFriendsList(QVariantList tracked_friends_list)
             request["context"]  = "updateTrackedFriendsList";
             request["user_ids"] = user_id_list.join(",");
         } else {
-            parameters["list_id"]  = TrackedFriendsListId.toInt();
+            parameters["list_id"]  = TrackedFriendsListId.toLongLong();
             parameters["name"]     = TRACKED_FRIENDS_LIST_NAME;
             parameters["user_ids"] = user_id_list.join(",");
 
@@ -416,7 +416,7 @@ void VKHelper::updateTrackedFriendsLocations(bool expedited)
                     QVariantMap request, parameters;
 
                     parameters["count"]   = MAX_NOTES_GET_COUNT;
-                    parameters["user_id"] = key.toInt();
+                    parameters["user_id"] = key.toLongLong();
 
                     request["method"]     = "notes.get";
                     request["context"]    = "updateTrackedFriendsLocations";
@@ -434,7 +434,7 @@ void VKHelper::sendMessage(QString user_id, QString message)
     if (Initialized) {
         QVariantMap request, parameters;
 
-        parameters["user_id"] = user_id.toInt();
+        parameters["user_id"] = user_id.toLongLong();
         parameters["message"] = message;
 
         request["method"]     = "messages.send";
@@ -450,7 +450,7 @@ void VKHelper::sendInvitation(QString user_id, QString text)
     if (Initialized) {
         QVariantMap request, parameters;
 
-        parameters["user_id"] = user_id.toInt();
+        parameters["user_id"] = user_id.toLongLong();
         parameters["text"]    = text;
         parameters["type"]    = "invite";
 
@@ -467,7 +467,7 @@ void VKHelper::joinGroup(QString group_id)
     if (Initialized) {
         QVariantMap request, parameters;
 
-        parameters["group_id"] = group_id.toInt();
+        parameters["group_id"] = group_id.toLongLong();
 
         request["method"]     = "groups.join";
         request["context"]    = "joinGroup";
@@ -760,7 +760,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                     if (json_note.contains("id") && json_note.contains("title")) {
                         if (json_note.value("title").toString() == DATA_NOTE_TITLE) {
-                            QString data_note_id = QString::number(json_note.value("id").toInt());
+                            QString data_note_id = QString::number(json_note.value("id").toVariant().toLongLong());
 
                             if (data_note_id != "") {
                                 notes_to_delete.append(data_note_id);
@@ -791,7 +791,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                         for (int i = 0; i < notes_to_delete.count(); i++) {
                             QVariantMap request, parameters;
 
-                            parameters["note_id"] = notes_to_delete[i].toInt();
+                            parameters["note_id"] = notes_to_delete[i].toLongLong();
 
                             request["method"]     = "notes.delete";
                             request["context"]    = resp_request["context"].toString();
@@ -892,7 +892,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                             parameters["count"]   = MAX_NOTES_GET_COUNT;
                             parameters["offset"]  = offset + json_items.count();
-                            parameters["user_id"] = user_id.toInt();
+                            parameters["user_id"] = user_id.toLongLong();
 
                             request["method"]     = "notes.get";
                             request["context"]    = resp_request["context"].toString();
@@ -974,7 +974,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                             if (!json_friend.contains("deactivated")) {
                                 QVariantMap frnd;
 
-                                frnd["userId"]  = QString::number(json_friend.value("id").toInt());
+                                frnd["userId"]  = QString::number(json_friend.value("id").toVariant().toLongLong());
                                 frnd["trusted"] = false;
                                 frnd["tracked"] = false;
 
@@ -1017,7 +1017,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                                     QJsonObject json_last_seen = json_friend.value("last_seen").toObject();
 
                                     if (json_last_seen.contains("time")) {
-                                        frnd["lastSeenTime"] = QString::number(json_last_seen["time"].toInt());
+                                        frnd["lastSeenTime"] = QString::number(json_last_seen["time"].toVariant().toLongLong());
                                     } else {
                                         frnd["lastSeenTime"] = "";
                                     }
@@ -1033,7 +1033,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                     }
                 } else if (list_id == TrustedFriendsListId) {
                     for (int i = 0; i < json_items.count() && offset + i < MaxTrustedFriendsCount; i++) {
-                        QString friend_id = QString::number(json_items.at(i).toInt());
+                        QString friend_id = QString::number(json_items.at(i).toVariant().toLongLong());
 
                         if (FriendsDataTmp.contains(friend_id)) {
                             QVariantMap frnd = FriendsDataTmp[friend_id].toMap();
@@ -1046,7 +1046,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                     }
                 } else if (list_id == TrackedFriendsListId) {
                     for (int i = 0; i < json_items.count() && offset + i < MaxTrackedFriendsCount; i++) {
-                        QString friend_id = QString::number(json_items.at(i).toInt());
+                        QString friend_id = QString::number(json_items.at(i).toVariant().toLongLong());
 
                         if (FriendsDataTmp.contains(friend_id)) {
                             QVariantMap frnd = FriendsDataTmp[friend_id].toMap();
@@ -1072,7 +1072,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                         parameters["fields"] = fields;
                     }
                     if (list_id != "") {
-                        parameters["list_id"] = list_id.toInt();
+                        parameters["list_id"] = list_id.toLongLong();
                     }
 
                     request["method"]     = "friends.get";
@@ -1134,9 +1134,9 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
 
                     if (json_list.contains("id") && json_list.contains("name")) {
                         if (json_list.value("name").toString() == TRUSTED_FRIENDS_LIST_NAME) {
-                            trusted_friends_list_id = QString::number(json_list.value("id").toInt());
+                            trusted_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
                         } else if (json_list.value("name").toString() == TRACKED_FRIENDS_LIST_NAME) {
-                            tracked_friends_list_id = QString::number(json_list.value("id").toInt());
+                            tracked_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
                         }
 
                         if (trusted_friends_list_id != "" && tracked_friends_list_id != "") {
@@ -1188,9 +1188,9 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
 
                     if (json_list.contains("id") && json_list.contains("name")) {
                         if (json_list.value("name").toString() == TRUSTED_FRIENDS_LIST_NAME) {
-                            trusted_friends_list_id = QString::number(json_list.value("id").toInt());
+                            trusted_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
                         } else if (json_list.value("name").toString() == TRACKED_FRIENDS_LIST_NAME) {
-                            tracked_friends_list_id = QString::number(json_list.value("id").toInt());
+                            tracked_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
                         }
 
                         if (trusted_friends_list_id != "" && tracked_friends_list_id != "") {
@@ -1205,7 +1205,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     QVariantMap request, parameters;
 
                     parameters["count"]   = MAX_FRIENDS_GET_COUNT;
-                    parameters["list_id"] = TrustedFriendsListId.toInt();
+                    parameters["list_id"] = TrustedFriendsListId.toLongLong();
 
                     request["method"]     = "friends.get";
                     request["context"]    = resp_request["context"].toString();
@@ -1219,7 +1219,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     QVariantMap request, parameters;
 
                     parameters["count"]   = MAX_FRIENDS_GET_COUNT;
-                    parameters["list_id"] = TrackedFriendsListId.toInt();
+                    parameters["list_id"] = TrackedFriendsListId.toLongLong();
 
                     request["method"]     = "friends.get";
                     request["context"]    = resp_request["context"].toString();
@@ -1256,7 +1256,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
 
                     if (json_list.contains("id") && json_list.contains("name")) {
                         if (json_list.value("name").toString() == TRUSTED_FRIENDS_LIST_NAME) {
-                            trusted_friends_list_id = QString::number(json_list.value("id").toInt());
+                            trusted_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
 
                             if (trusted_friends_list_id != "") {
                                 break;
@@ -1271,7 +1271,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     if (trusted_friends_list_id != "") {
                         TrustedFriendsListId = trusted_friends_list_id;
 
-                        parameters["list_id"]  = TrustedFriendsListId.toInt();
+                        parameters["list_id"]  = TrustedFriendsListId.toLongLong();
                         parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
                         parameters["user_ids"] = resp_request["user_ids"].toString();
 
@@ -1313,7 +1313,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
 
                     if (json_list.contains("id") && json_list.contains("name")) {
                         if (json_list.value("name").toString() == TRACKED_FRIENDS_LIST_NAME) {
-                            tracked_friends_list_id = QString::number(json_list.value("id").toInt());
+                            tracked_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
 
                             if (tracked_friends_list_id != "") {
                                 break;
@@ -1328,7 +1328,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     if (tracked_friends_list_id != "") {
                         TrackedFriendsListId = tracked_friends_list_id;
 
-                        parameters["list_id"]  = TrackedFriendsListId.toInt();
+                        parameters["list_id"]  = TrackedFriendsListId.toLongLong();
                         parameters["name"]     = TRACKED_FRIENDS_LIST_NAME;
                         parameters["user_ids"] = resp_request["user_ids"].toString();
 
@@ -1378,7 +1378,7 @@ void VKHelper::ProcessFriendsAddListResponse(QString response, QVariantMap resp_
             QJsonObject json_response = json_document.object().value("response").toObject();
 
             if (json_response.contains("list_id")) {
-                TrustedFriendsListId = QString::number(json_response.value("list_id").toInt());
+                TrustedFriendsListId = QString::number(json_response.value("list_id").toVariant().toLongLong());
             } else {
                 qWarning() << "ProcessFriendsAddListResponse() : invalid response";
             }
@@ -1392,7 +1392,7 @@ void VKHelper::ProcessFriendsAddListResponse(QString response, QVariantMap resp_
             QJsonObject json_response = json_document.object().value("response").toObject();
 
             if (json_response.contains("list_id")) {
-                TrackedFriendsListId = QString::number(json_response.value("list_id").toInt());
+                TrackedFriendsListId = QString::number(json_response.value("list_id").toVariant().toLongLong());
             } else {
                 qWarning() << "ProcessFriendsAddListResponse() : invalid response";
             }
@@ -1467,7 +1467,7 @@ void VKHelper::ProcessUsersGetResponse(QString response, QVariantMap resp_reques
                 QJsonObject json_user = json_response.at(0).toObject();
 
                 if (json_user.contains("id")) {
-                    UserId = QString::number(json_user.value("id").toInt());
+                    UserId = QString::number(json_user.value("id").toVariant().toLongLong());
                 } else {
                     UserId = "";
                 }
