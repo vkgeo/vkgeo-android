@@ -59,15 +59,27 @@ public class VKGeoService extends QtService implements LocationListener
         public void handleMessage(Message msg)
         {
             if (msg.what == MESSAGE_NOT_AUTHORIZED) {
-                vkAuthChanged(false);
+                serviceWeakRef.get().runOnMainThreadWithDelay(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        vkAuthChanged(false);
+                    }
+                }, AUTH_CHANGE_ON_MSG_DELAY);
             } else if (msg.what == MESSAGE_AUTHORIZED) {
-                Bundle bdl = msg.getData();
+                final Bundle bdl = msg.getData();
 
                 if (bdl != null && bdl.containsKey("VKAccessToken") && bdl.getString("VKAccessToken") != null) {
                     try {
-                        VKAccessToken.replaceToken(serviceWeakRef.get().getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
+                        serviceWeakRef.get().runOnMainThreadWithDelay(new Runnable() {
+                            @Override
+                            public void run()
+                            {
+                                VKAccessToken.replaceToken(serviceWeakRef.get().getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
 
-                        vkAuthChanged(true);
+                                vkAuthChanged(true);
+                            }
+                        }, AUTH_CHANGE_ON_MSG_DELAY);
                     } catch (Exception ex) {
                         Log.w("VKGeoService", ex.toString());
                     }
@@ -81,7 +93,8 @@ public class VKGeoService extends QtService implements LocationListener
     public static final int                  MESSAGE_NOT_AUTHORIZED             = 1001,
                                              MESSAGE_AUTHORIZED                 = 1002;
 
-    private static final int                 LOCATION_SOURCE_SELECTION_INTERVAL = 60000;
+    private static final int                 AUTH_CHANGE_ON_MSG_DELAY           = 15000,
+                                             LOCATION_SOURCE_SELECTION_INTERVAL = 60000;
     private static final long                LOCATION_UPDATE_MIN_TIME           = 30000,
                                              LOCATION_UPDATE_CTR_TIMEOUT        = 900000;
     private static final float               LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
