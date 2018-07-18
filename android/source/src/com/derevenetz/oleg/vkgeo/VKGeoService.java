@@ -63,6 +63,8 @@ public class VKGeoService extends QtService implements LocationListener
                     @Override
                     public void run()
                     {
+                        VKAccessToken.replaceToken(serviceWeakRef.get().getApplicationContext(), null);
+
                         vkAuthChanged(false);
                     }
                 }, AUTH_CHANGE_ON_MSG_DELAY);
