@@ -23,7 +23,7 @@ VKService::~VKService()
 void VKService::authStateChanged(int authState)
 {
     if (authState == VKAuthState::StateAuthorized) {
-        emit updateFriends();
+        QTimer::singleShot(UPDATE_FRIENDS_ON_AUTH_DELAY, this, &VKService::updateFriendsOnAuthSingleShot);
     }
 }
 
@@ -96,6 +96,11 @@ void VKService::trackedFriendLocationUpdated(QString id, qint64 updateTime, qrea
             FriendsData[id] = frnd;
         }
     }
+}
+
+void VKService::updateFriendsOnAuthSingleShot()
+{
+    emit updateFriends();
 }
 
 void VKService::updateFriendsTimerTimeout()

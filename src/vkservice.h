@@ -13,6 +13,7 @@ class VKService : public QObject
 public:
     static const int UPDATE_FRIENDS_TIMER_INTERVAL = 1000,
                      UPDATE_FRIENDS_INTERVAL       = 600,
+                     UPDATE_FRIENDS_ON_AUTH_DELAY  = 15000,
                      NEARBY_DISTANCE               = 500;
 
     explicit VKService(QObject *parent = 0);
@@ -25,6 +26,7 @@ public slots:
     void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
 private slots:
+    void updateFriendsOnAuthSingleShot();
     void updateFriendsTimerTimeout();
 
 signals:
