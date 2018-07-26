@@ -64,8 +64,6 @@ int main(int argc, char *argv[])
         QObject::connect(vk_service, &VKService::updateFriends,                 vk_helper,  &VKHelper::updateFriends);
         QObject::connect(vk_service, &VKService::updateTrackedFriendsLocations, vk_helper,  &VKHelper::updateTrackedFriendsLocations);
 
-        vk_helper->initialize();
-
         return app.exec();
     } else {
         return 0;

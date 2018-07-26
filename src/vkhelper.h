@@ -83,7 +83,6 @@ public:
     int maxTrackedFriendsCount() const;
     void setMaxTrackedFriendsCount(int count);
 
-    Q_INVOKABLE void initialize();
     Q_INVOKABLE void cleanup();
 
     Q_INVOKABLE void login();
@@ -174,7 +173,6 @@ private:
     void ProcessUsersGetResponse(QString response, QVariantMap resp_request);
     void ProcessUsersGetError(QVariantMap err_request);
 
-    bool                Initialized;
     int                 AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64              LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;
     QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,

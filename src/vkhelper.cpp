@@ -61,7 +61,6 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 
 VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
 {
-    Initialized                           = false;
     AuthState                             = VKAuthState::StateUnknown;
     MaxTrustedFriendsCount                = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
     MaxTrackedFriendsCount                = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
@@ -75,6 +74,18 @@ VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
     } else {
         Context = QtAndroid::androidActivity();
     }
+
+    Context.callMethod<void>("initVK");
+
+    connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
+
+    RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
+    RequestQueueTimer.start();
+
+    connect(&ReportLocationTimer, &QTimer::timeout, this, &VKHelper::reportLocationTimerTimeout);
+
+    ReportLocationTimer.setInterval(REPORT_LOCATION_TIMER_INTERVAL);
+    ReportLocationTimer.start();
 }
 
 VKHelper::~VKHelper()
@@ -174,76 +185,51 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
     emit maxTrackedFriendsCountChanged(MaxTrackedFriendsCount);
 }
 
-void VKHelper::initialize()
-{
-    if (!Initialized) {
-        Context.callMethod<void>("initVK");
-
-        connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
-
-        RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
-        RequestQueueTimer.start();
-
-        connect(&ReportLocationTimer, &QTimer::timeout, this, &VKHelper::reportLocationTimerTimeout);
-
-        ReportLocationTimer.setInterval(REPORT_LOCATION_TIMER_INTERVAL);
-        ReportLocationTimer.start();
-
-        Initialized = true;
-    }
-}
-
 void VKHelper::cleanup()
 {
-    if (Initialized) {
-        LastReportLocationTime                = 0;
-        LastUpdateTrackedFriendsLocationsTime = 0;
-        UserId                                = "";
-        FirstName                             = "";
-        LastName                              = "";
-        PhotoUrl                              = DEFAULT_PHOTO_URL;
-        BigPhotoUrl                           = DEFAULT_PHOTO_URL;
-        TrustedFriendsListId                  = "";
-        TrackedFriendsListId                  = "";
+    LastReportLocationTime                = 0;
+    LastUpdateTrackedFriendsLocationsTime = 0;
+    UserId                                = "";
+    FirstName                             = "";
+    LastName                              = "";
+    PhotoUrl                              = DEFAULT_PHOTO_URL;
+    BigPhotoUrl                           = DEFAULT_PHOTO_URL;
+    TrustedFriendsListId                  = "";
+    TrackedFriendsListId                  = "";
 
-        emit userIdChanged(UserId);
-        emit firstNameChanged(FirstName);
-        emit lastNameChanged(LastName);
-        emit photoUrlChanged(PhotoUrl);
-        emit bigPhotoUrlChanged(BigPhotoUrl);
+    emit userIdChanged(UserId);
+    emit firstNameChanged(FirstName);
+    emit lastNameChanged(LastName);
+    emit photoUrlChanged(PhotoUrl);
+    emit bigPhotoUrlChanged(BigPhotoUrl);
 
-        while (!RequestQueue.isEmpty()) {
-            QVariantMap request = RequestQueue.dequeue();
+    while (!RequestQueue.isEmpty()) {
+        QVariantMap request = RequestQueue.dequeue();
 
-            ContextTrackerDelRequest(request);
-        }
-
-        Context.callMethod<void>("cancelAllVKRequests");
-
-        FriendsData.clear();
-        FriendsDataTmp.clear();
-
-        emit friendsCountChanged(FriendsData.count());
-        emit friendsUpdated();
+        ContextTrackerDelRequest(request);
     }
+
+    Context.callMethod<void>("cancelAllVKRequests");
+
+    FriendsData.clear();
+    FriendsDataTmp.clear();
+
+    emit friendsCountChanged(FriendsData.count());
+    emit friendsUpdated();
 }
 
 void VKHelper::login()
 {
-    if (Initialized) {
-        QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
+    QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
 
-        Context.callMethod<void>("loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
-    }
+    Context.callMethod<void>("loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
 }
 
 void VKHelper::logout()
 {
-    if (Initialized) {
-        Context.callMethod<void>("logoutVK");
+    Context.callMethod<void>("logoutVK");
 
-        setAuthState(VKAuthState::StateNotAuthorized);
-    }
+    setAuthState(VKAuthState::StateNotAuthorized);
 }
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
@@ -263,7 +249,7 @@ void VKHelper::reportLocation()
 
 void VKHelper::updateFriends()
 {
-    if (Initialized && !ContextHaveActiveRequests("updateFriends")) {
+    if (!ContextHaveActiveRequests("updateFriends")) {
         QVariantMap request, parameters;
 
         FriendsDataTmp.clear();
@@ -281,29 +267,21 @@ void VKHelper::updateFriends()
 
 QVariantMap VKHelper::getFriends()
 {
-    if (Initialized) {
-        return FriendsData;
-    } else {
-        return QVariantMap();
-    }
+    return FriendsData;
 }
 
 QVariantList VKHelper::getFriendsList()
 {
-    if (Initialized) {
-        QVariantList friends_list = FriendsData.values();
+    QVariantList friends_list = FriendsData.values();
 
-        std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+    std::sort(friends_list.begin(), friends_list.end(), compareFriends);
 
-        return friends_list;
-    } else {
-        return QVariantList();
-    }
+    return friends_list;
 }
 
 void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
 {
-    if (Initialized && !ContextHaveActiveRequests("updateTrustedFriendsList")) {
+    if (!ContextHaveActiveRequests("updateTrustedFriendsList")) {
         QStringList user_id_list;
 
         foreach (QString key, FriendsData.keys()) {
@@ -353,7 +331,7 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
 
 void VKHelper::updateTrackedFriendsList(QVariantList tracked_friends_list)
 {
-    if (Initialized && !ContextHaveActiveRequests("updateTrackedFriendsList")) {
+    if (!ContextHaveActiveRequests("updateTrackedFriendsList")) {
         QStringList user_id_list;
 
         foreach (QString key, FriendsData.keys()) {
@@ -404,26 +382,24 @@ void VKHelper::updateTrackedFriendsList(QVariantList tracked_friends_list)
 
 void VKHelper::updateTrackedFriendsLocations(bool expedited)
 {
-    if (Initialized) {
-        if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrackedFriendsLocationsTime + UPDATE_TRACKED_FRIENDS_LOCATIONS_INTERVAL) {
-            LastUpdateTrackedFriendsLocationsTime = QDateTime::currentSecsSinceEpoch();
+    if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrackedFriendsLocationsTime + UPDATE_TRACKED_FRIENDS_LOCATIONS_INTERVAL) {
+        LastUpdateTrackedFriendsLocationsTime = QDateTime::currentSecsSinceEpoch();
 
-            foreach (QString key, FriendsData.keys()) {
-                QVariantMap frnd = FriendsData[key].toMap();
+        foreach (QString key, FriendsData.keys()) {
+            QVariantMap frnd = FriendsData[key].toMap();
 
-                if ((frnd.contains("trusted") && frnd["trusted"].toBool()) ||
-                    (frnd.contains("tracked") && frnd["tracked"].toBool())) {
-                    QVariantMap request, parameters;
+            if ((frnd.contains("trusted") && frnd["trusted"].toBool()) ||
+                (frnd.contains("tracked") && frnd["tracked"].toBool())) {
+                QVariantMap request, parameters;
 
-                    parameters["count"]   = MAX_NOTES_GET_COUNT;
-                    parameters["user_id"] = key.toLongLong();
+                parameters["count"]   = MAX_NOTES_GET_COUNT;
+                parameters["user_id"] = key.toLongLong();
 
-                    request["method"]     = "notes.get";
-                    request["context"]    = "updateTrackedFriendsLocations";
-                    request["parameters"] = parameters;
+                request["method"]     = "notes.get";
+                request["context"]    = "updateTrackedFriendsLocations";
+                request["parameters"] = parameters;
 
-                    EnqueueRequest(request);
-                }
+                EnqueueRequest(request);
             }
         }
     }
@@ -431,50 +407,44 @@ void VKHelper::updateTrackedFriendsLocations(bool expedited)
 
 void VKHelper::sendMessage(QString user_id, QString message)
 {
-    if (Initialized) {
-        QVariantMap request, parameters;
+    QVariantMap request, parameters;
 
-        parameters["user_id"] = user_id.toLongLong();
-        parameters["message"] = message;
+    parameters["user_id"] = user_id.toLongLong();
+    parameters["message"] = message;
 
-        request["method"]     = "messages.send";
-        request["context"]    = "sendMessage";
-        request["parameters"] = parameters;
+    request["method"]     = "messages.send";
+    request["context"]    = "sendMessage";
+    request["parameters"] = parameters;
 
-        EnqueueRequest(request);
-    }
+    EnqueueRequest(request);
 }
 
 void VKHelper::sendInvitation(QString user_id, QString text)
 {
-    if (Initialized) {
-        QVariantMap request, parameters;
+    QVariantMap request, parameters;
 
-        parameters["user_id"] = user_id.toLongLong();
-        parameters["text"]    = text;
-        parameters["type"]    = "invite";
+    parameters["user_id"] = user_id.toLongLong();
+    parameters["text"]    = text;
+    parameters["type"]    = "invite";
 
-        request["method"]     = "apps.sendRequest";
-        request["context"]    = "sendInvitation";
-        request["parameters"] = parameters;
+    request["method"]     = "apps.sendRequest";
+    request["context"]    = "sendInvitation";
+    request["parameters"] = parameters;
 
-        EnqueueRequest(request);
-    }
+    EnqueueRequest(request);
 }
 
 void VKHelper::joinGroup(QString group_id)
 {
-    if (Initialized) {
-        QVariantMap request, parameters;
+    QVariantMap request, parameters;
 
-        parameters["group_id"] = group_id.toLongLong();
+    parameters["group_id"] = group_id.toLongLong();
 
-        request["method"]     = "groups.join";
-        request["context"]    = "joinGroup";
-        request["parameters"] = parameters;
+    request["method"]     = "groups.join";
+    request["context"]    = "joinGroup";
+    request["parameters"] = parameters;
 
-        EnqueueRequest(request);
-    }
+    EnqueueRequest(request);
 }
 
 void VKHelper::setAuthState(int state)

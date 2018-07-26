@@ -249,9 +249,6 @@ Window {
 
         updateFeatures();
 
-        AdMobHelper.initialize();
-        VKHelper.initialize();
-
         mainStackView.push(mainPage);
 
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
