@@ -1,6 +1,7 @@
 #ifndef VKSERVICE_H
 #define VKSERVICE_H
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QVariantMap>

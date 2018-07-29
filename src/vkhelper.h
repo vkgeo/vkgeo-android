@@ -1,6 +1,7 @@
 #ifndef VKHELPER_H
 #define VKHELPER_H
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QQueue>

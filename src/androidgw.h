@@ -1,6 +1,7 @@
 #ifndef ANDROIDGW_H
 #define ANDROIDGW_H
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
