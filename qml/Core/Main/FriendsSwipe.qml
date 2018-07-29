@@ -102,6 +102,8 @@ Item {
                         profile_page.online            = frnd.online;
                         profile_page.locationAvailable = frnd.locationAvailable;
                         profile_page.updateTime        = frnd.updateTime;
+                        profile_page.latitude          = frnd.latitude;
+                        profile_page.longitude         = frnd.longitude;
                         profile_page.firstName         = frnd.firstName;
                         profile_page.lastName          = frnd.lastName;
                         profile_page.bigPhotoUrl       = frnd.bigPhotoUrl;
