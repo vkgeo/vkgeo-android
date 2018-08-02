@@ -249,7 +249,7 @@ void VKHelper::reportLocation()
 
 void VKHelper::updateFriends()
 {
-    if (!ContextHaveActiveRequests("updateFriends")) {
+    if (!ContextHasActiveRequests("updateFriends")) {
         QVariantMap request, parameters;
 
         FriendsDataTmp.clear();
@@ -281,7 +281,7 @@ QVariantList VKHelper::getFriendsList()
 
 void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
 {
-    if (!ContextHaveActiveRequests("updateTrustedFriendsList")) {
+    if (!ContextHasActiveRequests("updateTrustedFriendsList")) {
         QStringList user_id_list;
 
         foreach (QString key, FriendsData.keys()) {
@@ -331,7 +331,7 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
 
 void VKHelper::updateTrackedFriendsList(QVariantList tracked_friends_list)
 {
-    if (!ContextHaveActiveRequests("updateTrackedFriendsList")) {
+    if (!ContextHasActiveRequests("updateTrackedFriendsList")) {
         QStringList user_id_list;
 
         foreach (QString key, FriendsData.keys()) {
@@ -610,7 +610,7 @@ void VKHelper::reportLocationTimerTimeout()
 
 void VKHelper::ReportLocation(bool expedited)
 {
-    if (!ContextHaveActiveRequests("reportLocation")) {
+    if (!ContextHasActiveRequests("reportLocation")) {
         if (LastLocationInfo.contains("updated")  && LastLocationInfo.contains("update_time") &&
             LastLocationInfo.contains("latitude") && LastLocationInfo.contains("longitude")) {
             if (AuthState == VKAuthState::StateAuthorized) {
@@ -664,7 +664,7 @@ void VKHelper::ContextTrackerAddRequest(QVariantMap request)
             ContextTracker[context] = 1;
         }
     } else {
-        qWarning() << "ContextTrackerAddRequest() : request have no context";
+        qWarning() << "ContextTrackerAddRequest() : request has no context";
     }
 }
 
@@ -683,11 +683,11 @@ void VKHelper::ContextTrackerDelRequest(QVariantMap request)
             qWarning() << QString("ContextTrackerDelRequest() : no tracker value for context: %1").arg(context);
         }
     } else {
-        qWarning() << "ContextTrackerDelRequest() : request have no context";
+        qWarning() << "ContextTrackerDelRequest() : request has no context";
     }
 }
 
-bool VKHelper::ContextHaveActiveRequests(QString context)
+bool VKHelper::ContextHasActiveRequests(QString context)
 {
     if (ContextTracker.contains(context) && ContextTracker[context] > 0) {
         return true;
@@ -1065,7 +1065,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
             qWarning() << "ProcessFriendsGetResponse() : invalid json";
         }
 
-        if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
+        if (!ContextHasActiveRequests(resp_request["context"].toString())) {
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
@@ -1077,7 +1077,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
 void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
 {
     if (err_request["context"].toString() == "updateFriends") {
-        if (!ContextHaveActiveRequests(err_request["context"].toString())) {
+        if (!ContextHasActiveRequests(err_request["context"].toString())) {
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
@@ -1204,7 +1204,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
             qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
         }
 
-        if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
+        if (!ContextHasActiveRequests(resp_request["context"].toString())) {
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
@@ -1330,7 +1330,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
 void VKHelper::ProcessFriendsGetListsError(QVariantMap err_request)
 {
     if (err_request["context"].toString() == "updateFriends") {
-        if (!ContextHaveActiveRequests(err_request["context"].toString())) {
+        if (!ContextHasActiveRequests(err_request["context"].toString())) {
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
