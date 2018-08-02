@@ -588,9 +588,15 @@ void VKHelper::requestQueueTimerTimeout()
         for (int i = 0; i < MAX_BATCH_SIZE && !RequestQueue.isEmpty(); i++) {
             QVariantMap request = RequestQueue.dequeue();
 
-            if (AuthState == VKAuthState::StateAuthorized) {
-                request_list.append(request);
+            if (request.contains("method") && request.contains("context")) {
+                if (AuthState == VKAuthState::StateAuthorized) {
+                    request_list.append(request);
+                } else {
+                    ContextTrackerDelRequest(request);
+                }
             } else {
+                qWarning() << "requestQueueTimerTimeout() : invalid request";
+
                 ContextTrackerDelRequest(request);
             }
         }
