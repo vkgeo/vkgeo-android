@@ -162,11 +162,7 @@ public class VKGeoService extends QtService implements LocationListener
         if (currentLocation == null || currentLocation.distanceTo(location) > location.getAccuracy()) {
             currentLocation = location;
 
-            try {
-                locationUpdated(currentLocation.getLatitude(), currentLocation.getLongitude());
-            } catch (Exception ex) {
-                Log.w("VKGeoService", "onLocationChanged() : " + ex.toString());
-            }
+            locationUpdated(currentLocation.getLatitude(), currentLocation.getLongitude());
 
             if (centerLocation == null || centerLocation.distanceTo(currentLocation) > LOCATION_UPDATE_CTR_DISTANCE) {
                 centerLocation        = currentLocation;
