@@ -393,6 +393,7 @@ void VKHelper::updateTrackedFriendsData(bool expedited)
                 QVariantMap request, parameters;
 
                 parameters["count"]   = MAX_NOTES_GET_COUNT;
+                parameters["sort"]    = 0;
                 parameters["user_id"] = key.toLongLong();
 
                 request["method"]     = "notes.get";
@@ -640,6 +641,7 @@ void VKHelper::SendData(bool expedited)
                             request["user_data"] = user_data_string;
                         } else {
                             parameters["count"] = MAX_NOTES_GET_COUNT;
+                            parameters["sort"]  = 0;
 
                             request["method"]     = "notes.get";
                             request["context"]    = "sendData";
@@ -746,11 +748,12 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                 }
 
                 if (resp_request.contains("user_data")) {
-                    if (offset + json_items.count() < notes_count) {
-                        QVariantMap request, parameters;
+                    QVariantMap request, parameters;
 
+                    if (offset + json_items.count() < notes_count) {
                         parameters["count"]  = MAX_NOTES_GET_COUNT;
                         parameters["offset"] = offset + json_items.count();
+                        parameters["sort"]   = 0;
 
                         request["method"]     = "notes.get";
                         request["context"]    = resp_request["context"].toString();
@@ -761,23 +764,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                         }
 
                         request["parameters"] = parameters;
-
-                        EnqueueRequest(request);
                     } else {
-                        for (int i = 0; i < notes_to_delete.count(); i++) {
-                            QVariantMap request, parameters;
-
-                            parameters["note_id"] = notes_to_delete[i].toLongLong();
-
-                            request["method"]     = "notes.delete";
-                            request["context"]    = resp_request["context"].toString();
-                            request["parameters"] = parameters;
-
-                            EnqueueRequest(request);
-                        }
-
-                        QVariantMap request, parameters;
-
                         parameters["title"]           = DATA_NOTE_TITLE;
                         parameters["text"]            = resp_request["user_data"].toString();
                         parameters["privacy_comment"] = "nobody";
@@ -790,10 +777,15 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                         request["method"]     = "notes.add";
                         request["context"]    = resp_request["context"].toString();
-                        request["parameters"] = parameters;
 
-                        EnqueueRequest(request);
+                        if (notes_to_delete.count() > 0) {
+                            request["notes_to_delete"] = notes_to_delete.join(",");
+                        }
+
+                        request["parameters"] = parameters;
                     }
+
+                    EnqueueRequest(request);
                 } else {
                     qWarning() << "ProcessNotesGetResponse() : invalid request";
                 }
@@ -859,6 +851,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                             parameters["count"]   = MAX_NOTES_GET_COUNT;
                             parameters["offset"]  = offset + json_items.count();
+                            parameters["sort"]    = 0;
                             parameters["user_id"] = user_id.toLongLong();
 
                             request["method"]     = "notes.get";
@@ -889,7 +882,26 @@ void VKHelper::ProcessNotesGetError(QVariantMap err_request)
 void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_request)
 {
     Q_UNUSED(response)
-    Q_UNUSED(resp_request)
+
+    if (resp_request["context"].toString() == "sendData") {
+        QStringList notes_to_delete;
+
+        if (resp_request.contains("notes_to_delete")) {
+            notes_to_delete = resp_request["notes_to_delete"].toString().split(",");
+        }
+
+        for (int i = 0; i < notes_to_delete.count(); i++) {
+            QVariantMap request, parameters;
+
+            parameters["note_id"] = notes_to_delete[i].toLongLong();
+
+            request["method"]     = "notes.delete";
+            request["context"]    = resp_request["context"].toString();
+            request["parameters"] = parameters;
+
+            EnqueueRequest(request);
+        }
+    }
 }
 
 void VKHelper::ProcessNotesAddError(QVariantMap err_request)
@@ -1123,6 +1135,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     QVariantMap request, parameters;
 
                     parameters["count"] = MAX_NOTES_GET_COUNT;
+                    parameters["sort"]  = 0;
 
                     request["method"]     = "notes.get";
                     request["context"]    = resp_request["context"].toString();
