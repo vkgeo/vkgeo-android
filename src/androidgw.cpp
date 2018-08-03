@@ -19,17 +19,12 @@ AndroidGW *AndroidGW::instance()
     return Instance;
 }
 
-static void bannerViewHeightUpdated(JNIEnv *, jclass, jint height)
+extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoActivity_bannerViewHeightUpdated(JNIEnv *, jclass, jint height)
 {
     emit AndroidGW::instance()->setBannerViewHeight(height);
 }
 
-static void locationUpdated(JNIEnv *, jclass, jdouble latitude, jdouble longitude)
-{
-    emit AndroidGW::instance()->processLocationUpdate(latitude, longitude);
-}
-
-static void vkAuthChanged(JNIEnv *, jclass, jboolean authorized)
+extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoActivity_vkAuthChanged(JNIEnv *, jclass, jboolean authorized)
 {
     if (authorized) {
         emit AndroidGW::instance()->setAuthState(VKAuthState::StateAuthorized);
@@ -38,7 +33,7 @@ static void vkAuthChanged(JNIEnv *, jclass, jboolean authorized)
     }
 }
 
-static void vkRequestComplete(JNIEnv *jni_env, jclass, jstring j_request, jstring j_response)
+extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoActivity_vkRequestComplete(JNIEnv *jni_env, jclass, jstring j_request, jstring j_response)
 {
     const char* request_str  = jni_env->GetStringUTFChars(j_request,  nullptr);
     const char* response_str = jni_env->GetStringUTFChars(j_response, nullptr);
@@ -51,7 +46,7 @@ static void vkRequestComplete(JNIEnv *jni_env, jclass, jstring j_request, jstrin
     emit AndroidGW::instance()->processResponse(response, request);
 }
 
-static void vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j_error_message)
+extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoActivity_vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j_error_message)
 {
     const char* request_str       = jni_env->GetStringUTFChars(j_request,       nullptr);
     const char* error_message_str = jni_env->GetStringUTFChars(j_error_message, nullptr);
@@ -64,52 +59,42 @@ static void vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j
     emit AndroidGW::instance()->processError(error_message, request);
 }
 
-static JNINativeMethod activity_methods[] = {
-    { "bannerViewHeightUpdated", "(I)V",                                    reinterpret_cast<void *>(bannerViewHeightUpdated) },
-    { "vkAuthChanged",           "(Z)V",                                    reinterpret_cast<void *>(vkAuthChanged) },
-    { "vkRequestComplete",       "(Ljava/lang/String;Ljava/lang/String;)V", reinterpret_cast<void *>(vkRequestComplete) },
-    { "vkRequestError",          "(Ljava/lang/String;Ljava/lang/String;)V", reinterpret_cast<void *>(vkRequestError) }
-};
-static int activity_methods_count = 4;
-
-static JNINativeMethod service_methods[] = {
-    { "locationUpdated",   "(DD)V",                                   reinterpret_cast<void *>(locationUpdated) },
-    { "vkAuthChanged",     "(Z)V",                                    reinterpret_cast<void *>(vkAuthChanged) },
-    { "vkRequestComplete", "(Ljava/lang/String;Ljava/lang/String;)V", reinterpret_cast<void *>(vkRequestComplete) },
-    { "vkRequestError",    "(Ljava/lang/String;Ljava/lang/String;)V", reinterpret_cast<void *>(vkRequestError) }
-};
-static int service_methods_count = 4;
-
-jint JNICALL JNI_OnLoad(JavaVM *vm, void *)
+extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoService_locationUpdated(JNIEnv *, jclass, jdouble latitude, jdouble longitude)
 {
-    JNIEnv *env;
+    emit AndroidGW::instance()->processLocationUpdate(latitude, longitude);
+}
 
-    if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_4) == JNI_OK) {
-        bool   success        = true;
-        jclass activity_clazz = env->FindClass("com/derevenetz/oleg/vkgeo/VKGeoActivity");
-        jclass service_clazz  = env->FindClass("com/derevenetz/oleg/vkgeo/VKGeoService");
-
-        if (activity_clazz != nullptr) {
-            success = false;
-
-            if (env->RegisterNatives(activity_clazz, activity_methods, activity_methods_count) >= 0) {
-                success = true;
-            }
-        }
-        if (service_clazz != nullptr) {
-            success = false;
-
-            if (env->RegisterNatives(service_clazz, service_methods, service_methods_count) >= 0) {
-                success = true;
-            }
-        }
-
-        if (success) {
-            return JNI_VERSION_1_4;
-        } else {
-            return JNI_FALSE;
-        }
+extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoService_vkAuthChanged(JNIEnv *, jclass, jboolean authorized)
+{
+    if (authorized) {
+        emit AndroidGW::instance()->setAuthState(VKAuthState::StateAuthorized);
     } else {
-        return JNI_FALSE;
+        emit AndroidGW::instance()->setAuthState(VKAuthState::StateNotAuthorized);
     }
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoService_vkRequestComplete(JNIEnv *jni_env, jclass, jstring j_request, jstring j_response)
+{
+    const char* request_str  = jni_env->GetStringUTFChars(j_request,  nullptr);
+    const char* response_str = jni_env->GetStringUTFChars(j_response, nullptr);
+    QString     request      = request_str;
+    QString     response     = response_str;
+
+    jni_env->ReleaseStringUTFChars(j_request,  request_str);
+    jni_env->ReleaseStringUTFChars(j_response, response_str);
+
+    emit AndroidGW::instance()->processResponse(response, request);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoService_vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j_error_message)
+{
+    const char* request_str       = jni_env->GetStringUTFChars(j_request,       nullptr);
+    const char* error_message_str = jni_env->GetStringUTFChars(j_error_message, nullptr);
+    QString     request           = request_str;
+    QString     error_message     = error_message_str;
+
+    jni_env->ReleaseStringUTFChars(j_request,       request_str);
+    jni_env->ReleaseStringUTFChars(j_error_message, error_message_str);
+
+    emit AndroidGW::instance()->processError(error_message, request);
 }
