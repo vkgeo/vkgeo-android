@@ -3,7 +3,7 @@
 #include "androidgw.h"
 #include "vkhelper.h"
 
-AndroidGW *AndroidGW::Instance = NULL;
+AndroidGW *AndroidGW::Instance = nullptr;
 
 AndroidGW::AndroidGW(QObject *parent) : QObject(parent)
 {
@@ -40,8 +40,8 @@ static void vkAuthChanged(JNIEnv *, jclass, jboolean authorized)
 
 static void vkRequestComplete(JNIEnv *jni_env, jclass, jstring j_request, jstring j_response)
 {
-    const char* request_str  = jni_env->GetStringUTFChars(j_request,  NULL);
-    const char* response_str = jni_env->GetStringUTFChars(j_response, NULL);
+    const char* request_str  = jni_env->GetStringUTFChars(j_request,  nullptr);
+    const char* response_str = jni_env->GetStringUTFChars(j_response, nullptr);
     QString     request      = request_str;
     QString     response     = response_str;
 
@@ -53,8 +53,8 @@ static void vkRequestComplete(JNIEnv *jni_env, jclass, jstring j_request, jstrin
 
 static void vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j_error_message)
 {
-    const char* request_str       = jni_env->GetStringUTFChars(j_request,       NULL);
-    const char* error_message_str = jni_env->GetStringUTFChars(j_error_message, NULL);
+    const char* request_str       = jni_env->GetStringUTFChars(j_request,       nullptr);
+    const char* error_message_str = jni_env->GetStringUTFChars(j_error_message, nullptr);
     QString     request           = request_str;
     QString     error_message     = error_message_str;
 
@@ -65,18 +65,18 @@ static void vkRequestError(JNIEnv *jni_env, jclass, jstring j_request, jstring j
 }
 
 static JNINativeMethod activity_methods[] = {
-    { "bannerViewHeightUpdated", "(I)V",                                    (void *)bannerViewHeightUpdated },
-    { "vkAuthChanged",           "(Z)V",                                    (void *)vkAuthChanged },
-    { "vkRequestComplete",       "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestComplete },
-    { "vkRequestError",          "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestError }
+    { "bannerViewHeightUpdated", "(I)V",                                    reinterpret_cast<void *>(bannerViewHeightUpdated) },
+    { "vkAuthChanged",           "(Z)V",                                    reinterpret_cast<void *>(vkAuthChanged) },
+    { "vkRequestComplete",       "(Ljava/lang/String;Ljava/lang/String;)V", reinterpret_cast<void *>(vkRequestComplete) },
+    { "vkRequestError",          "(Ljava/lang/String;Ljava/lang/String;)V", reinterpret_cast<void *>(vkRequestError) }
 };
 static int activity_methods_count = 4;
 
 static JNINativeMethod service_methods[] = {
-    { "locationUpdated",   "(DD)V",                                   (void *)locationUpdated },
-    { "vkAuthChanged",     "(Z)V",                                    (void *)vkAuthChanged },
-    { "vkRequestComplete", "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestComplete },
-    { "vkRequestError",    "(Ljava/lang/String;Ljava/lang/String;)V", (void *)vkRequestError }
+    { "locationUpdated",   "(DD)V",                                   reinterpret_cast<void *>(locationUpdated) },
+    { "vkAuthChanged",     "(Z)V",                                    reinterpret_cast<void *>(vkAuthChanged) },
+    { "vkRequestComplete", "(Ljava/lang/String;Ljava/lang/String;)V", reinterpret_cast<void *>(vkRequestComplete) },
+    { "vkRequestError",    "(Ljava/lang/String;Ljava/lang/String;)V", reinterpret_cast<void *>(vkRequestError) }
 };
 static int service_methods_count = 4;
 
@@ -89,14 +89,14 @@ jint JNICALL JNI_OnLoad(JavaVM *vm, void *)
         jclass activity_clazz = env->FindClass("com/derevenetz/oleg/vkgeo/VKGeoActivity");
         jclass service_clazz  = env->FindClass("com/derevenetz/oleg/vkgeo/VKGeoService");
 
-        if (activity_clazz != NULL) {
+        if (activity_clazz != nullptr) {
             success = false;
 
             if (env->RegisterNatives(activity_clazz, activity_methods, activity_methods_count) >= 0) {
                 success = true;
             }
         }
-        if (service_clazz != NULL) {
+        if (service_clazz != nullptr) {
             success = false;
 
             if (env->RegisterNatives(service_clazz, service_methods, service_methods_count) >= 0) {

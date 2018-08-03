@@ -8,7 +8,7 @@ class StoreHelper : public QObject
     Q_OBJECT
 
 public:
-    explicit StoreHelper(QObject *parent = 0);
+    explicit StoreHelper(QObject *parent = nullptr);
     virtual ~StoreHelper();
 
     Q_INVOKABLE QString getPackageName();

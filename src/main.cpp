@@ -53,16 +53,16 @@ int main(int argc, char *argv[])
         VKHelper  *vk_helper  = new VKHelper("SERVICE", &app);
         VKService *vk_service = new VKService(&app);
 
-        QObject::connect(android_gw, &AndroidGW::setAuthState,                  vk_helper,  &VKHelper::setAuthState);
-        QObject::connect(android_gw, &AndroidGW::processResponse,               vk_helper,  &VKHelper::processResponse);
-        QObject::connect(android_gw, &AndroidGW::processError,                  vk_helper,  &VKHelper::processError);
-        QObject::connect(android_gw, &AndroidGW::processLocationUpdate,         vk_helper,  &VKHelper::processLocationUpdate);
-        QObject::connect(vk_helper,  &VKHelper::authStateChanged,               vk_service, &VKService::authStateChanged);
-        QObject::connect(vk_helper,  &VKHelper::locationReported,               vk_service, &VKService::locationReported);
-        QObject::connect(vk_helper,  &VKHelper::friendsUpdated,                 vk_service, &VKService::friendsUpdated);
-        QObject::connect(vk_helper,  &VKHelper::trackedFriendLocationUpdated,   vk_service, &VKService::trackedFriendLocationUpdated);
-        QObject::connect(vk_service, &VKService::updateFriends,                 vk_helper,  &VKHelper::updateFriends);
-        QObject::connect(vk_service, &VKService::updateTrackedFriendsLocations, vk_helper,  &VKHelper::updateTrackedFriendsLocations);
+        QObject::connect(android_gw, &AndroidGW::setAuthState,             vk_helper,  &VKHelper::setAuthState);
+        QObject::connect(android_gw, &AndroidGW::processResponse,          vk_helper,  &VKHelper::processResponse);
+        QObject::connect(android_gw, &AndroidGW::processError,             vk_helper,  &VKHelper::processError);
+        QObject::connect(android_gw, &AndroidGW::processLocationUpdate,    vk_helper,  &VKHelper::processLocationUpdate);
+        QObject::connect(vk_helper,  &VKHelper::authStateChanged,          vk_service, &VKService::authStateChanged);
+        QObject::connect(vk_helper,  &VKHelper::dataSent,                  vk_service, &VKService::dataSent);
+        QObject::connect(vk_helper,  &VKHelper::friendsUpdated,            vk_service, &VKService::friendsUpdated);
+        QObject::connect(vk_helper,  &VKHelper::trackedFriendDataUpdated,  vk_service, &VKService::trackedFriendDataUpdated);
+        QObject::connect(vk_service, &VKService::updateFriends,            vk_helper,  &VKHelper::updateFriends);
+        QObject::connect(vk_service, &VKService::updateTrackedFriendsData, vk_helper,  &VKHelper::updateTrackedFriendsData);
 
         return app.exec();
     } else {

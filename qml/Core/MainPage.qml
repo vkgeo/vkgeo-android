@@ -96,8 +96,8 @@ Page {
         }
     }
 
-    function updateTrackedFriendsLocations() {
-        VKHelper.updateTrackedFriendsLocations(true);
+    function updateTrackedFriendsData() {
+        VKHelper.updateTrackedFriendsData(true);
     }
 
     SwipeView {
@@ -147,14 +147,14 @@ Page {
         repeat:   true
 
         onTriggered: {
-            VKHelper.updateTrackedFriendsLocations(false);
+            VKHelper.updateTrackedFriendsData(false);
 
             mapSwipe.updateMapItemsStates();
         }
     }
 
     Component.onCompleted: {
-        VKHelper.locationReported.connect(updateTrackedFriendsLocations);
-        VKHelper.friendsUpdated.connect(updateTrackedFriendsLocations);
+        VKHelper.dataSent.connect(updateTrackedFriendsData);
+        VKHelper.friendsUpdated.connect(updateTrackedFriendsData);
     }
 }

@@ -46,15 +46,22 @@ Item {
         }
     }
 
-    function trackedFriendLocationAvailable(user_id, update_time, latitude, longitude) {
+    function trackedFriendDataAvailable(user_id, data) {
         for (var i = 0; i < friendsList.length; i++) {
             var frnd = friendsList[i];
 
             if (user_id === frnd.userId) {
-                frnd.locationAvailable = true;
-                frnd.updateTime        = update_time;
-                frnd.latitude          = latitude;
-                frnd.longitude         = longitude;
+                if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
+                                                       && !isNaN(data.update_time) && isFinite(data.update_time) &&
+                    data.hasOwnProperty("latitude")    && typeof data.latitude === "number"
+                                                       && !isNaN(data.latitude) && isFinite(data.latitude) &&
+                    data.hasOwnProperty("longitude")   && typeof data.longitude === "number"
+                                                       && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                    frnd.locationAvailable = true;
+                    frnd.updateTime        = data.update_time;
+                    frnd.latitude          = data.latitude;
+                    frnd.longitude         = data.longitude;
+                }
 
                 friendsList[i] = frnd;
 
@@ -66,10 +73,17 @@ Item {
             var model_frnd = friendsListModel.get(j);
 
             if (user_id === model_frnd.userId) {
-                friendsListModel.set(j, { "locationAvailable" : true,
-                                          "updateTime"        : update_time,
-                                          "latitude"          : latitude,
-                                          "longitude"         : longitude });
+                if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
+                                                       && !isNaN(data.update_time) && isFinite(data.update_time) &&
+                    data.hasOwnProperty("latitude")    && typeof data.latitude === "number"
+                                                       && !isNaN(data.latitude) && isFinite(data.latitude) &&
+                    data.hasOwnProperty("longitude")   && typeof data.longitude === "number"
+                                                       && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                    friendsListModel.set(j, { "locationAvailable" : true,
+                                              "updateTime"        : data.update_time,
+                                              "latitude"          : data.latitude,
+                                              "longitude"         : data.longitude });
+                }
 
                 break;
             }
@@ -423,6 +437,6 @@ Item {
 
     Component.onCompleted: {
         VKHelper.friendsUpdated.connect(updateFriends);
-        VKHelper.trackedFriendLocationUpdated.connect(trackedFriendLocationAvailable);
+        VKHelper.trackedFriendDataUpdated.connect(trackedFriendDataAvailable);
     }
 }

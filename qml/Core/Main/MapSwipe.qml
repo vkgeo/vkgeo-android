@@ -86,13 +86,20 @@ Item {
         }
     }
 
-    function updateMapItemLocation(user_id, update_time, latitude, longitude) {
+    function updateMapItemLocation(user_id, data) {
         for (var i = 0; i < map.mapItems.length; i++) {
             var map_item = map.mapItems[i];
 
             if (user_id === map_item.userId) {
-                map_item.coordinate = QtPositioning.coordinate(latitude, longitude);
-                map_item.updateTime = update_time;
+                if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
+                                                       && !isNaN(data.update_time) && isFinite(data.update_time) &&
+                    data.hasOwnProperty("latitude")    && typeof data.latitude === "number"
+                                                       && !isNaN(data.latitude) && isFinite(data.latitude) &&
+                    data.hasOwnProperty("longitude")   && typeof data.longitude === "number"
+                                                       && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                    map_item.coordinate = QtPositioning.coordinate(data.latitude, data.longitude);
+                    map_item.updateTime = data.update_time;
+                }
 
                 break;
             }
@@ -303,7 +310,7 @@ Item {
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {
-            VKHelper.reportLocation();
+            VKHelper.sendData();
         }
     }
 
@@ -343,6 +350,6 @@ Item {
 
         VKHelper.locationUpdated.connect(updateMyLocation);
         VKHelper.friendsUpdated.connect(updateMapItems);
-        VKHelper.trackedFriendLocationUpdated.connect(updateMapItemLocation);
+        VKHelper.trackedFriendDataUpdated.connect(updateMapItemLocation);
     }
 }

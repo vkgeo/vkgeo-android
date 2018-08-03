@@ -10,7 +10,7 @@ class AndroidGW : public QObject
     Q_OBJECT
 
 public:
-    explicit AndroidGW(QObject *parent = 0);
+    explicit AndroidGW(QObject *parent = nullptr);
     virtual ~AndroidGW();
 
     static AndroidGW *instance();

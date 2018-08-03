@@ -17,14 +17,14 @@ public:
                      UPDATE_FRIENDS_ON_AUTH_DELAY  = 15000,
                      NEARBY_DISTANCE               = 500;
 
-    explicit VKService(QObject *parent = 0);
+    explicit VKService(QObject *parent = nullptr);
     virtual ~VKService();
 
 public slots:
     void authStateChanged(int authState);
-    void locationReported();
+    void dataSent();
     void friendsUpdated();
-    void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
+    void trackedFriendDataUpdated(QString id, QVariantMap data);
 
 private slots:
     void updateFriendsOnAuthSingleShot();
@@ -32,7 +32,7 @@ private slots:
 
 signals:
     void updateFriends();
-    void updateTrackedFriendsLocations(bool expedited);
+    void updateTrackedFriendsData(bool expedited);
 
 private:
     qint64      LastUpdateFriendsTime;

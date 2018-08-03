@@ -46,15 +46,15 @@ class VKHelper : public QObject
     Q_PROPERTY(int maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
 
 public:
-    static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT         = 5,
-                     DEFAULT_MAX_TRACKED_FRIENDS_COUNT         = 5,
-                     REQUEST_QUEUE_TIMER_INTERVAL              = 1000,
-                     REPORT_LOCATION_TIMER_INTERVAL            = 1000,
-                     REPORT_LOCATION_INTERVAL                  = 300,
-                     UPDATE_TRACKED_FRIENDS_LOCATIONS_INTERVAL = 60,
-                     MAX_BATCH_SIZE                            = 25,
-                     MAX_NOTES_GET_COUNT                       = 100,
-                     MAX_FRIENDS_GET_COUNT                     = 5000;
+    static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT    = 5,
+                     DEFAULT_MAX_TRACKED_FRIENDS_COUNT    = 5,
+                     REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
+                     SEND_DATA_TIMER_INTERVAL             = 1000,
+                     SEND_DATA_INTERVAL                   = 300,
+                     UPDATE_TRACKED_FRIENDS_DATA_INTERVAL = 60,
+                     MAX_BATCH_SIZE                       = 25,
+                     MAX_NOTES_GET_COUNT                  = 100,
+                     MAX_FRIENDS_GET_COUNT                = 5000;
 
     static const QString AUTH_SCOPE,
                          DEFAULT_PHOTO_URL,
@@ -62,7 +62,7 @@ public:
                          TRUSTED_FRIENDS_LIST_NAME,
                          TRACKED_FRIENDS_LIST_NAME;
 
-    explicit VKHelper(QString context, QObject *parent = 0);
+    explicit VKHelper(QString context, QObject *parent = nullptr);
     virtual ~VKHelper();
 
     bool locationValid() const;
@@ -90,7 +90,7 @@ public:
     Q_INVOKABLE void logout();
 
     Q_INVOKABLE void updateLocation(qreal latitude, qreal longitude);
-    Q_INVOKABLE void reportLocation();
+    Q_INVOKABLE void sendData();
 
     Q_INVOKABLE void updateFriends();
     Q_INVOKABLE QVariantMap getFriends();
@@ -99,7 +99,7 @@ public:
     Q_INVOKABLE void updateTrustedFriendsList(QVariantList trusted_friends_list);
     Q_INVOKABLE void updateTrackedFriendsList(QVariantList tracked_friends_list);
 
-    Q_INVOKABLE void updateTrackedFriendsLocations(bool expedited);
+    Q_INVOKABLE void updateTrackedFriendsData(bool expedited);
 
     Q_INVOKABLE void sendMessage(QString user_id, QString message);
     Q_INVOKABLE void sendInvitation(QString user_id, QString text);
@@ -114,7 +114,7 @@ public slots:
 
 private slots:
     void requestQueueTimerTimeout();
-    void reportLocationTimerTimeout();
+    void sendDataTimerTimeout();
 
 signals:
     void authStateChanged(int authState);
@@ -127,12 +127,12 @@ signals:
     void maxTrustedFriendsCountChanged(int maxTrustedFriendsCount);
     void maxTrackedFriendsCountChanged(int maxTrackedFriendsCount);
     void locationUpdated();
-    void locationReported();
+    void dataSent();
     void friendsUpdated();
-    void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
+    void trackedFriendDataUpdated(QString id, QVariantMap data);
 
 private:
-    void ReportLocation(bool expedited);
+    void SendData(bool expedited);
 
     void ContextTrackerAddRequest(QVariantMap request);
     void ContextTrackerDelRequest(QVariantMap request);
@@ -175,13 +175,13 @@ private:
     void ProcessUsersGetError(QVariantMap err_request);
 
     int                 AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
-    qint64              LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;
+    qint64              LastSendDataTime, LastUpdateTrackedFriendsDataTime;
     QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
                         TrustedFriendsListId, TrackedFriendsListId;
     QQueue<QVariantMap> RequestQueue;
-    QTimer              RequestQueueTimer, ReportLocationTimer;
+    QTimer              RequestQueueTimer, SendDataTimer;
     QMap<QString, int>  ContextTracker;
-    QVariantMap         LastLocationInfo, FriendsData, FriendsDataTmp;
+    QVariantMap         CurrentData, FriendsData, FriendsDataTmp;
     QAndroidJniObject   Context;
 };
 
