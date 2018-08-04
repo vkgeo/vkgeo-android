@@ -19,5 +19,13 @@
         <file>resources/images/main/tab_people.png</file>
         <file>resources/images/main/tab_settings.png</file>
         <file>resources/images/misc/button_clear.png</file>
+        <file>resources/images/profile/battery_100.png</file>
+        <file>resources/images/profile/battery_100_charging.png</file>
+        <file>resources/images/profile/battery_25.png</file>
+        <file>resources/images/profile/battery_25_charging.png</file>
+        <file>resources/images/profile/battery_50.png</file>
+        <file>resources/images/profile/battery_50_charging.png</file>
+        <file>resources/images/profile/battery_75.png</file>
+        <file>resources/images/profile/battery_75_charging.png</file>
     </qresource>
 </RCC>

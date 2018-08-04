@@ -64,6 +64,16 @@ extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoService_lo
     emit AndroidGW::instance()->processLocationUpdate(latitude, longitude);
 }
 
+extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoService_batteryStatusUpdated(JNIEnv *jni_env, jclass, jstring j_status, jint level)
+{
+    const char* status_str = jni_env->GetStringUTFChars(j_status, nullptr);
+    QString     status     = status_str;
+
+    jni_env->ReleaseStringUTFChars(j_status, status_str);
+
+    emit AndroidGW::instance()->processBatteryStatusUpdate(status, level);
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_derevenetz_oleg_vkgeo_VKGeoService_vkAuthChanged(JNIEnv *, jclass, jboolean authorized)
 {
     if (authorized) {

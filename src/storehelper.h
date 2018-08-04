@@ -2,6 +2,7 @@
 #define STOREHELPER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
 
 class StoreHelper : public QObject
 {

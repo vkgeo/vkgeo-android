@@ -22,10 +22,12 @@ Item {
             var frnd = friendsList[i];
 
             frnd.invited           = false;
-            frnd.locationAvailable = false;
             frnd.updateTime        = 0;
+            frnd.locationAvailable = false;
             frnd.latitude          = 0;
             frnd.longitude         = 0;
+            frnd.batteryStatus     = "";
+            frnd.batteryLevel      = 0;
 
             friendsList[i] = frnd;
         }
@@ -52,15 +54,24 @@ Item {
 
             if (user_id === frnd.userId) {
                 if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
-                                                       && !isNaN(data.update_time) && isFinite(data.update_time) &&
-                    data.hasOwnProperty("latitude")    && typeof data.latitude === "number"
-                                                       && !isNaN(data.latitude) && isFinite(data.latitude) &&
-                    data.hasOwnProperty("longitude")   && typeof data.longitude === "number"
-                                                       && !isNaN(data.longitude) && isFinite(data.longitude)) {
-                    frnd.locationAvailable = true;
-                    frnd.updateTime        = data.update_time;
-                    frnd.latitude          = data.latitude;
-                    frnd.longitude         = data.longitude;
+                                                       && !isNaN(data.update_time) && isFinite(data.update_time)) {
+                    frnd.updateTime = data.update_time;
+
+                    if (data.hasOwnProperty("latitude")  && typeof data.latitude === "number"
+                                                         && !isNaN(data.latitude) && isFinite(data.latitude) &&
+                        data.hasOwnProperty("longitude") && typeof data.longitude === "number"
+                                                         && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                        frnd.locationAvailable = true;
+                        frnd.latitude          = data.latitude;
+                        frnd.longitude         = data.longitude;
+                    }
+
+                    if (data.hasOwnProperty("battery_status") && typeof data.battery_status === "string" &&
+                        data.hasOwnProperty("battery_level")  && typeof data.battery_level  === "number"
+                                                              && !isNaN(data.battery_level) && isFinite(data.battery_level)) {
+                        frnd.batteryStatus = data.battery_status;
+                        frnd.batteryLevel  = data.battery_level;
+                    }
                 }
 
                 friendsList[i] = frnd;
@@ -74,15 +85,24 @@ Item {
 
             if (user_id === model_frnd.userId) {
                 if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
-                                                       && !isNaN(data.update_time) && isFinite(data.update_time) &&
-                    data.hasOwnProperty("latitude")    && typeof data.latitude === "number"
-                                                       && !isNaN(data.latitude) && isFinite(data.latitude) &&
-                    data.hasOwnProperty("longitude")   && typeof data.longitude === "number"
-                                                       && !isNaN(data.longitude) && isFinite(data.longitude)) {
-                    friendsListModel.set(j, { "locationAvailable" : true,
-                                              "updateTime"        : data.update_time,
-                                              "latitude"          : data.latitude,
-                                              "longitude"         : data.longitude });
+                                                       && !isNaN(data.update_time) && isFinite(data.update_time)) {
+                    friendsListModel.set(j, { "updateTime" : data.update_time });
+
+                    if (data.hasOwnProperty("latitude")  && typeof data.latitude === "number"
+                                                         && !isNaN(data.latitude) && isFinite(data.latitude) &&
+                        data.hasOwnProperty("longitude") && typeof data.longitude === "number"
+                                                         && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                        friendsListModel.set(j, { "locationAvailable" : true,
+                                                  "latitude"          : data.latitude,
+                                                  "longitude"         : data.longitude });
+                    }
+
+                    if (data.hasOwnProperty("battery_status") && typeof data.battery_status === "string" &&
+                        data.hasOwnProperty("battery_level")  && typeof data.battery_level  === "number"
+                                                              && !isNaN(data.battery_level) && isFinite(data.battery_level)) {
+                        friendsListModel.set(j, { "batteryStatus" : data.battery_status,
+                                                  "batteryLevel"  : data.battery_level });
+                    }
                 }
 
                 break;
@@ -105,6 +125,7 @@ Item {
                 my_profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
                 my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
                 my_profile_page.status            = "";
+                my_profile_page.batteryStatus     = "";
             } else {
                 for (var i = 0; i < friendsListModel.count; i++) {
                     var frnd = friendsListModel.get(i);
@@ -115,6 +136,7 @@ Item {
                         profile_page.userId            = frnd.userId;
                         profile_page.online            = frnd.online;
                         profile_page.locationAvailable = frnd.locationAvailable;
+                        profile_page.batteryLevel      = frnd.batteryLevel;
                         profile_page.updateTime        = frnd.updateTime;
                         profile_page.latitude          = frnd.latitude;
                         profile_page.longitude         = frnd.longitude;
@@ -123,6 +145,7 @@ Item {
                         profile_page.bigPhotoUrl       = frnd.bigPhotoUrl;
                         profile_page.screenName        = frnd.screenName;
                         profile_page.status            = frnd.status;
+                        profile_page.batteryStatus     = frnd.batteryStatus;
 
                         profile_page.locateOnMap.connect(friendsSwipe.locateFriendOnMap);
 

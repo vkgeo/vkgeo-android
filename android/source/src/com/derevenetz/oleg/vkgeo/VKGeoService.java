@@ -13,11 +13,13 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -98,6 +100,7 @@ public class VKGeoService extends QtService implements LocationListener
     private HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker              = new HashMap<VKBatchRequest, Boolean>();
 
     private static native void locationUpdated(double latitude, double longitude);
+    private static native void batteryStatusUpdated(String status, int level);
 
     private static native void vkAuthChanged(boolean authorized);
     private static native void vkRequestComplete(String request, String response);
@@ -168,6 +171,8 @@ public class VKGeoService extends QtService implements LocationListener
                 centerLocation        = currentLocation;
                 centerLocationChanged = true;
             }
+
+            batteryStatusUpdated(getBatteryStatus(), getBatteryLevel());
         }
     }
 
@@ -443,6 +448,35 @@ public class VKGeoService extends QtService implements LocationListener
                 selectLocationSource();
             }
         }, LOCATION_SOURCE_SELECTION_INTERVAL);
+    }
+
+    private String getBatteryStatus()
+    {
+        Intent battery_intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int    battery_status = battery_intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+
+        if (battery_status == BatteryManager.BATTERY_STATUS_CHARGING ||
+            battery_status == BatteryManager.BATTERY_STATUS_FULL) {
+            return "CHARGING";
+        } else if (battery_status == BatteryManager.BATTERY_STATUS_DISCHARGING ||
+                   battery_status == BatteryManager.BATTERY_STATUS_NOT_CHARGING) {
+            return "DISCHARGING";
+        } else {
+            return "UNKNOWN";
+        }
+    }
+
+    private int getBatteryLevel()
+    {
+        Intent battery_intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int    battery_level  = battery_intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int    battery_scale  = battery_intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+        if (battery_level > 0 && battery_scale > 0) {
+            return (battery_level * 100) / battery_scale;
+        } else {
+            return 0;
+        }
     }
 
     private void runOnMainThread(Runnable runnable)

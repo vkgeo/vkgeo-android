@@ -63,6 +63,7 @@ Page {
     property bool locationAvailable: false
 
     property int bannerViewHeight:   AdMobHelper.bannerViewHeight
+    property int batteryLevel:       0
 
     property real updateTime:        0.0
     property real latitude:          0.0
@@ -74,6 +75,7 @@ Page {
     property string bigPhotoUrl:     ""
     property string screenName:      ""
     property string status:          ""
+    property string batteryStatus:   ""
 
     signal locateOnMap(string user_id)
 
@@ -142,6 +144,48 @@ Page {
 
                     property real angle: Math.PI / 4
                 }
+
+                Image {
+                    x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
+                    y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
+                    z:        1
+                    width:    UtilScript.pt(16)
+                    height:   UtilScript.pt(24)
+                    source:   imageToShow(profilePage.batteryStatus, profilePage.batteryLevel)
+                    fillMode: Image.PreserveAspectFit
+                    visible:  profilePage.batteryStatus === "CHARGING" ||
+                              profilePage.batteryStatus === "DISCHARGING"
+
+                    property real angle: -Math.PI / 4
+
+                    function imageToShow(battery_status, battery_level) {
+                        if (battery_level < 25) {
+                            if (battery_status === "CHARGING") {
+                                return "qrc:/resources/images/profile/battery_25_charging.png";
+                            } else {
+                                return "qrc:/resources/images/profile/battery_25.png";
+                            }
+                        } else if (battery_level < 50) {
+                            if (battery_status === "CHARGING") {
+                                return "qrc:/resources/images/profile/battery_50_charging.png";
+                            } else {
+                                return "qrc:/resources/images/profile/battery_50.png";
+                            }
+                        } else if (battery_level < 75) {
+                            if (battery_status === "CHARGING") {
+                                return "qrc:/resources/images/profile/battery_75_charging.png";
+                            } else {
+                                return "qrc:/resources/images/profile/battery_75.png";
+                            }
+                        } else {
+                            if (battery_status === "CHARGING") {
+                                return "qrc:/resources/images/profile/battery_100_charging.png";
+                            } else {
+                                return "qrc:/resources/images/profile/battery_100.png";
+                            }
+                        }
+                    }
+                }
             }
 
             Text {
@@ -181,8 +225,8 @@ Page {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                qsTr("Location updated at: %1").arg((new Date(profilePage.updateTime * 1000))
-                                                                              .toLocaleString())
+                text:                qsTr("Last update at: %1").arg((new Date(profilePage.updateTime * 1000))
+                                                                         .toLocaleString())
                 color:               "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -192,7 +236,9 @@ Page {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
-                visible:             profilePage.locationAvailable
+                visible:             profilePage.locationAvailable ||
+                                     profilePage.batteryStatus === "CHARGING" ||
+                                     profilePage.batteryStatus === "DISCHARGING"
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
             }

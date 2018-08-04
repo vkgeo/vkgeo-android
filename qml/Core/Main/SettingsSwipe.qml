@@ -246,6 +246,7 @@ Item {
                         my_profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
                         my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
                         my_profile_page.status            = "";
+                        my_profile_page.batteryStatus     = "";
                     } else {
                         console.log(component.errorString());
                     }

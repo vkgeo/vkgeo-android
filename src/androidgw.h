@@ -22,6 +22,7 @@ signals:
     void processResponse(QString response, QString resp_request_str);
     void processError(QString error_message, QString err_request_str);
     void processLocationUpdate(qreal latitude, qreal longitude);
+    void processBatteryStatusUpdate(QString status, int level);
 
 private:
     static AndroidGW *Instance;

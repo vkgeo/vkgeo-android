@@ -7,7 +7,9 @@ import java.util.Iterator;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -217,6 +219,35 @@ public class VKGeoActivity extends QtActivity
     public String getPackageName()
     {
         return getApplicationContext().getPackageName();
+    }
+
+    public String getBatteryStatus()
+    {
+        Intent battery_intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int    battery_status = battery_intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+
+        if (battery_status == BatteryManager.BATTERY_STATUS_CHARGING ||
+            battery_status == BatteryManager.BATTERY_STATUS_FULL) {
+            return "CHARGING";
+        } else if (battery_status == BatteryManager.BATTERY_STATUS_DISCHARGING ||
+                   battery_status == BatteryManager.BATTERY_STATUS_NOT_CHARGING) {
+            return "DISCHARGING";
+        } else {
+            return "UNKNOWN";
+        }
+    }
+
+    public int getBatteryLevel()
+    {
+        Intent battery_intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int    battery_level  = battery_intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int    battery_scale  = battery_intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+        if (battery_level > 0 && battery_scale > 0) {
+            return (battery_level * 100) / battery_scale;
+        } else {
+            return 0;
+        }
     }
 
     public void initAds(String app_id, String interstitial_unit_id)

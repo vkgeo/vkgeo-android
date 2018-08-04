@@ -137,6 +137,9 @@ Page {
             if (position.latitudeValid && position.longitudeValid) {
                 VKHelper.updateLocation(position.coordinate.latitude,
                                         position.coordinate.longitude);
+
+                VKHelper.updateBatteryStatus(BatteryHelper.getBatteryStatus(),
+                                             BatteryHelper.getBatteryLevel());
             }
         }
     }

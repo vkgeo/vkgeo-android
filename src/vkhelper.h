@@ -90,6 +90,7 @@ public:
     Q_INVOKABLE void logout();
 
     Q_INVOKABLE void updateLocation(qreal latitude, qreal longitude);
+    Q_INVOKABLE void updateBatteryStatus(QString status, int level);
     Q_INVOKABLE void sendData();
 
     Q_INVOKABLE void updateFriends();
@@ -111,6 +112,7 @@ public slots:
     void processResponse(QString response, QString resp_request_str);
     void processError(QString error_message, QString err_request_str);
     void processLocationUpdate(qreal latitude, qreal longitude);
+    void processBatteryStatusUpdate(QString status, int level);
 
 private slots:
     void requestQueueTimerTimeout();
@@ -127,6 +129,7 @@ signals:
     void maxTrustedFriendsCountChanged(int maxTrustedFriendsCount);
     void maxTrackedFriendsCountChanged(int maxTrackedFriendsCount);
     void locationUpdated();
+    void batteryStatusUpdated();
     void dataSent();
     void friendsUpdated();
     void trackedFriendDataUpdated(QString id, QVariantMap data);
@@ -174,6 +177,7 @@ private:
     void ProcessUsersGetResponse(QString response, QVariantMap resp_request);
     void ProcessUsersGetError(QVariantMap err_request);
 
+    bool                CurrentDataUpdated;
     int                 AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64              LastSendDataTime, LastUpdateTrackedFriendsDataTime;
     QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,

@@ -8,6 +8,7 @@
 #include "androidgw.h"
 #include "admobhelper.h"
 #include "storehelper.h"
+#include "batteryhelper.h"
 #include "uihelper.h"
 #include "vkhelper.h"
 #include "vkservice.h"
@@ -37,6 +38,7 @@ int main(int argc, char *argv[])
 
         engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), admob_helper);
         engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), new StoreHelper(&app));
+        engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), new BatteryHelper(&app));
         engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), new UIHelper(&app));
         engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), vk_helper);
 
@@ -53,16 +55,17 @@ int main(int argc, char *argv[])
         VKHelper  *vk_helper  = new VKHelper("SERVICE", &app);
         VKService *vk_service = new VKService(&app);
 
-        QObject::connect(android_gw, &AndroidGW::setAuthState,             vk_helper,  &VKHelper::setAuthState);
-        QObject::connect(android_gw, &AndroidGW::processResponse,          vk_helper,  &VKHelper::processResponse);
-        QObject::connect(android_gw, &AndroidGW::processError,             vk_helper,  &VKHelper::processError);
-        QObject::connect(android_gw, &AndroidGW::processLocationUpdate,    vk_helper,  &VKHelper::processLocationUpdate);
-        QObject::connect(vk_helper,  &VKHelper::authStateChanged,          vk_service, &VKService::authStateChanged);
-        QObject::connect(vk_helper,  &VKHelper::dataSent,                  vk_service, &VKService::dataSent);
-        QObject::connect(vk_helper,  &VKHelper::friendsUpdated,            vk_service, &VKService::friendsUpdated);
-        QObject::connect(vk_helper,  &VKHelper::trackedFriendDataUpdated,  vk_service, &VKService::trackedFriendDataUpdated);
-        QObject::connect(vk_service, &VKService::updateFriends,            vk_helper,  &VKHelper::updateFriends);
-        QObject::connect(vk_service, &VKService::updateTrackedFriendsData, vk_helper,  &VKHelper::updateTrackedFriendsData);
+        QObject::connect(android_gw, &AndroidGW::setAuthState,               vk_helper,  &VKHelper::setAuthState);
+        QObject::connect(android_gw, &AndroidGW::processResponse,            vk_helper,  &VKHelper::processResponse);
+        QObject::connect(android_gw, &AndroidGW::processError,               vk_helper,  &VKHelper::processError);
+        QObject::connect(android_gw, &AndroidGW::processLocationUpdate,      vk_helper,  &VKHelper::processLocationUpdate);
+        QObject::connect(android_gw, &AndroidGW::processBatteryStatusUpdate, vk_helper,  &VKHelper::processBatteryStatusUpdate);
+        QObject::connect(vk_helper,  &VKHelper::authStateChanged,            vk_service, &VKService::authStateChanged);
+        QObject::connect(vk_helper,  &VKHelper::dataSent,                    vk_service, &VKService::dataSent);
+        QObject::connect(vk_helper,  &VKHelper::friendsUpdated,              vk_service, &VKService::friendsUpdated);
+        QObject::connect(vk_helper,  &VKHelper::trackedFriendDataUpdated,    vk_service, &VKService::trackedFriendDataUpdated);
+        QObject::connect(vk_service, &VKService::updateFriends,              vk_helper,  &VKHelper::updateFriends);
+        QObject::connect(vk_service, &VKService::updateTrackedFriendsData,   vk_helper,  &VKHelper::updateTrackedFriendsData);
 
         return app.exec();
     } else {

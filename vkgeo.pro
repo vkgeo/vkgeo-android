@@ -7,6 +7,7 @@ SOURCES += src/main.cpp \
     src/androidgw.cpp \
     src/admobhelper.cpp \
     src/storehelper.cpp \
+    src/batteryhelper.cpp \
     src/uihelper.cpp \
     src/vkhelper.cpp \
     src/vkservice.cpp
@@ -15,6 +16,7 @@ HEADERS += \
     src/androidgw.h \
     src/admobhelper.h \
     src/storehelper.h \
+    src/batteryhelper.h \
     src/uihelper.h \
     src/vkhelper.h \
     src/vkservice.h
