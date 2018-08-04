@@ -69,10 +69,6 @@
         <translation>Закрыть</translation>
     </message>
     <message>
-        <source>Location updated at: %1</source>
-        <translation>Последнее обновление местоположения: %1</translation>
-    </message>
-    <message>
         <source>Locate on map</source>
         <translation>Показать на карте</translation>
     </message>
@@ -83,6 +79,10 @@
     <message>
         <source>Get directions</source>
         <translation>Построить маршрут</translation>
+    </message>
+    <message>
+        <source>Last update at: %1</source>
+        <translation>Последнее обновление: %1</translation>
     </message>
 </context>
 <context>
