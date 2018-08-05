@@ -240,6 +240,7 @@ Item {
 
                         my_profile_page.userId            = VKHelper.userId;
                         my_profile_page.online            = false;
+                        my_profile_page.dataAvailable     = false;
                         my_profile_page.locationAvailable = false;
                         my_profile_page.firstName         = VKHelper.firstName;
                         my_profile_page.lastName          = VKHelper.lastName;

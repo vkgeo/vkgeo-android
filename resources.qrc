@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>resources/images/login/button_login.png</file>
         <file>resources/images/main/avatar_mask.png</file>
-        <file>resources/images/main/avatar_obsolete_location_label.png</file>
+        <file>resources/images/main/avatar_obsolete_data_label.png</file>
         <file>resources/images/main/avatar_online_label.png</file>
         <file>resources/images/main/button_invite_other.png</file>
         <file>resources/images/main/button_invite_other_done.png</file>
@@ -19,13 +19,13 @@
         <file>resources/images/main/tab_people.png</file>
         <file>resources/images/main/tab_settings.png</file>
         <file>resources/images/misc/button_clear.png</file>
-        <file>resources/images/profile/battery_100.png</file>
-        <file>resources/images/profile/battery_100_charging.png</file>
-        <file>resources/images/profile/battery_25.png</file>
-        <file>resources/images/profile/battery_25_charging.png</file>
-        <file>resources/images/profile/battery_50.png</file>
-        <file>resources/images/profile/battery_50_charging.png</file>
-        <file>resources/images/profile/battery_75.png</file>
-        <file>resources/images/profile/battery_75_charging.png</file>
+        <file>resources/images/profile/avatar_battery_100_charging_label.png</file>
+        <file>resources/images/profile/avatar_battery_100_label.png</file>
+        <file>resources/images/profile/avatar_battery_25_charging_label.png</file>
+        <file>resources/images/profile/avatar_battery_25_label.png</file>
+        <file>resources/images/profile/avatar_battery_50_charging_label.png</file>
+        <file>resources/images/profile/avatar_battery_50_label.png</file>
+        <file>resources/images/profile/avatar_battery_75_charging_label.png</file>
+        <file>resources/images/profile/avatar_battery_75_label.png</file>
     </qresource>
 </RCC>

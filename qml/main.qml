@@ -17,6 +17,7 @@ Window {
     property bool appRated:               false
 
     property int vkAuthState:             VKHelper.authState
+
     property var loginPage:               null
 
     onDisableAdsChanged: {

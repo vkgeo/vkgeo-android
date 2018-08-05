@@ -12,14 +12,14 @@ MapQuickItem {
     anchorPoint: Qt.point(width / 2, height / 2)
     visible:     false
 
-    property bool locationObsolete: false
+    property bool dataObsolete: false
 
-    property int locationTimeout:   12 * 60 * 60
+    property int dataTimeout:   12 * 60 * 60
 
-    property real updateTime:       0.0
+    property real updateTime:   0.0
 
-    property string userId:         ""
-    property string photoUrl:       ""
+    property string userId:     ""
+    property string photoUrl:   ""
 
     signal openProfilePage(string user_id)
 
@@ -55,9 +55,9 @@ MapQuickItem {
             z:        1
             width:    UtilScript.pt(16)
             height:   UtilScript.pt(16)
-            source:   "qrc:/resources/images/main/avatar_obsolete_location_label.png"
+            source:   "qrc:/resources/images/main/avatar_obsolete_data_label.png"
             fillMode: Image.PreserveAspectFit
-            visible:  vkMapItem.locationObsolete
+            visible:  vkMapItem.dataObsolete
 
             property real angle: Math.PI / 4
         }
@@ -80,10 +80,10 @@ MapQuickItem {
     }
 
     function updateState() {
-        if ((new Date()).getTime() / 1000 > updateTime + locationTimeout) {
-            locationObsolete = true;
+        if ((new Date()).getTime() / 1000 > updateTime + dataTimeout) {
+            dataObsolete = true;
         } else {
-            locationObsolete = false;
+            dataObsolete = false;
         }
     }
 

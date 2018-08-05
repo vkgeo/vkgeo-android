@@ -22,6 +22,7 @@ Item {
             var frnd = friendsList[i];
 
             frnd.invited           = false;
+            frnd.dataAvailable     = false;
             frnd.updateTime        = 0;
             frnd.locationAvailable = false;
             frnd.latitude          = 0;
@@ -55,7 +56,8 @@ Item {
             if (user_id === frnd.userId) {
                 if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
                                                        && !isNaN(data.update_time) && isFinite(data.update_time)) {
-                    frnd.updateTime = data.update_time;
+                    frnd.dataAvailable = true;
+                    frnd.updateTime    = data.update_time;
 
                     if (data.hasOwnProperty("latitude")  && typeof data.latitude === "number"
                                                          && !isNaN(data.latitude) && isFinite(data.latitude) &&
@@ -86,7 +88,8 @@ Item {
             if (user_id === model_frnd.userId) {
                 if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
                                                        && !isNaN(data.update_time) && isFinite(data.update_time)) {
-                    friendsListModel.set(j, { "updateTime" : data.update_time });
+                    friendsListModel.set(j, { "dataAvailable" : true,
+                                              "updateTime"    : data.update_time });
 
                     if (data.hasOwnProperty("latitude")  && typeof data.latitude === "number"
                                                          && !isNaN(data.latitude) && isFinite(data.latitude) &&
@@ -119,6 +122,7 @@ Item {
 
                 my_profile_page.userId            = VKHelper.userId;
                 my_profile_page.online            = false;
+                my_profile_page.dataAvailable     = false;
                 my_profile_page.locationAvailable = false;
                 my_profile_page.firstName         = VKHelper.firstName;
                 my_profile_page.lastName          = VKHelper.lastName;
@@ -135,6 +139,7 @@ Item {
 
                         profile_page.userId            = frnd.userId;
                         profile_page.online            = frnd.online;
+                        profile_page.dataAvailable     = frnd.dataAvailable;
                         profile_page.locationAvailable = frnd.locationAvailable;
                         profile_page.batteryLevel      = frnd.batteryLevel;
                         profile_page.updateTime        = frnd.updateTime;
@@ -352,7 +357,7 @@ Item {
                                 fillMode: Image.PreserveAspectFit
                                 visible:  online
 
-                                property real angle: Math.PI / 4
+                                property real angle: -Math.PI / 4
                             }
 
                             MouseArea {
