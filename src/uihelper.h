@@ -12,6 +12,8 @@ public:
     virtual ~UIHelper();
 
     Q_INVOKABLE int getScreenDPI();
+
+    Q_INVOKABLE void showAppSettings();
 };
 
 #endif // UIHELPER_H

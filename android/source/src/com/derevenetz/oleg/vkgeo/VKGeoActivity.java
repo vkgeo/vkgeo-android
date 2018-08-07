@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.Process;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -216,11 +218,6 @@ public class VKGeoActivity extends QtActivity
         return metrics.densityDpi;
     }
 
-    public String getPackageName()
-    {
-        return getApplicationContext().getPackageName();
-    }
-
     public String getBatteryStatus()
     {
         Intent battery_intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -247,6 +244,15 @@ public class VKGeoActivity extends QtActivity
             return (battery_level * 100) / battery_scale;
         } else {
             return 0;
+        }
+    }
+
+    public void showAppSettings()
+    {
+        try {
+            startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", getPackageName(), null)));
+        } catch (Exception ex) {
+            Log.w("VKGeoActivity", "showAppSettings() : " + ex.toString());
         }
     }
 

@@ -15,3 +15,8 @@ int UIHelper::getScreenDPI()
 {
     return QtAndroid::androidActivity().callMethod<jint>("getScreenDPI");
 }
+
+void UIHelper::showAppSettings()
+{
+    QtAndroid::androidActivity().callMethod<void>("showAppSettings");
+}

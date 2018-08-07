@@ -172,6 +172,17 @@ Item {
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
+                text:             qsTr("Additional settings")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    UIHelper.showAppSettings();
+                }
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
                 text:             qsTr("Store")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
