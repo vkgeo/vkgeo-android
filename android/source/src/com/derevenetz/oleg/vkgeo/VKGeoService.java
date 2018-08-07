@@ -71,7 +71,7 @@ public class VKGeoService extends QtService implements LocationListener
 
                         vkAuthChanged(true);
                     } catch (Exception ex) {
-                        Log.w("VKGeoService", ex.toString());
+                        Log.w("VKGeoService", "handleMessage() : " + ex.toString());
                     }
                 }
             } else {

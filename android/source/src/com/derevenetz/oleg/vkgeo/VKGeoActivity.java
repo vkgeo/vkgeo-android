@@ -89,7 +89,7 @@ public class VKGeoActivity extends QtActivity
 
                         serviceMessenger.send(msg);
                     } catch (Exception ex) {
-                        Log.w("VKGeoActivity", ex.toString());
+                        Log.w("VKGeoActivity", "onVKAccessTokenChanged() : " + ex.toString());
                     }
                 }
 
@@ -99,7 +99,7 @@ public class VKGeoActivity extends QtActivity
                     try {
                         serviceMessenger.send(Message.obtain(null, VKGeoService.MESSAGE_NOT_AUTHORIZED));
                     } catch (Exception ex) {
-                        Log.w("VKGeoActivity", ex.toString());
+                        Log.w("VKGeoActivity", "onVKAccessTokenChanged() : " + ex.toString());
                     }
                 }
 
@@ -630,7 +630,7 @@ public class VKGeoActivity extends QtActivity
                     error_str = error.toString();
                 }
 
-                Log.w("VKGeoActivity", error_str);
+                Log.w("VKGeoActivity", "onActivityResult() : " + error_str);
             }
         });
     }
