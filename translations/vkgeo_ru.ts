@@ -155,6 +155,10 @@
         <source>Do you want to join the VKGeo Friends on Map group?</source>
         <translation>Вы действительно хотите вступить в группу VKGeo Друзья на Карте?</translation>
     </message>
+    <message>
+        <source>Additional settings</source>
+        <translation>Дополнительные настройки</translation>
+    </message>
 </context>
 <context>
     <name>StorePage</name>
