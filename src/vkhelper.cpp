@@ -764,9 +764,9 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                         parameters["offset"] = offset + json_items.count();
                         parameters["sort"]   = 0;
 
-                        request["method"]     = "notes.get";
-                        request["context"]    = resp_request["context"].toString();
-                        request["user_data"]  = resp_request["user_data"].toString();
+                        request["method"]    = "notes.get";
+                        request["context"]   = resp_request["context"].toString();
+                        request["user_data"] = resp_request["user_data"].toString();
 
                         if (notes_to_delete.count() > 0) {
                             request["notes_to_delete"] = notes_to_delete.join(",");
@@ -784,8 +784,8 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                             parameters["privacy_view"] = QString("list%1").arg(TrustedFriendsListId);
                         }
 
-                        request["method"]     = "notes.add";
-                        request["context"]    = resp_request["context"].toString();
+                        request["method"]  = "notes.add";
+                        request["context"] = resp_request["context"].toString();
 
                         if (notes_to_delete.count() > 0) {
                             request["notes_to_delete"] = notes_to_delete.join(",");
