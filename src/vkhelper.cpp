@@ -210,6 +210,8 @@ void VKHelper::cleanup()
         ContextTrackerDelRequest(request);
     }
 
+    RequestQueueTimer.stop();
+
     Context.callMethod<void>("cancelAllVKRequests");
 
     FriendsData.clear();
@@ -624,6 +626,10 @@ void VKHelper::requestQueueTimerTimeout()
             Context.callMethod<void>("executeVKBatch", "(Ljava/lang/String;)V", j_request_list.object<jstring>());
         }
     }
+
+    if (RequestQueue.isEmpty()) {
+        RequestQueueTimer.stop();
+    }
 }
 
 void VKHelper::sendDataTimerTimeout()
@@ -718,6 +724,10 @@ void VKHelper::EnqueueRequest(QVariantMap request)
     RequestQueue.enqueue(request);
 
     ContextTrackerAddRequest(request);
+
+    if (!RequestQueueTimer.isActive()) {
+        RequestQueueTimer.start();
+    }
 }
 
 void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_request)
