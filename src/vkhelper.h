@@ -177,7 +177,6 @@ private:
     void ProcessUsersGetResponse(QString response, QVariantMap resp_request);
     void ProcessUsersGetError(QVariantMap err_request);
 
-    bool                CurrentDataUpdated;
     int                 AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64              LastSendDataTime, LastUpdateTrackedFriendsDataTime;
     QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,

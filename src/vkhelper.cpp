@@ -61,7 +61,6 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 
 VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
 {
-    CurrentDataUpdated               = false;
     AuthState                        = VKAuthState::StateUnknown;
     MaxTrustedFriendsCount           = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
     MaxTrackedFriendsCount           = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
@@ -81,12 +80,10 @@ VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
 
     RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
-    RequestQueueTimer.start();
 
     connect(&SendDataTimer, &QTimer::timeout, this, &VKHelper::sendDataTimerTimeout);
 
     SendDataTimer.setInterval(SEND_DATA_TIMER_INTERVAL);
-    SendDataTimer.start();
 }
 
 VKHelper::~VKHelper()
@@ -237,22 +234,24 @@ void VKHelper::logout()
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
 {
-    CurrentDataUpdated         = true;
     CurrentData["update_time"] = QDateTime::currentSecsSinceEpoch();
     CurrentData["latitude"]    = latitude;
     CurrentData["longitude"]   = longitude;
 
     emit locationUpdated();
+
+    SendData(false);
 }
 
 void VKHelper::updateBatteryStatus(QString status, int level)
 {
-    CurrentDataUpdated            = true;
     CurrentData["update_time"]    = QDateTime::currentSecsSinceEpoch();
     CurrentData["battery_status"] = status;
     CurrentData["battery_level"]  = level;
 
     emit batteryStatusUpdated();
+
+    SendData(false);
 }
 
 void VKHelper::sendData()
@@ -639,40 +638,37 @@ void VKHelper::sendDataTimerTimeout()
 
 void VKHelper::SendData(bool expedited)
 {
-    if (!ContextHasActiveRequests("sendData")) {
-        if (AuthState == VKAuthState::StateAuthorized) {
-            if (CurrentDataUpdated) {
-                if (expedited || QDateTime::currentSecsSinceEpoch() > LastSendDataTime + SEND_DATA_INTERVAL) {
-                    LastSendDataTime = QDateTime::currentSecsSinceEpoch();
+    if (!ContextHasActiveRequests("sendData") && AuthState == VKAuthState::StateAuthorized &&
+        (expedited || QDateTime::currentSecsSinceEpoch() > LastSendDataTime + SEND_DATA_INTERVAL)) {
+        LastSendDataTime = QDateTime::currentSecsSinceEpoch();
 
-                    QVariantMap request, parameters;
+        QVariantMap request, parameters;
 
-                    QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
-                                                                                         .toJson(QJsonDocument::Compact)
-                                                                                         .toBase64()));
+        QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
+                                                                             .toJson(QJsonDocument::Compact)
+                                                                             .toBase64()));
 
-                    if (TrustedFriendsListId == "") {
-                        request["method"]    = "friends.getLists";
-                        request["context"]   = "sendData";
-                        request["user_data"] = user_data_string;
-                    } else {
-                        parameters["count"] = MAX_NOTES_GET_COUNT;
-                        parameters["sort"]  = 0;
+        if (TrustedFriendsListId == "") {
+            request["method"]    = "friends.getLists";
+            request["context"]   = "sendData";
+            request["user_data"] = user_data_string;
+        } else {
+            parameters["count"] = MAX_NOTES_GET_COUNT;
+            parameters["sort"]  = 0;
 
-                        request["method"]     = "notes.get";
-                        request["context"]    = "sendData";
-                        request["user_data"]  = user_data_string;
-                        request["parameters"] = parameters;
-                    }
-
-                    EnqueueRequest(request);
-
-                    CurrentDataUpdated = false;
-
-                    emit dataSent();
-                }
-            }
+            request["method"]     = "notes.get";
+            request["context"]    = "sendData";
+            request["user_data"]  = user_data_string;
+            request["parameters"] = parameters;
         }
+
+        EnqueueRequest(request);
+
+        SendDataTimer.stop();
+
+        emit dataSent();
+    } else if (!SendDataTimer.isActive()) {
+        SendDataTimer.start();
     }
 }
 
