@@ -61,6 +61,7 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 
 VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
 {
+    CurrentDataUpdated               = false;
     AuthState                        = VKAuthState::StateUnknown;
     MaxTrustedFriendsCount           = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
     MaxTrackedFriendsCount           = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
@@ -234,6 +235,7 @@ void VKHelper::logout()
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
 {
+    CurrentDataUpdated         = true;
     CurrentData["update_time"] = QDateTime::currentSecsSinceEpoch();
     CurrentData["latitude"]    = latitude;
     CurrentData["longitude"]   = longitude;
@@ -245,6 +247,7 @@ void VKHelper::updateLocation(qreal latitude, qreal longitude)
 
 void VKHelper::updateBatteryStatus(QString status, int level)
 {
+    CurrentDataUpdated            = true;
     CurrentData["update_time"]    = QDateTime::currentSecsSinceEpoch();
     CurrentData["battery_status"] = status;
     CurrentData["battery_level"]  = level;
@@ -643,37 +646,41 @@ void VKHelper::sendDataTimerTimeout()
 
 void VKHelper::SendData(bool expedited)
 {
-    if (!ContextHasActiveRequests("sendData") && AuthState == VKAuthState::StateAuthorized &&
-        (expedited || QDateTime::currentSecsSinceEpoch() > LastSendDataTime + SEND_DATA_INTERVAL)) {
-        LastSendDataTime = QDateTime::currentSecsSinceEpoch();
+    if (CurrentDataUpdated) {
+        if (!ContextHasActiveRequests("sendData") && AuthState == VKAuthState::StateAuthorized &&
+            (expedited || QDateTime::currentSecsSinceEpoch() > LastSendDataTime + SEND_DATA_INTERVAL)) {
+            LastSendDataTime = QDateTime::currentSecsSinceEpoch();
 
-        QVariantMap request, parameters;
+            QVariantMap request, parameters;
 
-        QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
-                                                                             .toJson(QJsonDocument::Compact)
-                                                                             .toBase64()));
+            QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
+                                                                                 .toJson(QJsonDocument::Compact)
+                                                                                 .toBase64()));
 
-        if (TrustedFriendsListId == "") {
-            request["method"]    = "friends.getLists";
-            request["context"]   = "sendData";
-            request["user_data"] = user_data_string;
-        } else {
-            parameters["count"] = MAX_NOTES_GET_COUNT;
-            parameters["sort"]  = 0;
+            if (TrustedFriendsListId == "") {
+                request["method"]    = "friends.getLists";
+                request["context"]   = "sendData";
+                request["user_data"] = user_data_string;
+            } else {
+                parameters["count"] = MAX_NOTES_GET_COUNT;
+                parameters["sort"]  = 0;
 
-            request["method"]     = "notes.get";
-            request["context"]    = "sendData";
-            request["user_data"]  = user_data_string;
-            request["parameters"] = parameters;
+                request["method"]     = "notes.get";
+                request["context"]    = "sendData";
+                request["user_data"]  = user_data_string;
+                request["parameters"] = parameters;
+            }
+
+            EnqueueRequest(request);
+
+            CurrentDataUpdated = false;
+
+            SendDataTimer.stop();
+
+            emit dataSent();
+        } else if (!SendDataTimer.isActive()) {
+            SendDataTimer.start();
         }
-
-        EnqueueRequest(request);
-
-        SendDataTimer.stop();
-
-        emit dataSent();
-    } else if (!SendDataTimer.isActive()) {
-        SendDataTimer.start();
     }
 }
 
