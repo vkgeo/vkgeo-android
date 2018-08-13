@@ -52,6 +52,7 @@ public:
                      SEND_DATA_TIMER_INTERVAL             = 60000,
                      SEND_DATA_INTERVAL                   = 300,
                      UPDATE_TRACKED_FRIENDS_DATA_INTERVAL = 60,
+                     SEND_DATA_ON_UPDATE_DELAY            = 100,
                      MAX_BATCH_SIZE                       = 25,
                      MAX_NOTES_GET_COUNT                  = 100,
                      MAX_FRIENDS_GET_COUNT                = 5000;
@@ -115,6 +116,7 @@ public slots:
     void processBatteryStatusUpdate(QString status, int level);
 
 private slots:
+    void sendDataOnUpdateSingleShot();
     void requestQueueTimerTimeout();
     void sendDataTimerTimeout();
 

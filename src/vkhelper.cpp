@@ -240,7 +240,7 @@ void VKHelper::updateLocation(qreal latitude, qreal longitude)
 
     emit locationUpdated();
 
-    SendData(false);
+    QTimer::singleShot(SEND_DATA_ON_UPDATE_DELAY, this, &VKHelper::sendDataOnUpdateSingleShot);
 }
 
 void VKHelper::updateBatteryStatus(QString status, int level)
@@ -251,7 +251,7 @@ void VKHelper::updateBatteryStatus(QString status, int level)
 
     emit batteryStatusUpdated();
 
-    SendData(false);
+    QTimer::singleShot(SEND_DATA_ON_UPDATE_DELAY, this, &VKHelper::sendDataOnUpdateSingleShot);
 }
 
 void VKHelper::sendData()
@@ -598,6 +598,11 @@ void VKHelper::processBatteryStatusUpdate(QString status, int level)
     updateBatteryStatus(status, level);
 }
 
+void VKHelper::sendDataOnUpdateSingleShot()
+{
+    SendData(false);
+}
+
 void VKHelper::requestQueueTimerTimeout()
 {
     if (!RequestQueue.isEmpty()) {
@@ -765,7 +770,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                 if (resp_request.contains("user_data")) {
                     QVariantMap request, parameters;
 
-                    if (offset + json_items.count() < notes_count) {
+                    if (json_items.count() > 0 && offset + json_items.count() < notes_count) {
                         parameters["count"]  = MAX_NOTES_GET_COUNT;
                         parameters["offset"] = offset + json_items.count();
                         parameters["sort"]   = 0;
@@ -861,7 +866,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                 if (!data_note_found) {
                     if (user_id != "") {
-                        if (offset + json_items.count() < notes_count) {
+                        if (json_items.count() > 0 && offset + json_items.count() < notes_count) {
                             QVariantMap request, parameters;
 
                             parameters["count"]   = MAX_NOTES_GET_COUNT;
@@ -1056,7 +1061,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                     qWarning() << "ProcessFriendsGetResponse() : unknown list id";
                 }
 
-                if (offset + json_items.count() < friends_count) {
+                if (json_items.count() > 0 && offset + json_items.count() < friends_count) {
                     QVariantMap request, parameters;
 
                     parameters["count"]  = MAX_FRIENDS_GET_COUNT;
