@@ -746,8 +746,8 @@ void VKHelper::EnqueueRequest(QVariantMap request)
 
     if (!RequestQueueTimer.isActive()) {
         RequestQueueTimer.setInterval(static_cast<int>(qMax(static_cast<qint64>(0),
-                                                       qMin(NextRequestQueueTimerTimeout - QDateTime::currentMSecsSinceEpoch(),
-                                                            static_cast<qint64>(REQUEST_QUEUE_TIMER_INTERVAL)))));
+                                                            qMin(NextRequestQueueTimerTimeout - QDateTime::currentMSecsSinceEpoch(),
+                                                                 static_cast<qint64>(REQUEST_QUEUE_TIMER_INTERVAL)))));
         RequestQueueTimer.start();
     }
 }
