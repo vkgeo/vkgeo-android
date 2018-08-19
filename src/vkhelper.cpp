@@ -189,6 +189,7 @@ void VKHelper::cleanup()
 {
     LastSendDataTime                 = 0;
     LastUpdateTrackedFriendsDataTime = 0;
+    NextRequestQueueTimerTimeout     = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
     UserId                           = "";
     FirstName                        = "";
     LastName                         = "";
@@ -208,8 +209,6 @@ void VKHelper::cleanup()
 
         ContextTrackerDelRequest(request);
     }
-
-    NextRequestQueueTimerTimeout = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
 
     RequestQueueTimer.stop();
 
