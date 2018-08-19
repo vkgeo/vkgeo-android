@@ -209,7 +209,7 @@ void VKHelper::cleanup()
         ContextTrackerDelRequest(request);
     }
 
-    NextRequestQueueTimerTimeout = QDateTime::currentMSecsSinceEpoch() + RequestQueueTimer.remainingTime();
+    NextRequestQueueTimerTimeout = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
 
     RequestQueueTimer.stop();
 
@@ -640,7 +640,7 @@ void VKHelper::requestQueueTimerTimeout()
     }
 
     if (RequestQueue.isEmpty()) {
-        NextRequestQueueTimerTimeout = QDateTime::currentMSecsSinceEpoch() + RequestQueueTimer.remainingTime();
+        NextRequestQueueTimerTimeout = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
 
         RequestQueueTimer.stop();
     } else {
