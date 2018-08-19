@@ -66,9 +66,10 @@ Page {
     property int bannerViewHeight:   AdMobHelper.bannerViewHeight
     property int batteryLevel:       0
 
-    property real updateTime:        0.0
     property real latitude:          0.0
     property real longitude:         0.0
+
+    property double updateTime:      0.0
 
     property string userId:          ""
     property string firstName:       ""

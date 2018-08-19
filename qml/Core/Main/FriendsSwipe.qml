@@ -142,9 +142,9 @@ Item {
                         profile_page.dataAvailable     = frnd.dataAvailable;
                         profile_page.locationAvailable = frnd.locationAvailable;
                         profile_page.batteryLevel      = frnd.batteryLevel;
-                        profile_page.updateTime        = frnd.updateTime;
                         profile_page.latitude          = frnd.latitude;
                         profile_page.longitude         = frnd.longitude;
+                        profile_page.updateTime        = frnd.updateTime;
                         profile_page.firstName         = frnd.firstName;
                         profile_page.lastName          = frnd.lastName;
                         profile_page.bigPhotoUrl       = frnd.bigPhotoUrl;

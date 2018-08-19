@@ -16,7 +16,7 @@ MapQuickItem {
 
     property int dataTimeout:   12 * 60 * 60
 
-    property real updateTime:   0.0
+    property double updateTime: 0.0
 
     property string userId:     ""
     property string photoUrl:   ""
@@ -80,7 +80,7 @@ MapQuickItem {
     }
 
     function updateState() {
-        if ((new Date()).getTime() / 1000 > updateTime + dataTimeout) {
+        if ((new Date()).getTime() / 1000 - updateTime > dataTimeout) {
             dataObsolete = true;
         } else {
             dataObsolete = false;

@@ -108,7 +108,9 @@ void VKService::updateFriendsOnAuthSingleShot()
 
 void VKService::updateFriendsTimerTimeout()
 {
-    if (QDateTime::currentSecsSinceEpoch() > LastUpdateFriendsTime + UPDATE_FRIENDS_INTERVAL) {
+    qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastUpdateFriendsTime;
+
+    if (elapsed < 0 || elapsed > UPDATE_FRIENDS_INTERVAL) {
         LastUpdateFriendsTime = QDateTime::currentSecsSinceEpoch();
 
         emit updateFriends();
