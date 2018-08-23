@@ -210,7 +210,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    var support_url = qsTr("http://vkgeo.sourceforge.io/");
+                    var support_url = qsTr("https://vkgeo.sourceforge.io/");
 
                     if (support_url.startsWith("http://") || support_url.startsWith("https://")) {
                         Qt.openUrlExternally(support_url);
