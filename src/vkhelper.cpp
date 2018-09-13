@@ -1108,32 +1108,25 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
 
                     EnqueueRequest(request);
                 }
+
+                if (!ContextHasActiveRequests(resp_request["context"].toString())) {
+                    FriendsData = FriendsDataTmp;
+
+                    emit friendsCountChanged(FriendsData.count());
+                    emit friendsUpdated();
+                }
             } else {
                 qWarning() << "ProcessFriendsGetResponse() : invalid response";
             }
         } else {
             qWarning() << "ProcessFriendsGetResponse() : invalid json";
         }
-
-        if (!ContextHasActiveRequests(resp_request["context"].toString())) {
-            FriendsData = FriendsDataTmp;
-
-            emit friendsCountChanged(FriendsData.count());
-            emit friendsUpdated();
-        }
     }
 }
 
 void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
 {
-    if (err_request["context"].toString() == "updateFriends") {
-        if (!ContextHasActiveRequests(err_request["context"].toString())) {
-            FriendsData = FriendsDataTmp;
-
-            emit friendsCountChanged(FriendsData.count());
-            emit friendsUpdated();
-        }
-    }
+    Q_UNUSED(err_request)
 }
 
 void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request)
@@ -1248,18 +1241,18 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
 
                     EnqueueRequest(request);
                 }
+
+                if (!ContextHasActiveRequests(resp_request["context"].toString())) {
+                    FriendsData = FriendsDataTmp;
+
+                    emit friendsCountChanged(FriendsData.count());
+                    emit friendsUpdated();
+                }
             } else {
                 qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
             }
         } else {
             qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
-        }
-
-        if (!ContextHasActiveRequests(resp_request["context"].toString())) {
-            FriendsData = FriendsDataTmp;
-
-            emit friendsCountChanged(FriendsData.count());
-            emit friendsUpdated();
         }
     } else if (resp_request["context"].toString() == "updateTrustedFriendsList") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1380,14 +1373,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
 
 void VKHelper::ProcessFriendsGetListsError(QVariantMap err_request)
 {
-    if (err_request["context"].toString() == "updateFriends") {
-        if (!ContextHasActiveRequests(err_request["context"].toString())) {
-            FriendsData = FriendsDataTmp;
-
-            emit friendsCountChanged(FriendsData.count());
-            emit friendsUpdated();
-        }
-    }
+    Q_UNUSED(err_request)
 }
 
 void VKHelper::ProcessFriendsAddListResponse(QString response, QVariantMap resp_request)
