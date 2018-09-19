@@ -1,4 +1,4 @@
-package com.derevenetz.oleg.vkgeo;
+package com.derevenetz.oleg.vkgeoapp;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

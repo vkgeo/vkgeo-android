@@ -1,4 +1,4 @@
-package com.derevenetz.oleg.vkgeo;
+package com.derevenetz.oleg.vkgeoapp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
