@@ -1,4 +1,4 @@
-package com.derevenetz.oleg.vkgeoapp;
+package com.derevenetz.oleg.vkgeo.gplay;
 
 import android.content.Intent;
 import android.os.Build;

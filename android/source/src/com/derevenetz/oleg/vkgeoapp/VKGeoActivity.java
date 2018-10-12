@@ -1,4 +1,4 @@
-package com.derevenetz.oleg.vkgeoapp;
+package com.derevenetz.oleg.vkgeo.gplay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
