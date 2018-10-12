@@ -61,10 +61,10 @@ android {
         android/source/res/values/strings.xml \
         android/source/res/values-ru/numbers.xml \
         android/source/res/values-ru/strings.xml \
-        android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoActivity.java \
-        android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoApplication.java \
-        android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoReceiver.java \
-        android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoService.java
+        android/source/src/com/derevenetz/oleg/vkgeo/stdalone/VKGeoActivity.java \
+        android/source/src/com/derevenetz/oleg/vkgeo/stdalone/VKGeoApplication.java \
+        android/source/src/com/derevenetz/oleg/vkgeo/stdalone/VKGeoReceiver.java \
+        android/source/src/com/derevenetz/oleg/vkgeo/stdalone/VKGeoService.java
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android/source
 
