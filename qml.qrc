@@ -5,7 +5,6 @@
         <file>qml/Core/LoginPage.qml</file>
         <file>qml/Core/MainPage.qml</file>
         <file>qml/Core/ProfilePage.qml</file>
-        <file>qml/Core/StorePage.qml</file>
         <file>qml/Core/TrackedFriendsPage.qml</file>
         <file>qml/Core/TrustedFriendsPage.qml</file>
         <file>qml/Core/Main/FriendsSwipe.qml</file>

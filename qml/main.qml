@@ -2,7 +2,6 @@ import QtQuick 2.9
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.2
 import QtQuick.LocalStorage 2.0
-import QtPurchasing 1.0
 import VKHelper 1.0
 
 import "Core"
@@ -11,36 +10,9 @@ Window {
     id:      mainWindow
     visible: true
 
-    property bool disableAds:             false
-    property bool enableTrackedFriends:   false
-    property bool increaseTrackingLimits: false
-    property bool appRated:               false
+    property int vkAuthState: VKHelper.authState
 
-    property int vkAuthState:             VKHelper.authState
-
-    property var loginPage:               null
-
-    onDisableAdsChanged: {
-        setSetting("DisableAds", disableAds ? "true" : "false");
-
-        updateFeatures();
-    }
-
-    onEnableTrackedFriendsChanged: {
-        setSetting("EnableTrackedFriends", enableTrackedFriends ? "true" : "false");
-
-        updateFeatures();
-    }
-
-    onIncreaseTrackingLimitsChanged: {
-        setSetting("IncreaseTrackingLimits", increaseTrackingLimits ? "true" : "false");
-
-        updateFeatures();
-    }
-
-    onAppRatedChanged: {
-        setSetting("AppRated", appRated ? "true" : "false");
-    }
+    property var loginPage:   null
 
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
@@ -97,109 +69,12 @@ Window {
     }
 
     function updateFeatures() {
-        if (mainStackView.depth > 0 && mainStackView.currentItem.hasOwnProperty("bannerViewHeight")) {
-            if (disableAds) {
-                AdMobHelper.hideBannerView();
-            } else {
-                AdMobHelper.showBannerView();
-            }
-        }
-
-        if (increaseTrackingLimits) {
-            VKHelper.maxTrustedFriendsCount = 15;
-        } else {
-            VKHelper.maxTrustedFriendsCount = 5;
-        }
-
-        if (enableTrackedFriends) {
-            if (increaseTrackingLimits) {
-                VKHelper.maxTrackedFriendsCount = 15;
-            } else {
-                VKHelper.maxTrackedFriendsCount = 5;
-            }
-        } else {
-            VKHelper.maxTrackedFriendsCount = 0;
-        }
+        VKHelper.maxTrustedFriendsCount = 15;
+        VKHelper.maxTrackedFriendsCount = 15;
     }
 
     function showInterstitial() {
-        if (!disableAds) {
-            AdMobHelper.showInterstitial();
-        }
-    }
-
-    Store {
-        id: store
-
-        function getPrice(status, price) {
-            if (status === Product.Registered) {
-                var result = /([\d \.,]+)/.exec(price);
-
-                if (Array.isArray(result) && result.length > 1) {
-                    return result[1].trim();
-                } else {
-                    return qsTr("BUY");
-                }
-            } else {
-                return qsTr("BUY");
-            }
-        }
-
-        Product {
-            id:         trackedFriendsProduct
-            identifier: "vkgeo.unlockable.trackedfriends"
-            type:       Product.Unlockable
-
-            onPurchaseSucceeded: {
-                mainWindow.disableAds           = true;
-                mainWindow.enableTrackedFriends = true;
-
-                transaction.finalize();
-            }
-
-            onPurchaseRestored: {
-                mainWindow.disableAds           = true;
-                mainWindow.enableTrackedFriends = true;
-
-                transaction.finalize();
-            }
-
-            onPurchaseFailed: {
-                if (transaction.failureReason === Transaction.ErrorOccurred) {
-                    console.log(transaction.errorString);
-                }
-
-                transaction.finalize();
-            }
-        }
-
-        Product {
-            id:         increasedLimitsProduct
-            identifier: "vkgeo.unlockable.increasedlimits"
-            type:       Product.Unlockable
-
-            onPurchaseSucceeded: {
-                mainWindow.disableAds             = true;
-                mainWindow.increaseTrackingLimits = true;
-
-                transaction.finalize();
-            }
-
-            onPurchaseRestored: {
-                mainWindow.disableAds             = true;
-                mainWindow.increaseTrackingLimits = true;
-
-                transaction.finalize();
-            }
-
-            onPurchaseFailed: {
-                if (transaction.failureReason === Transaction.ErrorOccurred) {
-                    console.log(transaction.errorString);
-                }
-
-                transaction.finalize();
-            }
-        }
+        AdMobHelper.showInterstitial();
     }
 
     StackView {
@@ -219,11 +94,7 @@ Window {
                 currentItem.forceActiveFocus();
 
                 if (currentItem.hasOwnProperty("bannerViewHeight")) {
-                    if (mainWindow.disableAds) {
-                        AdMobHelper.hideBannerView();
-                    } else {
-                        AdMobHelper.showBannerView();
-                    }
+                    AdMobHelper.showBannerView();
                 } else {
                     AdMobHelper.hideBannerView();
                 }
@@ -243,11 +114,6 @@ Window {
     }
 
     Component.onCompleted: {
-        disableAds             = (getSetting("DisableAds",             "false") === "true");
-        enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
-        increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
-        appRated               = (getSetting("AppRated",               "false") === "true");
-
         updateFeatures();
 
         mainStackView.push(mainPage);

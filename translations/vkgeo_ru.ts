@@ -49,14 +49,6 @@
         <source>Do you want to update location data in your VK profile now?</source>
         <translation>Вы действительно хотите сейчас обновить данные о местоположении в вашем профиле ВКонтакте?</translation>
     </message>
-    <message>
-        <source>Rate application</source>
-        <translation>Оценить приложение</translation>
-    </message>
-    <message>
-        <source>If you enjoy VKGeo Friends on Map, please take a moment to rate it. Do you want to do this now?</source>
-        <translation>Если вам нравится VKGeo Друзья на Карте, пожалуйста, найдите минутку, чтобы оценить его. Вы хотите сделать это сейчас?</translation>
-    </message>
 </context>
 <context>
     <name>ProfilePage</name>
@@ -116,16 +108,8 @@
         <translation>В данный момент вы можете иметь не более %1 отслеживаемых друзей.</translation>
     </message>
     <message>
-        <source>Currently you can&apos;t have tracked friends. Please visit Store for details.</source>
-        <translation>В данный момент вы не можете иметь отслеживаемых друзей. Пожалуйста, посетите Магазин для получения дополнительной информации.</translation>
-    </message>
-    <message>
         <source>Tracked friends list</source>
         <translation>Список отслеживаемых друзей</translation>
-    </message>
-    <message>
-        <source>Store</source>
-        <translation>Магазин</translation>
     </message>
     <message>
         <source>Support</source>
@@ -159,32 +143,9 @@
         <source>Additional settings</source>
         <translation>Дополнительные настройки</translation>
     </message>
-</context>
-<context>
-    <name>StorePage</name>
     <message>
-        <source>Store</source>
-        <translation>Магазин</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation>Закрыть</translation>
-    </message>
-    <message>
-        <source>Tracked friends</source>
-        <translation>Отслеживаемые друзья</translation>
-    </message>
-    <message>
-        <source>Tracking limits x 3</source>
-        <translation>Лимиты отслеживания x 3</translation>
-    </message>
-    <message>
-        <source>Restore purchases</source>
-        <translation>Восстановить покупки</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>OK</translation>
+        <source>Currently you can&apos;t have tracked friends.</source>
+        <translation>В данный момент вы не можете иметь отслеживаемых друзей.</translation>
     </message>
 </context>
 <context>
@@ -223,13 +184,6 @@
     <message>
         <source>Quick search</source>
         <translation>Быстрый поиск</translation>
-    </message>
-</context>
-<context>
-    <name>main</name>
-    <message>
-        <source>BUY</source>
-        <translation>КУПИТЬ</translation>
     </message>
 </context>
 </TS>

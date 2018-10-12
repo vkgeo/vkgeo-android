@@ -1,4 +1,4 @@
-QT += quick quickcontrols2 sql location positioning purchasing
+QT += quick quickcontrols2 sql location positioning
 CONFIG += c++11
 
 DEFINES += QT_DEPRECATED_WARNINGS
@@ -6,7 +6,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += src/main.cpp \
     src/androidgw.cpp \
     src/admobhelper.cpp \
-    src/storehelper.cpp \
     src/batteryhelper.cpp \
     src/uihelper.cpp \
     src/vkhelper.cpp \
@@ -15,7 +14,6 @@ SOURCES += src/main.cpp \
 HEADERS += \
     src/androidgw.h \
     src/admobhelper.h \
-    src/storehelper.h \
     src/batteryhelper.h \
     src/uihelper.h \
     src/vkhelper.h \
