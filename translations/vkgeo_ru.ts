@@ -231,5 +231,9 @@
         <source>BUY</source>
         <translation>КУПИТЬ</translation>
     </message>
+    <message>
+        <source>Friends on Map</source>
+        <translation>Друзья на Карте</translation>
+    </message>
 </context>
 </TS>
