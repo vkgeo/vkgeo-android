@@ -186,4 +186,11 @@
         <translation>Быстрый поиск</translation>
     </message>
 </context>
+<context>
+    <name>main</name>
+    <message>
+        <source>Friends on Map</source>
+        <translation>Друзья на Карте</translation>
+    </message>
+</context>
 </TS>
