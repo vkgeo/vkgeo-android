@@ -9,6 +9,7 @@ import "Core"
 
 Window {
     id:      mainWindow
+    title:   qsTr("Friends on Map")
     visible: true
 
     property bool disableAds:             false
