@@ -8,6 +8,7 @@ import "Core"
 
 Window {
     id:      mainWindow
+    title:   qsTr("Friends on Map")
     visible: true
 
     property int vkAuthState: VKHelper.authState
