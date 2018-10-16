@@ -86,6 +86,6 @@
         </receiver>
 
         <!-- AdMob App ID -->
-        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-2455088855015693~7218790912"/>
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-2455088855015693~4253416187"/>
     </application>
 </manifest>

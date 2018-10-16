@@ -3,9 +3,9 @@
 
 #include "admobhelper.h"
 
-const QString AdMobHelper::ADMOB_APP_ID              ("ca-app-pub-2455088855015693~7218790912");
-const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  ("ca-app-pub-2455088855015693/6835647536");
-const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID("ca-app-pub-2455088855015693/9626721580");
+const QString AdMobHelper::ADMOB_APP_ID              ("ca-app-pub-2455088855015693~4253416187");
+const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  ("ca-app-pub-2455088855015693/8090796831");
+const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID("ca-app-pub-2455088855015693/6181026787");
 
 AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
 {
