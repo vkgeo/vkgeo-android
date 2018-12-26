@@ -3,6 +3,7 @@
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
+#include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidService>
 
 #include "androidgw.h"
@@ -41,6 +42,8 @@ int main(int argc, char *argv[])
         engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), vk_helper);
 
         engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+
+        QtAndroid::hideSplashScreen();
 
         if (engine.rootObjects().isEmpty())
             return -1;
