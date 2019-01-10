@@ -13,7 +13,7 @@ StoreHelper::~StoreHelper()
 
 QString StoreHelper::getPackageName()
 {
-    QAndroidJniObject str_object = QtAndroid::androidActivity().callObjectMethod<jstring>("getPackageName");
+    QAndroidJniObject j_package_name = QtAndroid::androidActivity().callObjectMethod<jstring>("getPackageName");
 
-    return str_object.toString();
+    return j_package_name.toString();
 }
