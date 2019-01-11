@@ -39,7 +39,7 @@ void VKService::friendsUpdated()
     if (vk_helper != nullptr) {
         QVariantMap friends_data = vk_helper->getFriends();
 
-        foreach (QString key, friends_data.keys()) {
+        for (const QString &key : friends_data.keys()) {
             QVariantMap frnd = friends_data[key].toMap();
 
             if (FriendsData.contains(key)) {
