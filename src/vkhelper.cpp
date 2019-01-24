@@ -61,7 +61,7 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 
 VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
 {
-    CurrentDataUpdated               = false;
+    CurrentDataState                 = DataNotUpdated;
     AuthState                        = VKAuthState::StateUnknown;
     MaxTrustedFriendsCount           = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
     MaxTrackedFriendsCount           = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
@@ -82,6 +82,11 @@ VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
 
     RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
+
+    connect(&SendDataOnUpdateTimer, &QTimer::timeout, this, &VKHelper::sendDataOnUpdateTimerTimeout);
+
+    SendDataOnUpdateTimer.setInterval(SEND_DATA_ON_UPDATE_TIMER_INTERVAL);
+    SendDataOnUpdateTimer.setSingleShot(true);
 
     connect(&SendDataTimer, &QTimer::timeout, this, &VKHelper::sendDataTimerTimeout);
 
@@ -237,26 +242,26 @@ void VKHelper::logout()
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
 {
-    CurrentDataUpdated         = true;
+    CurrentDataState           = DataUpdatedNotSent;
     CurrentData["update_time"] = QDateTime::currentSecsSinceEpoch();
     CurrentData["latitude"]    = latitude;
     CurrentData["longitude"]   = longitude;
 
     emit locationUpdated();
 
-    QTimer::singleShot(SEND_DATA_ON_UPDATE_DELAY, this, &VKHelper::sendDataOnUpdateSingleShot);
+    SendDataOnUpdateTimer.start();
 }
 
 void VKHelper::updateBatteryStatus(QString status, int level)
 {
-    CurrentDataUpdated            = true;
+    CurrentDataState              = DataUpdatedNotSent;
     CurrentData["update_time"]    = QDateTime::currentSecsSinceEpoch();
     CurrentData["battery_status"] = status;
     CurrentData["battery_level"]  = level;
 
     emit batteryStatusUpdated();
 
-    QTimer::singleShot(SEND_DATA_ON_UPDATE_DELAY, this, &VKHelper::sendDataOnUpdateSingleShot);
+    SendDataOnUpdateTimer.start();
 }
 
 void VKHelper::sendData()
@@ -605,11 +610,6 @@ void VKHelper::processBatteryStatusUpdate(QString status, int level)
     updateBatteryStatus(status, level);
 }
 
-void VKHelper::sendDataOnUpdateSingleShot()
-{
-    SendData(false);
-}
-
 void VKHelper::requestQueueTimerTimeout()
 {
     if (!RequestQueue.isEmpty()) {
@@ -647,6 +647,11 @@ void VKHelper::requestQueueTimerTimeout()
     }
 }
 
+void VKHelper::sendDataOnUpdateTimerTimeout()
+{
+    SendData(false);
+}
+
 void VKHelper::sendDataTimerTimeout()
 {
     SendData(false);
@@ -654,14 +659,12 @@ void VKHelper::sendDataTimerTimeout()
 
 void VKHelper::SendData(bool expedited)
 {
-    if (CurrentDataUpdated) {
+    if (CurrentDataState != DataNotUpdated) {
         qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
 
         if (!ContextHasActiveRequests("sendData") &&
             AuthState == VKAuthState::StateAuthorized &&
             (expedited || elapsed < 0 || elapsed > SEND_DATA_INTERVAL)) {
-            LastSendDataTime = QDateTime::currentSecsSinceEpoch();
-
             QVariantMap request, parameters;
 
             QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
@@ -684,12 +687,10 @@ void VKHelper::SendData(bool expedited)
 
             EnqueueRequest(request);
 
-            CurrentDataUpdated = false;
+            CurrentDataState = DataUpdatedAndSent;
+        }
 
-            SendDataTimer.stop();
-
-            emit dataSent();
-        } else if (!SendDataTimer.isActive()) {
+        if (!SendDataTimer.isActive()) {
             SendDataTimer.start();
         }
     }
@@ -942,6 +943,16 @@ void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_reques
 
             EnqueueRequest(request);
         }
+
+        LastSendDataTime = QDateTime::currentSecsSinceEpoch();
+
+        if (CurrentDataState != DataUpdatedNotSent) {
+            CurrentDataState = DataNotUpdated;
+
+            SendDataTimer.stop();
+        }
+
+        emit dataSent();
     }
 }
 
