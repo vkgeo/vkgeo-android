@@ -65,6 +65,7 @@ VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
     AuthState                        = VKAuthState::StateUnknown;
     MaxTrustedFriendsCount           = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
     MaxTrackedFriendsCount           = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
+    SendDataTryNumber                = 0;
     LastSendDataTime                 = 0;
     LastUpdateTrackedFriendsDataTime = 0;
     NextRequestQueueTimerTimeout     = 0;
@@ -242,7 +243,7 @@ void VKHelper::logout()
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
 {
-    CurrentDataState           = DataUpdatedNotSent;
+    CurrentDataState           = DataUpdated;
     CurrentData["update_time"] = QDateTime::currentSecsSinceEpoch();
     CurrentData["latitude"]    = latitude;
     CurrentData["longitude"]   = longitude;
@@ -254,7 +255,7 @@ void VKHelper::updateLocation(qreal latitude, qreal longitude)
 
 void VKHelper::updateBatteryStatus(QString status, int level)
 {
-    CurrentDataState              = DataUpdatedNotSent;
+    CurrentDataState              = DataUpdated;
     CurrentData["update_time"]    = QDateTime::currentSecsSinceEpoch();
     CurrentData["battery_status"] = status;
     CurrentData["battery_level"]  = level;
@@ -659,7 +660,8 @@ void VKHelper::sendDataTimerTimeout()
 
 void VKHelper::SendData(bool expedited)
 {
-    if (CurrentDataState != DataNotUpdated) {
+    if (CurrentDataState == DataUpdated ||
+       (CurrentDataState == DataUpdatedAndSent && SendDataTryNumber < MAX_SEND_DATA_TRIES_COUNT)) {
         qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
 
         if (!ContextHasActiveRequests("sendData") &&
@@ -687,12 +689,20 @@ void VKHelper::SendData(bool expedited)
 
             EnqueueRequest(request);
 
+            if (CurrentDataState == DataUpdatedAndSent) {
+                SendDataTryNumber = SendDataTryNumber + 1;
+            } else {
+                SendDataTryNumber = 0;
+            }
+
             CurrentDataState = DataUpdatedAndSent;
         }
 
         if (!SendDataTimer.isActive()) {
             SendDataTimer.start();
         }
+    } else {
+        SendDataTimer.stop();
     }
 }
 
@@ -946,7 +956,7 @@ void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_reques
 
         LastSendDataTime = QDateTime::currentSecsSinceEpoch();
 
-        if (CurrentDataState != DataUpdatedNotSent) {
+        if (CurrentDataState != DataUpdated) {
             CurrentDataState = DataNotUpdated;
 
             SendDataTimer.stop();
