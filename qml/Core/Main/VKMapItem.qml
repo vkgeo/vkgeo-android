@@ -14,7 +14,7 @@ MapQuickItem {
 
     property bool dataObsolete: false
 
-    property int dataTimeout:   12 * 60 * 60
+    property int dataTimeout:   24 * 60 * 60
 
     property double updateTime: 0.0
 
