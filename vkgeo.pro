@@ -87,5 +87,9 @@ android {
     }
 }
 
+CONFIG(release, debug|release) {
+    CONFIG += qtquickcompiler
+}
+
 # Default rules for deployment.
 include(deployment.pri)
