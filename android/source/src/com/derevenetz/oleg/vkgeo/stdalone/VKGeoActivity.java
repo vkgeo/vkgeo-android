@@ -552,7 +552,7 @@ public class VKGeoActivity extends QtActivity
                                                 vkRequestError(json_request_list.optString(i), error_str);
                                             }
                                         } else if (response.json.has("response")) {
-                                            String            error_str = "";
+                                            String            error_str = null;
                                             ArrayList<String> responses = new ArrayList<String>();
 
                                             try {
@@ -569,7 +569,7 @@ public class VKGeoActivity extends QtActivity
                                                 error_str = ex.toString();
                                             }
 
-                                            if (error_str == "") {
+                                            if (error_str == null) {
                                                 for (int i = 0; i < json_request_list.length(); i++) {
                                                     vkRequestComplete(json_request_list.optString(i), responses.get(i));
                                                 }
