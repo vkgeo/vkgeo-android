@@ -35,8 +35,6 @@ import org.json.JSONObject;
 
 import org.qtproject.qt5.android.bindings.QtService;
 
-import com.vk.sdk.api.VKBatchRequest;
-import com.vk.sdk.api.VKBatchRequest.VKBatchRequestListener;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
@@ -80,24 +78,23 @@ public class VKGeoService extends QtService implements LocationListener
         }
     }
 
-    public static final int                  MESSAGE_NOT_AUTHORIZED             = 1001,
-                                             MESSAGE_AUTHORIZED                 = 1002;
+    public static final int             MESSAGE_NOT_AUTHORIZED             = 1001,
+                                        MESSAGE_AUTHORIZED                 = 1002;
 
-    private static final int                 LOCATION_SOURCE_SELECTION_INTERVAL = 60000;
-    private static final long                LOCATION_UPDATE_MIN_TIME           = 30000,
-                                             CENTRAL_LOCATION_CHANGE_TIMEOUT    = 900000;
-    private static final float               LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
-                                             CENTRAL_LOCATION_CHANGE_DISTANCE   = 500.0f;
+    private static final int            LOCATION_SOURCE_SELECTION_INTERVAL = 60000;
+    private static final long           LOCATION_UPDATE_MIN_TIME           = 30000,
+                                        CENTRAL_LOCATION_CHANGE_TIMEOUT    = 900000;
+    private static final float          LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
+                                        CENTRAL_LOCATION_CHANGE_DISTANCE   = 500.0f;
 
-    private boolean                          centralLocationChanged             = true;
-    private long                             centralLocationChangeHandleRtNanos = 0;
-    private String                           locationProvider                   = null;
-    private Location                         currentLocation                    = null,
-                                             centralLocation                    = null;
-    private Notification.Builder             serviceNotificationBuilder         = null;
-    private Messenger                        messenger                          = new Messenger(new MessageHandler(this));
-    private HashMap<VKRequest,      Boolean> vkRequestTracker                   = new HashMap<VKRequest,      Boolean>();
-    private HashMap<VKBatchRequest, Boolean> vkBatchRequestTracker              = new HashMap<VKBatchRequest, Boolean>();
+    private boolean                     centralLocationChanged             = true;
+    private long                        centralLocationChangeHandleRtNanos = 0;
+    private String                      locationProvider                   = null;
+    private Location                    currentLocation                    = null,
+                                        centralLocation                    = null;
+    private Notification.Builder        serviceNotificationBuilder         = null;
+    private Messenger                   messenger                          = new Messenger(new MessageHandler(this));
+    private HashMap<VKRequest, Boolean> vkRequestTracker                   = new HashMap<VKRequest, Boolean>();
 
     private static native void locationUpdated(double latitude, double longitude);
     private static native void batteryStatusUpdated(String status, int level);
@@ -257,90 +254,113 @@ public class VKGeoService extends QtService implements LocationListener
             public void run()
             {
                 try {
-                    JSONArray            json_request_list = new JSONArray(f_request_list);
-                    ArrayList<VKRequest> vk_requests       = new ArrayList<VKRequest>();
+                    final JSONArray json_request_list = new JSONArray(f_request_list);
 
-                    for (int i = 0; i < json_request_list.length(); i++) {
-                        final JSONObject json_request = json_request_list.getJSONObject(i);
+                    if (json_request_list.length() > 0) {
+                        String execute_code = "return [";
 
-                        if (json_request.has("method")) {
-                            ArrayList<String> vk_parameters = new ArrayList<String>();
+                        for (int i = 0; i < json_request_list.length(); i++) {
+                            JSONObject json_request = json_request_list.getJSONObject(i);
 
-                            if (json_request.has("parameters")) {
-                                JSONObject       json_parameters      = json_request.getJSONObject("parameters");
-                                Iterator<String> json_parameters_keys = json_parameters.keys();
+                            if (json_request.has("method")) {
+                                execute_code = execute_code + String.format("API.%s(%s)", json_request.getString("method"), json_request.optString("parameters"));
 
-                                while (json_parameters_keys.hasNext()) {
-                                    String key = json_parameters_keys.next();
-
-                                    vk_parameters.add(key);
-                                    vk_parameters.add(json_parameters.get(key).toString());
+                                if (i < json_request_list.length() - 1) {
+                                    execute_code = execute_code + ",";
                                 }
+                            } else {
+                                Log.w("VKGeoService", "executeVKBatch() : invalid request");
                             }
-
-                            final VKRequest vk_request = new VKRequest(json_request.getString("method"),
-                                                                       VKParameters.from((Object[])vk_parameters.toArray(new String[vk_parameters.size()])));
-
-                            vk_request.shouldInterruptUI = false;
-
-                            vk_request.setRequestListener(new VKRequestListener() {
-                                @Override
-                                public void onComplete(VKResponse response)
-                                {
-                                    if (vkRequestTracker.containsKey(vk_request)) {
-                                        vkRequestTracker.remove(vk_request);
-
-                                        String response_str = "";
-
-                                        if (response != null && response.json != null) {
-                                            response_str = response.json.toString();
-                                        }
-
-                                        vkRequestComplete(json_request.toString(), response_str);
-                                    }
-                                }
-
-                                @Override
-                                public void onError(VKError error)
-                                {
-                                    if (vkRequestTracker.containsKey(vk_request)) {
-                                        vkRequestTracker.remove(vk_request);
-
-                                        String error_str = "";
-
-                                        if (error != null) {
-                                            error_str = error.toString();
-                                        }
-
-                                        vkRequestError(json_request.toString(), error_str);
-                                    }
-                                }
-                            });
-
-                            vkRequestTracker.put(vk_request, true);
-
-                            vk_requests.add(vk_request);
-                        } else {
-                            Log.w("VKGeoService", "executeVKBatch() : invalid request");
                         }
-                    }
 
-                    if (vk_requests.size() > 0) {
-                        final VKBatchRequest vk_batch_request = new VKBatchRequest(vk_requests.toArray(new VKRequest[vk_requests.size()]));
+                        execute_code = execute_code + "];";
 
-                        vkBatchRequestTracker.put(vk_batch_request, true);
+                        final VKRequest vk_request = new VKRequest("execute", VKParameters.from("code", execute_code));
 
-                        vk_batch_request.executeWithListener(new VKBatchRequestListener() {
+                        vkRequestTracker.put(vk_request, true);
+
+                        vk_request.executeWithListener(new VKRequestListener() {
                             @Override
-                            public void onComplete(VKResponse[] responses)
+                            public void onComplete(VKResponse response)
                             {
-                                vkBatchRequestTracker.remove(vk_batch_request);
+                                if (vkRequestTracker.containsKey(vk_request)) {
+                                    vkRequestTracker.remove(vk_request);
+
+                                    if (response != null && response.json != null) {
+                                        if (response.json.has("execute_errors")) {
+                                            String error_str = "";
+
+                                            try {
+                                                JSONArray json_execute_errors_list = response.json.getJSONArray("execute_errors");
+
+                                                if (json_execute_errors_list.length() > 0 && json_execute_errors_list.getJSONObject(0).has("error_msg")) {
+                                                    error_str = json_execute_errors_list.getJSONObject(0).getString("error_msg");
+                                                } else {
+                                                    error_str = "response has execute_errors without error_msg";
+                                                }
+                                            } catch (Exception ex) {
+                                                error_str = ex.toString();
+                                            }
+
+                                            for (int i = 0; i < json_request_list.length(); i++) {
+                                                vkRequestError(json_request_list.optString(i), error_str);
+                                            }
+                                        } else if (response.json.has("response")) {
+                                            String            error_str = "";
+                                            ArrayList<String> responses = new ArrayList<String>();
+
+                                            try {
+                                                JSONArray json_response_list = response.json.getJSONArray("response");
+
+                                                for (int i = 0; i < json_request_list.length(); i++) {
+                                                    if (i < json_response_list.length()) {
+                                                        responses.add((new JSONObject().put("response", json_response_list.get(i))).toString());
+                                                    } else {
+                                                        responses.add("");
+                                                    }
+                                                }
+                                            } catch (Exception ex) {
+                                                error_str = ex.toString();
+                                            }
+
+                                            if (error_str == "") {
+                                                for (int i = 0; i < json_request_list.length(); i++) {
+                                                    vkRequestComplete(json_request_list.optString(i), responses.get(i));
+                                                }
+                                            } else {
+                                                for (int i = 0; i < json_request_list.length(); i++) {
+                                                    vkRequestError(json_request_list.optString(i), error_str);
+                                                }
+                                            }
+                                        } else {
+                                            for (int i = 0; i < json_request_list.length(); i++) {
+                                                vkRequestComplete(json_request_list.optString(i), "");
+                                            }
+                                        }
+                                    } else {
+                                        for (int i = 0; i < json_request_list.length(); i++) {
+                                            vkRequestComplete(json_request_list.optString(i), "");
+                                        }
+                                    }
+                                }
                             }
 
                             @Override
                             public void onError(VKError error)
                             {
-                                vkBatchRequestTracker.remove(vk_batch_request);
+                                if (vkRequestTracker.containsKey(vk_request)) {
+                                    vkRequestTracker.remove(vk_request);
+
+                                    String error_str = "";
+
+                                    if (error != null) {
+                                        error_str = error.toString();
+                                    }
+
+                                    for (int i = 0; i < json_request_list.length(); i++) {
+                                        vkRequestError(json_request_list.optString(i), error_str);
+                                    }
+                                }
                             }
                         });
                     }
@@ -357,10 +377,10 @@ public class VKGeoService extends QtService implements LocationListener
             @Override
             public void run()
             {
-                Iterator<VKBatchRequest> vk_batch_request_tracker_keys = vkBatchRequestTracker.keySet().iterator();
+                Iterator<VKRequest> vk_request_tracker_keys = vkRequestTracker.keySet().iterator();
 
-                while (vk_batch_request_tracker_keys.hasNext()) {
-                    vk_batch_request_tracker_keys.next().cancel();
+                while (vk_request_tracker_keys.hasNext()) {
+                    vk_request_tracker_keys.next().cancel();
                 }
             }
         });
