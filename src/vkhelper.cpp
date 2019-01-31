@@ -1,6 +1,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
 #include <QtCore/QStringList>
+#include <QtCore/QRandomGenerator>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
@@ -435,8 +436,9 @@ void VKHelper::sendMessage(QString user_id, QString message)
 {
     QVariantMap request, parameters;
 
-    parameters["user_id"] = user_id.toLongLong();
-    parameters["message"] = message;
+    parameters["user_id"]   = user_id.toLongLong();
+    parameters["random_id"] = QRandomGenerator::system()->generate();
+    parameters["message"]   = message;
 
     request["method"]     = "messages.send";
     request["context"]    = "sendMessage";
