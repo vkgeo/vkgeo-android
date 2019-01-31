@@ -56,7 +56,7 @@ public:
                      UPDATE_TRACKED_FRIENDS_DATA_INTERVAL = 60,
                      MAX_BATCH_SIZE                       = 25,
                      MAX_NOTES_GET_COUNT                  = 100,
-                     MAX_FRIENDS_GET_COUNT                = 5000;
+                     MAX_FRIENDS_GET_COUNT                = 500;
 
     static const QString AUTH_SCOPE,
                          DEFAULT_PHOTO_URL,
