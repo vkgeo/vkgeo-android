@@ -1,3 +1,6 @@
-PATH=%PATH%;C:\Qt\5.11.2\mingw53_32\bin;C:\Qt\Tools\mingw530_32\bin
+PATH=%PATH%;C:\Qt\5.12.1\mingw73_64\bin;C:\Qt\Tools\mingw730_64\bin
 
-lupdate ..\vkgeo.pro
+lupdate ..\vkgeo.pro -ts ..\translations\vkgeo_ru.src.ts
+lupdate ..\qml       -ts ..\translations\vkgeo_ru.qml.ts
+
+lconvert ..\translations\vkgeo_ru.src.ts ..\translations\vkgeo_ru.qml.ts -o ..\translations\vkgeo_ru.ts
