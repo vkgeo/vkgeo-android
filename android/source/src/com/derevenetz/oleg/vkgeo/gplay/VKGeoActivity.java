@@ -2,6 +2,7 @@ package com.derevenetz.oleg.vkgeo.gplay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import android.content.ComponentName;
@@ -623,10 +624,10 @@ public class VKGeoActivity extends QtActivity
             @Override
             public void run()
             {
-                Iterator<VKRequest> vk_request_tracker_keys = vkRequestTracker.keySet().iterator();
+                Iterator<VKRequest> vk_request_tracker_keys_iter = new HashSet<VKRequest>(vkRequestTracker.keySet()).iterator();
 
-                while (vk_request_tracker_keys.hasNext()) {
-                    vk_request_tracker_keys.next().cancel();
+                while (vk_request_tracker_keys_iter.hasNext()) {
+                    vk_request_tracker_keys_iter.next().cancel();
                 }
             }
         });
