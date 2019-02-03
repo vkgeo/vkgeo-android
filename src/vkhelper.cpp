@@ -915,7 +915,6 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                             request["method"]     = "notes.get";
                             request["context"]    = resp_request["context"].toString();
-                            request["user_data"]  = resp_request["user_data"].toString();
                             request["parameters"] = parameters;
 
                             EnqueueRequest(request);
@@ -1224,7 +1223,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
         } else {
             qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
         }
-    } if (resp_request["context"].toString() == "updateFriends") {
+    } else if (resp_request["context"].toString() == "updateFriends") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
