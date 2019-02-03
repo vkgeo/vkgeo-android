@@ -416,17 +416,22 @@ void VKHelper::updateTrackedFriendsData(bool expedited)
 
             if ((frnd.contains("trusted") && frnd["trusted"].toBool()) ||
                 (frnd.contains("tracked") && frnd["tracked"].toBool())) {
-                QVariantMap request, parameters;
+                bool is_closed         = frnd.contains("isClosed")        && frnd["isClosed"].toBool();
+                bool can_access_closed = frnd.contains("canAccessClosed") && frnd["canAccessClosed"].toBool();
 
-                parameters["count"]   = MAX_NOTES_GET_COUNT;
-                parameters["sort"]    = 0;
-                parameters["user_id"] = key.toLongLong();
+                if (!is_closed || can_access_closed) {
+                    QVariantMap request, parameters;
 
-                request["method"]     = "notes.get";
-                request["context"]    = "updateTrackedFriendsData";
-                request["parameters"] = parameters;
+                    parameters["count"]   = MAX_NOTES_GET_COUNT;
+                    parameters["sort"]    = 0;
+                    parameters["user_id"] = key.toLongLong();
 
-                EnqueueRequest(request);
+                    request["method"]     = "notes.get";
+                    request["context"]    = "updateTrackedFriendsData";
+                    request["parameters"] = parameters;
+
+                    EnqueueRequest(request);
+                }
             }
         }
     }
@@ -1030,6 +1035,16 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                                     frnd["lastName"] = json_friend.value("last_name").toString();
                                 } else {
                                     frnd["lastName"] = "";
+                                }
+                                if (json_friend.contains("is_closed")) {
+                                    frnd["isClosed"] = json_friend.value("is_closed").toBool();
+                                } else {
+                                    frnd["isClosed"] = false;
+                                }
+                                if (json_friend.contains("can_access_closed")) {
+                                    frnd["canAccessClosed"] = json_friend.value("can_access_closed").toBool();
+                                } else {
+                                    frnd["canAccessClosed"] = false;
                                 }
                                 if (json_friend.contains("photo_100")) {
                                     frnd["photoUrl"] = json_friend.value("photo_100").toString();
