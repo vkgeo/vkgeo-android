@@ -1,7 +1,7 @@
-import QtQuick 2.9
+import QtQuick 2.12
 import QtGraphicalEffects 1.0
-import QtPositioning 5.8
-import QtLocation 5.9
+import QtPositioning 5.12
+import QtLocation 5.12
 
 import "../../Util.js" as UtilScript
 

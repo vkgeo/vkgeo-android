@@ -1,6 +1,6 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
-import QtPositioning 5.8
+import QtQuick 2.12
+import QtQuick.Controls 2.5
+import QtPositioning 5.12
 import VKHelper 1.0
 
 import "Main"
