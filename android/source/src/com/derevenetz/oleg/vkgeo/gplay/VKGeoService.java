@@ -89,7 +89,7 @@ public class VKGeoService extends QtService implements LocationListener
     private static final float          LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
                                         CENTRAL_LOCATION_CHANGE_DISTANCE   = 500.0f;
 
-    private boolean                     centralLocationChanged             = false;
+    private boolean                     centralLocationChanged             = true;
     private long                        centralLocationChangeHandleRtNanos = 0;
     private String                      locationProvider                   = null;
     private Location                    currentLocation                    = null,
