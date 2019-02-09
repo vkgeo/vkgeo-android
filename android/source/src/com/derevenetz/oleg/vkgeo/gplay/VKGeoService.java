@@ -193,7 +193,7 @@ public class VKGeoService extends QtService implements LocationListener
     public void onStatusChanged(String provider, int status, Bundle extras)
     {
         if (locationProvider != null && locationProvider.equals(provider)) {
-            if (status == LocationProvider.OUT_OF_SERVICE || status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+            if (status == LocationProvider.OUT_OF_SERVICE) {
                 restartLocationSourceSelection = true;
             }
         }
