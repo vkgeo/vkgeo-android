@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -52,7 +53,6 @@ public class VKGeoActivity extends QtActivity
 {
     private boolean                     statusBarVisible = false;
     private int                         statusBarHeight  = 0;
-    private VKGeoActivity               activity         = null;
     private Messenger                   serviceMessenger = null;
     private AdView                      bannerView       = null;
     private InterstitialAd              interstitial     = null;
@@ -111,11 +111,6 @@ public class VKGeoActivity extends QtActivity
     private static native void vkAuthChanged(boolean authorized);
     private static native void vkRequestComplete(String request, String response);
     private static native void vkRequestError(String request, String error_message);
-
-    public VKGeoActivity()
-    {
-        activity = this;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -256,16 +251,17 @@ public class VKGeoActivity extends QtActivity
 
     public void initAds(String app_id, String interstitial_unit_id)
     {
-        final String f_app_id               = app_id;
-        final String f_interstitial_unit_id = interstitial_unit_id;
+        final String  f_app_id               = app_id;
+        final String  f_interstitial_unit_id = interstitial_unit_id;
+        final Context f_context              = this;
 
         runOnUiThread(new Runnable() {
             @Override
             public void run()
             {
-                MobileAds.initialize(activity, f_app_id);
+                MobileAds.initialize(f_context, f_app_id);
 
-                interstitial = new InterstitialAd(activity);
+                interstitial = new InterstitialAd(f_context);
 
                 interstitial.setAdUnitId(f_interstitial_unit_id);
 
@@ -308,7 +304,8 @@ public class VKGeoActivity extends QtActivity
 
     public void showBannerView(String unit_id)
     {
-        final String f_unit_id = unit_id;
+        final String  f_unit_id = unit_id;
+        final Context f_context = this;
 
         runOnUiThread(new Runnable() {
             @Override
@@ -333,7 +330,7 @@ public class VKGeoActivity extends QtActivity
                                                                                    FrameLayout.LayoutParams.WRAP_CONTENT,
                                                                                    Gravity.CENTER_HORIZONTAL);
 
-                    bannerView = new AdView(activity);
+                    bannerView = new AdView(f_context);
 
                     bannerView.setAdSize(AdSize.SMART_BANNER);
                     bannerView.setAdUnitId(f_unit_id);
@@ -451,7 +448,8 @@ public class VKGeoActivity extends QtActivity
 
     public void loginVK(String auth_scope)
     {
-        final String f_auth_scope = auth_scope;
+        final String   f_auth_scope = auth_scope;
+        final Activity f_activity   = this;
 
         runOnUiThread(new Runnable() {
             @Override
@@ -465,7 +463,7 @@ public class VKGeoActivity extends QtActivity
                         vk_auth_scope.add(json_auth_scope.get(i).toString());
                     }
 
-                    VKSdk.login(activity, vk_auth_scope.toArray(new String[vk_auth_scope.size()]));
+                    VKSdk.login(f_activity, vk_auth_scope.toArray(new String[vk_auth_scope.size()]));
                 } catch (Exception ex) {
                     Log.w("VKGeoActivity", "loginVK() : " + ex.toString());
                 }
