@@ -89,12 +89,12 @@ public class VKGeoService extends QtService implements LocationListener
     private static final float          LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
                                         CENTRAL_LOCATION_CHANGE_DISTANCE   = 500.0f;
 
-    private boolean                     restartLocationSourceSelection     = true,
-                                        centralLocationChanged             = false;
+    private boolean                     centralLocationChanged             = false;
     private long                        centralLocationChangeHandleRtNanos = 0;
     private String                      locationProvider                   = null;
     private Location                    currentLocation                    = null,
                                         centralLocation                    = null;
+    private Criteria                    locationSourceSelectionCriteria    = new Criteria();
     private Notification.Builder        serviceNotificationBuilder         = null;
     private Messenger                   messenger                          = new Messenger(new MessageHandler(this));
     private HashMap<VKRequest, Boolean> vkRequestTracker                   = new HashMap<VKRequest, Boolean>();
@@ -110,6 +110,13 @@ public class VKGeoService extends QtService implements LocationListener
     public void onCreate()
     {
         super.onCreate();
+
+        locationSourceSelectionCriteria.setAltitudeRequired(false);
+        locationSourceSelectionCriteria.setBearingRequired(false);
+        locationSourceSelectionCriteria.setSpeedRequired(false);
+
+        locationSourceSelectionCriteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+        locationSourceSelectionCriteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
 
         NotificationManager notification_manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -180,7 +187,7 @@ public class VKGeoService extends QtService implements LocationListener
     public void onProviderDisabled(String provider)
     {
         if (locationProvider != null && locationProvider.equals(provider)) {
-            restartLocationSourceSelection = true;
+            locationProvider = null;
         }
     }
 
@@ -194,7 +201,7 @@ public class VKGeoService extends QtService implements LocationListener
     {
         if (locationProvider != null && locationProvider.equals(provider)) {
             if (status == LocationProvider.OUT_OF_SERVICE) {
-                restartLocationSourceSelection = true;
+                locationProvider = null;
             }
         }
     }
@@ -404,72 +411,58 @@ public class VKGeoService extends QtService implements LocationListener
             LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
             if (manager != null) {
-                Criteria criteria = new Criteria();
-
-                criteria.setAltitudeRequired(false);
-                criteria.setBearingRequired(false);
-                criteria.setSpeedRequired(false);
-
-                if (restartLocationSourceSelection) {
-                    criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-                    criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
-                } else if (centralLocationChanged) {
-                    criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-                    criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
+                if (centralLocationChanged) {
+                    locationSourceSelectionCriteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+                    locationSourceSelectionCriteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
                 } else if (SystemClock.elapsedRealtimeNanos() - centralLocationChangeHandleRtNanos > CENTRAL_LOCATION_CHANGE_TIMEOUT * 1000000) {
-                    criteria.setHorizontalAccuracy(Criteria.ACCURACY_MEDIUM);
-                    criteria.setPowerRequirement(Criteria.POWER_LOW);
-                } else {
-                    criteria = null;
+                    locationSourceSelectionCriteria.setHorizontalAccuracy(Criteria.ACCURACY_MEDIUM);
+                    locationSourceSelectionCriteria.setPowerRequirement(Criteria.POWER_LOW);
                 }
 
-                if (criteria != null) {
-                    String provider = manager.getBestProvider(criteria, true);
+                String provider = manager.getBestProvider(locationSourceSelectionCriteria, true);
 
-                    if (provider != null) {
-                        if (restartLocationSourceSelection || locationProvider == null || !locationProvider.equals(provider)) {
-                            manager.removeUpdates(this);
+                if (provider != null) {
+                    if (locationProvider == null || !locationProvider.equals(provider)) {
+                        manager.removeUpdates(this);
 
-                            locationProvider = null;
+                        locationProvider = null;
 
-                            try {
-                                manager.requestLocationUpdates(provider, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
+                        try {
+                            manager.requestLocationUpdates(provider, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
 
-                                locationProvider               = provider;
-                                restartLocationSourceSelection = false;
+                            locationProvider = provider;
 
-                                if (centralLocationChanged) {
-                                    centralLocationChanged             = false;
-                                    centralLocationChangeHandleRtNanos = SystemClock.elapsedRealtimeNanos();
-                                }
-
-                                if (serviceNotificationBuilder != null) {
-                                    NotificationManager notification_manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-
-                                    if (locationProvider.equals(LocationManager.GPS_PROVIDER)) {
-                                        serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
-                                                                                                 getResources().getString(R.string.location_provider_gps)));
-                                    } else if (locationProvider.equals(LocationManager.NETWORK_PROVIDER)) {
-                                        serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
-                                                                                                 getResources().getString(R.string.location_provider_network)));
-                                    } else if (locationProvider.equals(LocationManager.PASSIVE_PROVIDER)) {
-                                        serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
-                                                                                                 getResources().getString(R.string.location_provider_passive)));
-                                    } else {
-                                        serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
-                                                                                                 locationProvider));
-                                    }
-
-                                    notification_manager.notify(getResources().getInteger(R.integer.service_foreground_notification_id), serviceNotificationBuilder.build());
-                                }
-                            } catch (Exception ex) {
-                                Log.w("VKGeoService", "selectLocationSource() : " + ex.toString());
-                            }
-                        } else {
                             if (centralLocationChanged) {
                                 centralLocationChanged             = false;
                                 centralLocationChangeHandleRtNanos = SystemClock.elapsedRealtimeNanos();
                             }
+
+                            if (serviceNotificationBuilder != null) {
+                                NotificationManager notification_manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+
+                                if (locationProvider.equals(LocationManager.GPS_PROVIDER)) {
+                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
+                                                                                             getResources().getString(R.string.location_provider_gps)));
+                                } else if (locationProvider.equals(LocationManager.NETWORK_PROVIDER)) {
+                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
+                                                                                             getResources().getString(R.string.location_provider_network)));
+                                } else if (locationProvider.equals(LocationManager.PASSIVE_PROVIDER)) {
+                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
+                                                                                             getResources().getString(R.string.location_provider_passive)));
+                                } else {
+                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
+                                                                                             locationProvider));
+                                }
+
+                                notification_manager.notify(getResources().getInteger(R.integer.service_foreground_notification_id), serviceNotificationBuilder.build());
+                            }
+                        } catch (Exception ex) {
+                            Log.w("VKGeoService", "selectLocationSource() : " + ex.toString());
+                        }
+                    } else {
+                        if (centralLocationChanged) {
+                            centralLocationChanged             = false;
+                            centralLocationChangeHandleRtNanos = SystemClock.elapsedRealtimeNanos();
                         }
                     }
                 }
