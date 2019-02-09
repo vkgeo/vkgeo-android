@@ -20,6 +20,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -88,7 +89,8 @@ public class VKGeoService extends QtService implements LocationListener
     private static final float          LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
                                         CENTRAL_LOCATION_CHANGE_DISTANCE   = 500.0f;
 
-    private boolean                     centralLocationChanged             = true;
+    private boolean                     restartLocationSourceSelection     = true,
+                                        centralLocationChanged             = false;
     private long                        centralLocationChangeHandleRtNanos = 0;
     private String                      locationProvider                   = null;
     private Location                    currentLocation                    = null,
@@ -177,6 +179,9 @@ public class VKGeoService extends QtService implements LocationListener
     @Override
     public void onProviderDisabled(String provider)
     {
+        if (locationProvider != null && locationProvider.equals(provider)) {
+            restartLocationSourceSelection = true;
+        }
     }
 
     @Override
@@ -185,8 +190,13 @@ public class VKGeoService extends QtService implements LocationListener
     }
 
     @Override
-    public void onStatusChanged (String provider, int status, Bundle extras)
+    public void onStatusChanged(String provider, int status, Bundle extras)
     {
+        if (locationProvider != null && locationProvider.equals(provider)) {
+            if (status == LocationProvider.OUT_OF_SERVICE || status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+                restartLocationSourceSelection = true;
+            }
+        }
     }
 
     public void showFriendsNearbyNotification(String friend_id, String friend_name)
@@ -400,7 +410,10 @@ public class VKGeoService extends QtService implements LocationListener
                 criteria.setBearingRequired(false);
                 criteria.setSpeedRequired(false);
 
-                if (centralLocationChanged) {
+                if (restartLocationSourceSelection) {
+                    criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+                    criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
+                } else if (centralLocationChanged) {
                     criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
                     criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
                 } else if (SystemClock.elapsedRealtimeNanos() - centralLocationChangeHandleRtNanos > CENTRAL_LOCATION_CHANGE_TIMEOUT * 1000000) {
@@ -414,7 +427,7 @@ public class VKGeoService extends QtService implements LocationListener
                     String provider = manager.getBestProvider(criteria, true);
 
                     if (provider != null) {
-                        if (locationProvider == null || !locationProvider.equals(provider)) {
+                        if (restartLocationSourceSelection || locationProvider == null || !locationProvider.equals(provider)) {
                             manager.removeUpdates(this);
 
                             locationProvider = null;
@@ -422,7 +435,8 @@ public class VKGeoService extends QtService implements LocationListener
                             try {
                                 manager.requestLocationUpdates(provider, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
 
-                                locationProvider = provider;
+                                locationProvider               = provider;
+                                restartLocationSourceSelection = false;
 
                                 if (centralLocationChanged) {
                                     centralLocationChanged             = false;
