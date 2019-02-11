@@ -4,20 +4,8 @@
 <context>
     <name>FriendsSwipe</name>
     <message>
-        <source>Invitation sent</source>
-        <translation>Приглашение отправлено</translation>
-    </message>
-    <message>
         <source>Quick search</source>
         <translation>Быстрый поиск</translation>
-    </message>
-    <message>
-        <source>Invite friend</source>
-        <translation>Пригласить друга</translation>
-    </message>
-    <message>
-        <source>Do you want to send an invitation to this friend?</source>
-        <translation>Вы действительно хотите отослать приглашение этому другу?</translation>
     </message>
     <message>
         <source>I invite you to install the VKGeo Friends on Map app and join the community: https://vkgeo.sourceforge.io/</source>
