@@ -4,8 +4,6 @@ import QtQuick.Controls 2.5
 import QtQuick.LocalStorage 2.12
 import VKHelper 1.0
 
-import "Core"
-
 Window {
     id:      mainWindow
     title:   qsTr("Friends on Map")
@@ -103,10 +101,6 @@ Window {
         }
     }
 
-    MainPage {
-        id: mainPage
-    }
-
     MouseArea {
         id:           screenLockMouseArea
         anchors.fill: parent
@@ -117,7 +111,13 @@ Window {
     Component.onCompleted: {
         updateFeatures();
 
-        mainStackView.push(mainPage);
+        var component = Qt.createComponent("Core/MainPage.qml");
+
+        if (component.status === Component.Ready) {
+            mainStackView.push(component);
+        } else {
+            console.log(component.errorString());
+        }
 
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
             showLoginPage();
