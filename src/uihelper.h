@@ -14,6 +14,7 @@ public:
     Q_INVOKABLE int getScreenDPI();
 
     Q_INVOKABLE void showAppSettings();
+    Q_INVOKABLE void sendInvitation(QString text);
 };
 
 #endif // UIHELPER_H

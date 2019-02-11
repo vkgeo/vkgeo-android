@@ -37,19 +37,24 @@ Pane {
             }
         }
 
-        Image {
-            sourceSize.width:  Math.min(textField.implicitWidth, textField.implicitHeight)
-            sourceSize.height: Math.min(textField.implicitWidth, textField.implicitHeight)
-            source:            "qrc:/resources/images/misc/button_clear.png"
-            fillMode:          Image.PreserveAspectFit
-            visible:           textField.text !== ""
-            Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
+        Rectangle {
+            width:            textField.implicitHeight
+            height:           textField.implicitHeight
+            color:            "transparent"
+            visible:          textField.text !== ""
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-            MouseArea {
+            Image {
                 anchors.fill: parent
+                source:       "qrc:/resources/images/misc/button_clear.png"
+                fillMode:     Image.PreserveAspectFit
 
-                onClicked: {
-                    textField.clear();
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        textField.clear();
+                    }
                 }
             }
         }

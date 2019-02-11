@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Друзья на Карте</string>
+    <string name="activity_header_send_invitation">Пригласить друзей</string>
     <string name="service_notification_channel_name">Фоновый сервис</string>
     <string name="friends_nearby_notification_channel_name">Друзья поблизости</string>
     <string name="service_notification_title">Сервис Друзья на Карте запущен</string>

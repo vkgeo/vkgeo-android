@@ -20,3 +20,10 @@ void UIHelper::showAppSettings()
 {
     QtAndroid::androidActivity().callMethod<void>("showAppSettings");
 }
+
+void UIHelper::sendInvitation(QString text)
+{
+    QAndroidJniObject j_text = QAndroidJniObject::fromString(text);
+
+    QtAndroid::androidActivity().callMethod<void>("sendInvitation", "(Ljava/lang/String;)V", j_text.object<jstring>());
+}

@@ -281,7 +281,6 @@ Item {
     MessageDialog {
         id:              joinVKGeoGroupMessageDialog
         title:           qsTr("Join group")
-        icon:            StandardIcon.Question
         text:            qsTr("Do you want to join the VKGeo Friends on Map group?")
         standardButtons: StandardButton.Yes | StandardButton.No
 
