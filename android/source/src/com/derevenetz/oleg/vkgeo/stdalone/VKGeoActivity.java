@@ -249,6 +249,20 @@ public class VKGeoActivity extends QtActivity
         }
     }
 
+    public void sendInvitation(String text)
+    {
+        try {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, text);
+
+            startActivity(Intent.createChooser(intent, getResources().getString(R.string.activity_header_send_invitation)));
+        } catch (Exception ex) {
+            Log.w("VKGeoActivity", "sendInvitation() : " + ex.toString());
+        }
+    }
+
     public void initAds(String app_id, String interstitial_unit_id)
     {
         final String  f_app_id               = app_id;

@@ -297,7 +297,6 @@ Item {
     MessageDialog {
         id:              updateMessageDialog
         title:           qsTr("Update location data")
-        icon:            StandardIcon.Question
         text:            qsTr("Do you want to update location data in your VK profile now?")
         standardButtons: StandardButton.Yes | StandardButton.No
 

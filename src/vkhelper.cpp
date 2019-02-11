@@ -11,7 +11,7 @@
 
 #include "vkhelper.h"
 
-const QString VKHelper::AUTH_SCOPE               ("[ \"friends\", \"notes\", \"messages\", \"groups\", \"offline\" ]");
+const QString VKHelper::AUTH_SCOPE               ("[ \"friends\", \"notes\", \"groups\", \"offline\" ]");
 const QString VKHelper::DEFAULT_PHOTO_URL        ("https://vk.com/images/camera_100.png");
 const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
@@ -437,36 +437,6 @@ void VKHelper::updateTrackedFriendsData(bool expedited)
     }
 }
 
-void VKHelper::sendMessage(QString user_id, QString message)
-{
-    QVariantMap request, parameters;
-
-    parameters["user_id"]   = user_id.toLongLong();
-    parameters["random_id"] = QRandomGenerator::system()->generate();
-    parameters["message"]   = message;
-
-    request["method"]     = "messages.send";
-    request["context"]    = "sendMessage";
-    request["parameters"] = parameters;
-
-    EnqueueRequest(request);
-}
-
-void VKHelper::sendInvitation(QString user_id, QString text)
-{
-    QVariantMap request, parameters;
-
-    parameters["user_id"] = user_id.toLongLong();
-    parameters["text"]    = text;
-    parameters["type"]    = "invite";
-
-    request["method"]     = "apps.sendRequest";
-    request["context"]    = "sendInvitation";
-    request["parameters"] = parameters;
-
-    EnqueueRequest(request);
-}
-
 void VKHelper::joinGroup(QString group_id)
 {
     QVariantMap request, parameters;
@@ -522,10 +492,6 @@ void VKHelper::processResponse(QString response, QString resp_request_str)
             ProcessFriendsAddListResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "friends.editList") {
             ProcessFriendsEditListResponse(response, resp_request);
-        } else if (resp_request["method"].toString() == "messages.send") {
-            ProcessMessagesSendResponse(response, resp_request);
-        } else if (resp_request["method"].toString() == "apps.sendRequest") {
-            ProcessAppsSendRequestResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "groups.join") {
             ProcessGroupsJoinResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "users.get") {
@@ -580,16 +546,6 @@ void VKHelper::processError(QString error_message, QString err_request_str)
                                                                             .arg(error_message);
 
             ProcessFriendsEditListError(err_request);
-        } else if (err_request["method"].toString() == "messages.send") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
-
-            ProcessMessagesSendError(err_request);
-        } else if (err_request["method"].toString() == "apps.sendRequest") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
-
-            ProcessAppsSendRequestError(err_request);
         } else if (err_request["method"].toString() == "groups.join") {
             qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
                                                                             .arg(error_message);
@@ -1464,28 +1420,6 @@ void VKHelper::ProcessFriendsEditListError(QVariantMap err_request)
     } else if (err_request["context"].toString() == "updateTrackedFriendsList") {
         TrackedFriendsListId = "";
     }
-}
-
-void VKHelper::ProcessMessagesSendResponse(QString response, QVariantMap resp_request)
-{
-    Q_UNUSED(response)
-    Q_UNUSED(resp_request)
-}
-
-void VKHelper::ProcessMessagesSendError(QVariantMap err_request)
-{
-    Q_UNUSED(err_request)
-}
-
-void VKHelper::ProcessAppsSendRequestResponse(QString response, QVariantMap resp_request)
-{
-    Q_UNUSED(response)
-    Q_UNUSED(resp_request)
-}
-
-void VKHelper::ProcessAppsSendRequestError(QVariantMap err_request)
-{
-    Q_UNUSED(err_request)
 }
 
 void VKHelper::ProcessGroupsJoinResponse(QString response, QVariantMap resp_request)

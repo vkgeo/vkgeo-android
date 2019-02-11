@@ -21,7 +21,6 @@ Item {
         for (var i = 0; i < friendsList.length; i++) {
             var frnd = friendsList[i];
 
-            frnd.invited           = false;
             frnd.dataAvailable     = false;
             frnd.updateTime        = 0;
             frnd.locationAvailable = false;
@@ -163,58 +162,47 @@ Item {
         }
     }
 
-    function inviteFriend(user_id) {
-        VKHelper.sendMessage(user_id, qsTr("I invite you to install the VKGeo Friends on Map app and join the community: https://vkgeo.sourceforge.io/"));
-
-        for (var i = 0; i < friendsList.length; i++) {
-            var frnd = friendsList[i];
-
-            if (user_id === frnd.userId) {
-                frnd.invited = true;
-
-                friendsList[i] = frnd;
-
-                break;
-            }
-        }
-
-        for (var j = 0; j < friendsListModel.count; j++) {
-            var model_frnd = friendsListModel.get(j);
-
-            if (user_id === model_frnd.userId) {
-                friendsListModel.set(j, { "invited" : true });
-
-                break;
-            }
-        }
-
-        invitationToast.visible = true;
-    }
-
-    Toast {
-        id:              invitationToast
-        anchors.top:     parent.top
-        anchors.left:    parent.left
-        anchors.right:   parent.right
-        anchors.margins: UtilScript.pt(4)
-        height:          UtilScript.pt(48)
-        z:               1
-        text:            qsTr("Invitation sent")
-    }
-
     ColumnLayout {
         anchors.fill:      parent
         anchors.topMargin: UtilScript.pt(4)
         spacing:           UtilScript.pt(4)
 
-        FilterTextField {
-            id:               filterTextField
-            placeholderText:  qsTr("Quick search")
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
+        RowLayout {
+            spacing:           UtilScript.pt(4)
+            Layout.leftMargin: UtilScript.pt(8)
+            Layout.fillWidth:  true
+            Layout.alignment:  Qt.AlignVCenter
 
-            onTextChanged: {
-                friendsSwipe.updateModel();
+            Rectangle {
+                width:            filterTextField.implicitHeight
+                height:           filterTextField.implicitHeight
+                color:            "transparent"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                Image {
+                    anchors.fill: parent
+                    source:       "qrc:/resources/images/main/button_invite.png"
+                    fillMode:     Image.PreserveAspectFit
+
+                    MouseArea {
+                        anchors.fill: parent
+
+                        onClicked: {
+                            UIHelper.sendInvitation(qsTr("I invite you to install the VKGeo Friends on Map app and join the community: https://vkgeo.sourceforge.io/"));
+                        }
+                    }
+                }
+            }
+
+            FilterTextField {
+                id:               filterTextField
+                placeholderText:  qsTr("Quick search")
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+
+                onTextChanged: {
+                    friendsSwipe.updateModel();
+                }
             }
         }
 
@@ -391,24 +379,15 @@ Item {
 
                             Image {
                                 anchors.fill: parent
-                                source:       buttonToShow(locationAvailable, trusted, tracked, invited)
+                                source:       buttonToShow(locationAvailable)
                                 fillMode:     Image.PreserveAspectFit
+                                visible:      locationAvailable || trusted || tracked
 
-                                function buttonToShow(location_available, trusted, tracked, invited) {
+                                function buttonToShow(location_available) {
                                     if (location_available) {
                                         return "qrc:/resources/images/main/button_show_on_map.png";
-                                    } else if (trusted || tracked) {
-                                        if (invited) {
-                                            return "qrc:/resources/images/main/button_invite_tracked_done.png";
-                                        } else {
-                                            return "qrc:/resources/images/main/button_invite_tracked.png";
-                                        }
                                     } else {
-                                        if (invited) {
-                                            return "qrc:/resources/images/main/button_invite_other_done.png";
-                                        } else {
-                                            return "qrc:/resources/images/main/button_invite_other.png";
-                                        }
+                                        return "qrc:/resources/images/main/button_tracked_friend.png";
                                     }
                                 }
 
@@ -418,8 +397,6 @@ Item {
                                     onClicked: {
                                         if (locationAvailable) {
                                             friendDelegate.listView.locateFriendOnMap(userId);
-                                        } else if (!invited) {
-                                            friendDelegate.listView.inviteFriend(userId);
                                         }
                                     }
                                 }
@@ -439,27 +416,7 @@ Item {
                 function locateFriendOnMap(user_id) {
                     friendsSwipe.locateFriendOnMap(user_id);
                 }
-
-                function inviteFriend(user_id) {
-                    inviteMessageDialog.userId = user_id;
-
-                    inviteMessageDialog.open();
-                }
             }
-        }
-    }
-
-    MessageDialog {
-        id:              inviteMessageDialog
-        title:           qsTr("Invite friend")
-        icon:            StandardIcon.Question
-        text:            qsTr("Do you want to send an invitation to this friend?")
-        standardButtons: StandardButton.Yes | StandardButton.No
-
-        property string userId: ""
-
-        onYes: {
-            friendsSwipe.inviteFriend(userId);
         }
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Friends on Map</string>
+    <string name="activity_header_send_invitation">Invite friends</string>
     <string name="service_notification_channel_id" translatable="false">BackgroundService</string>
     <string name="service_notification_channel_name">Background service</string>
     <string name="friends_nearby_notification_channel_id" translatable="false">FriendsNearby</string>

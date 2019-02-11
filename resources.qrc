@@ -4,14 +4,12 @@
         <file>resources/images/main/avatar_mask.png</file>
         <file>resources/images/main/avatar_obsolete_data_label.png</file>
         <file>resources/images/main/avatar_online_label.png</file>
-        <file>resources/images/main/button_invite_other.png</file>
-        <file>resources/images/main/button_invite_other_done.png</file>
-        <file>resources/images/main/button_invite_tracked.png</file>
-        <file>resources/images/main/button_invite_tracked_done.png</file>
+        <file>resources/images/main/button_invite.png</file>
         <file>resources/images/main/button_show_all.png</file>
         <file>resources/images/main/button_show_on_map.png</file>
         <file>resources/images/main/button_track.png</file>
         <file>resources/images/main/button_track_disabled.png</file>
+        <file>resources/images/main/button_tracked_friend.png</file>
         <file>resources/images/main/button_update.png</file>
         <file>resources/images/main/button_update_disabled.png</file>
         <file>resources/images/main/refresh.png</file>
