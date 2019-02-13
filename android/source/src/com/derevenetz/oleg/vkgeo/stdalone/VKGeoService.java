@@ -83,6 +83,8 @@ public class VKGeoService extends QtService implements LocationListener
     public static final int             MESSAGE_NOT_AUTHORIZED             = 1001,
                                         MESSAGE_AUTHORIZED                 = 1002;
 
+    private static final int            VK_API_ERROR_AUTHORIZATION_FAILED  = 5;
+
     private static final int            LOCATION_SOURCE_SELECTION_INTERVAL = 60000;
     private static final long           LOCATION_UPDATE_MIN_TIME           = 30000,
                                         CENTRAL_LOCATION_CHANGE_TIMEOUT    = 900000;
@@ -204,6 +206,47 @@ public class VKGeoService extends QtService implements LocationListener
                 locationProvider = null;
             }
         }
+    }
+
+    public void showNotLoggedInNotification()
+    {
+        NotificationManager  notification_manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification.Builder notification_builder = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(getResources().getString(R.string.authorization_state_notification_channel_id),
+                                                                  getResources().getString(R.string.authorization_state_notification_channel_name),
+                                                                  NotificationManager.IMPORTANCE_DEFAULT);
+
+            channel.setShowBadge(true);
+
+            notification_manager.createNotificationChannel(channel);
+
+            notification_builder = new Notification.Builder(this, getResources().getString(R.string.authorization_state_notification_channel_id))
+                                                           .setAutoCancel(true)
+                                                           .setSmallIcon(R.drawable.ic_stat_notify_service)
+                                                           .setContentTitle(getResources().getString(R.string.not_logged_in_notification_title))
+                                                           .setContentText(getResources().getString(R.string.not_logged_in_notification_text))
+                                                           .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
+        } else {
+            notification_builder = new Notification.Builder(this)
+                                                           .setPriority(Notification.PRIORITY_DEFAULT)
+                                                           .setDefaults(Notification.DEFAULT_ALL)
+                                                           .setAutoCancel(true)
+                                                           .setSmallIcon(R.drawable.ic_stat_notify_service)
+                                                           .setContentTitle(getResources().getString(R.string.not_logged_in_notification_title))
+                                                           .setContentText(getResources().getString(R.string.not_logged_in_notification_text))
+                                                           .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
+        }
+
+        notification_manager.notify(getResources().getInteger(R.integer.not_logged_in_notification_id), notification_builder.build());
+    }
+
+    public void hideNotLoggedInNotification()
+    {
+        NotificationManager notification_manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notification_manager.cancel(getResources().getInteger(R.integer.not_logged_in_notification_id));
     }
 
     public void showFriendsNearbyNotification(String friend_id, String friend_name)
@@ -373,6 +416,12 @@ public class VKGeoService extends QtService implements LocationListener
 
                                     if (error != null) {
                                         error_str = error.toString();
+
+                                        if (error.errorCode == VKError.VK_API_ERROR && error.apiError != null) {
+                                            if (error.apiError.errorCode == VK_API_ERROR_AUTHORIZATION_FAILED) {
+                                                showNotLoggedInNotification();
+                                            }
+                                        }
                                     }
 
                                     for (int i = 0; i < json_request_list.length(); i++) {

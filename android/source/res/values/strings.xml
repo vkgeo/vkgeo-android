@@ -4,11 +4,15 @@
     <string name="activity_header_send_invitation">Invite friends</string>
     <string name="service_notification_channel_id" translatable="false">BackgroundService</string>
     <string name="service_notification_channel_name">Background service</string>
+    <string name="authorization_state_notification_channel_id" translatable="false">AuthorizationState</string>
+    <string name="authorization_state_notification_channel_name">Authorization state</string>
     <string name="friends_nearby_notification_channel_id" translatable="false">FriendsNearby</string>
     <string name="friends_nearby_notification_channel_name">Friends nearby</string>
     <string name="service_notification_title">Friends on Map service is running</string>
     <string name="service_notification_title_provider">Friends on Map service: %s</string>
     <string name="service_notification_text">Tap to open the application</string>
+    <string name="not_logged_in_notification_title">You are not logged into your VK account</string>
+    <string name="not_logged_in_notification_text">Tap to open the application</string>
     <string name="friends_nearby_notification_title">New friends nearby</string>
     <string name="friends_nearby_notification_text">%s is nearby</string>
     <string name="location_provider_gps">GPS</string>
