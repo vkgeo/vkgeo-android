@@ -417,10 +417,9 @@ public class VKGeoService extends QtService implements LocationListener
                                     if (error != null) {
                                         error_str = error.toString();
 
-                                        if (error.errorCode == VKError.VK_API_ERROR && error.apiError != null) {
-                                            if (error.apiError.errorCode == VK_API_ERROR_AUTHORIZATION_FAILED) {
-                                                showNotLoggedInNotification();
-                                            }
+                                        if (error.errorCode == VKError.VK_API_ERROR && error.apiError != null &&
+                                                                                       error.apiError.errorCode == VK_API_ERROR_AUTHORIZATION_FAILED) {
+                                            showNotLoggedInNotification();
                                         }
                                     }
 
