@@ -122,6 +122,8 @@ Item {
         property bool wasCenterOnMyMapItem: false
         property bool autoAction:           false
 
+        property int  autoActionTriesCount: 10
+
         property real centerBearing:        0.0
         property real centerTilt:           0.0
         property real centerZoomLevel:      16.0
@@ -197,10 +199,12 @@ Item {
             if (trackedMapItem !== null) {
                 autoAction = true;
 
-                center    = trackedMapItem.coordinate;
-                bearing   = centerBearing;
-                tilt      = centerTilt;
-                zoomLevel = centerZoomLevel;
+                for (var i = 0; i < autoActionTriesCount; i++) {
+                    center    = trackedMapItem.coordinate;
+                    bearing   = centerBearing;
+                    tilt      = centerTilt;
+                    zoomLevel = centerZoomLevel;
+                }
 
                 autoAction = false;
             }
@@ -210,10 +214,12 @@ Item {
             if (!wasCenterOnMyMapItem && myMapItem !== null) {
                 autoAction = true;
 
-                center    = myMapItem.coordinate;
-                bearing   = centerBearing;
-                tilt      = centerTilt;
-                zoomLevel = centerZoomLevel;
+                for (var i = 0; i < autoActionTriesCount; i++) {
+                    center    = myMapItem.coordinate;
+                    bearing   = centerBearing;
+                    tilt      = centerTilt;
+                    zoomLevel = centerZoomLevel;
+                }
 
                 wasCenterOnMyMapItem = true;
 
@@ -224,7 +230,9 @@ Item {
         function showAllMapItems() {
             autoAction = true;
 
-            fitViewportToVisibleMapItems();
+            for (var i = 0; i < autoActionTriesCount; i++) {
+                fitViewportToVisibleMapItems();
+            }
 
             autoAction = false;
         }
