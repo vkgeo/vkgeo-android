@@ -102,6 +102,8 @@ Window {
             } else {
                 AdMobHelper.showBannerView();
             }
+        } else {
+            AdMobHelper.hideBannerView();
         }
 
         if (increaseTrackingLimits) {
@@ -226,6 +228,8 @@ Window {
                 } else {
                     AdMobHelper.hideBannerView();
                 }
+            } else {
+                AdMobHelper.hideBannerView();
             }
         }
     }
