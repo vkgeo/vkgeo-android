@@ -75,7 +75,7 @@ Page {
         }
     }
 
-    property bool appInForeground: Qt.application.active
+    property bool appInForeground: Qt.application.state === Qt.ApplicationActive
 
     property int bannerViewHeight: AdMobHelper.bannerViewHeight
     property int vkAuthState:      VKHelper.authState

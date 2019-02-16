@@ -97,6 +97,8 @@ Window {
                 } else {
                     AdMobHelper.hideBannerView();
                 }
+            } else {
+                AdMobHelper.hideBannerView();
             }
         }
     }
