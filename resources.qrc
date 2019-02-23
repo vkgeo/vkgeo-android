@@ -12,11 +12,11 @@
         <file>resources/images/main/button_tracked_friend.png</file>
         <file>resources/images/main/button_update.png</file>
         <file>resources/images/main/button_update_disabled.png</file>
-        <file>resources/images/main/refresh.png</file>
         <file>resources/images/main/tab_map.png</file>
         <file>resources/images/main/tab_people.png</file>
         <file>resources/images/main/tab_settings.png</file>
         <file>resources/images/misc/button_clear.png</file>
+        <file>resources/images/misc/refresh.png</file>
         <file>resources/images/profile/avatar_battery_100_charging_label.png</file>
         <file>resources/images/profile/avatar_battery_100_label.png</file>
         <file>resources/images/profile/avatar_battery_25_charging_label.png</file>
