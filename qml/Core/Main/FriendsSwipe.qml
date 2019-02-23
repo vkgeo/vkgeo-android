@@ -211,73 +211,16 @@ Item {
             Layout.fillWidth:  true
             Layout.fillHeight: true
 
-            Image {
-                id:                       refreshImage
-                anchors.top:              parent.top
+            RefreshControl {
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:                    UtilScript.pt(64)
-                height:                   UtilScript.pt(64)
+                y:                        (listViewOriginY - listViewContentY) / 2 - height / 2
                 z:                        1
-                source:                   "qrc:/resources/images/main/refresh.png"
-                fillMode:                 Image.PreserveAspectFit
-                rotation:                 calculateRotation(height, listViewOriginY, listViewContentY,
-                                                            refreshImageAnimation.running)
-                visible:                  listViewContentY < listViewOriginY
+                listViewOriginY:          friendsListView.originY
+                listViewContentY:         friendsListView.contentY
+                shiftDenominator:         2.0
 
-                property bool timerStarted:     false
-
-                property real listViewOriginY:  friendsListView.originY
-                property real listViewContentY: friendsListView.contentY
-
-                onVisibleChanged: {
-                    if (!visible) {
-                        refreshImageAnimation.stop();
-                    }
-                }
-
-                onListViewContentYChanged: {
-                    if (listViewOriginY - listViewContentY > height) {
-                        if (!timerStarted) {
-                            timerStarted = true;
-
-                            refreshTimer.start();
-                        }
-                    } else {
-                        timerStarted = false;
-
-                        refreshTimer.stop();
-                    }
-                }
-
-                function calculateRotation(height, list_view_origin_y, list_view_content_y, animation_running) {
-                    if (animation_running) {
-                        return rotation;
-                    } else if (height > 0 && list_view_content_y < list_view_origin_y) {
-                        return 360 * ((list_view_origin_y - list_view_content_y) / height);
-                    } else {
-                        return 0;
-                    }
-                }
-
-                PropertyAnimation {
-                    id:       refreshImageAnimation
-                    target:   refreshImage
-                    property: "rotation"
-                    from:     0
-                    to:       360
-                    duration: 500
-                    loops:    Animation.Infinite
-                }
-
-                Timer {
-                    id:       refreshTimer
-                    interval: 500
-
-                    onTriggered: {
-                        refreshImageAnimation.start();
-
-                        VKHelper.updateFriends();
-                    }
+                onRefresh: {
+                    VKHelper.updateFriends();
                 }
             }
 
