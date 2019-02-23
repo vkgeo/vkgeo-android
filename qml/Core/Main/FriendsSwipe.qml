@@ -217,7 +217,6 @@ Item {
                 z:                        1
                 listViewOriginY:          friendsListView.originY
                 listViewContentY:         friendsListView.contentY
-                shiftDenominator:         2.0
 
                 onRefresh: {
                     VKHelper.updateFriends();
