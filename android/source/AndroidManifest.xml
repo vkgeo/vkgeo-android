@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<manifest package="com.derevenetz.oleg.vkgeo.stdalone" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0.16" android:versionCode="76" android:installLocation="auto">
+<manifest package="com.derevenetz.oleg.vkgeo.stdalone" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0.17" android:versionCode="77" android:installLocation="auto">
     <uses-sdk android:minSdkVersion="17" android:targetSdkVersion="27"/>
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true" android:xlargeScreens="true"/>
     <!-- Additional permissions not covered by Qt -->
