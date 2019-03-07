@@ -21,7 +21,7 @@ Image {
     signal refresh()
 
     onOpacityChanged: {
-        if (opacity >= 1) {
+        if (opacity >= 1.0) {
             refreshTimer.start();
         } else {
             refreshTimer.stop();
@@ -40,7 +40,7 @@ Image {
         } else if (height > 0 && list_view_content_y < list_view_origin_y && shift_denominator > 0) {
             return 360 * ((list_view_origin_y - list_view_content_y) / height) / shift_denominator;
         } else {
-            return 0.0;
+            return 0;
         }
     }
 
