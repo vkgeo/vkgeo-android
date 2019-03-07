@@ -22,7 +22,9 @@ Image {
 
     onOpacityChanged: {
         if (opacity >= 1.0) {
-            refreshTimer.start();
+            if (!refreshAnimation.running) {
+                refreshTimer.start();
+            }
         } else {
             refreshTimer.stop();
         }
