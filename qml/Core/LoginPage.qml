@@ -8,8 +8,7 @@ import "Misc"
 import "../Util.js" as UtilScript
 
 Page {
-    id:         loginPage
-    objectName: "loginPage"
+    id: loginPage
 
     property int vkAuthState: VKHelper.authState
 
