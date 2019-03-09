@@ -20,11 +20,11 @@ VKService::~VKService()
 {
 }
 
-void VKService::authStateChanged(int authState)
+void VKService::authStateChanged(int auth_state)
 {
-    if (authState == VKAuthState::StateNotAuthorized) {
+    if (auth_state == VKAuthState::StateNotAuthorized) {
         QtAndroid::androidService().callMethod<void>("showNotLoggedInNotification");
-    } else if (authState == VKAuthState::StateAuthorized) {
+    } else if (auth_state == VKAuthState::StateAuthorized) {
         QtAndroid::androidService().callMethod<void>("hideNotLoggedInNotification");
 
         QTimer::singleShot(UPDATE_FRIENDS_ON_AUTH_DELAY, this, &VKService::updateFriendsOnAuthSingleShot);
