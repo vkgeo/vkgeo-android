@@ -21,7 +21,7 @@ public:
     virtual ~VKService();
 
 public slots:
-    void authStateChanged(int authState);
+    void authStateChanged(int auth_state);
     void dataSent();
     void friendsUpdated();
     void trackedFriendDataUpdated(QString id, QVariantMap data);
