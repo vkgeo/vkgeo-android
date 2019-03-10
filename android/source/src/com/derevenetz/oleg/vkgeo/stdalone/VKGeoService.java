@@ -489,16 +489,16 @@ public class VKGeoService extends QtService implements LocationListener
                                 NotificationManager notification_manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
                                 if (locationProvider.equals(LocationManager.GPS_PROVIDER)) {
-                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
-                                                                                             getResources().getString(R.string.location_provider_gps)));
+                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_with_provider),
+                                                                                             getResources().getString(R.string.gps_location_provider)));
                                 } else if (locationProvider.equals(LocationManager.NETWORK_PROVIDER)) {
-                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
-                                                                                             getResources().getString(R.string.location_provider_network)));
+                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_with_provider),
+                                                                                             getResources().getString(R.string.network_location_provider)));
                                 } else if (locationProvider.equals(LocationManager.PASSIVE_PROVIDER)) {
-                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
-                                                                                             getResources().getString(R.string.location_provider_passive)));
+                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_with_provider),
+                                                                                             getResources().getString(R.string.passive_location_provider)));
                                 } else {
-                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_provider),
+                                    serviceNotificationBuilder.setContentTitle(String.format(getResources().getString(R.string.service_notification_title_with_provider),
                                                                                              locationProvider));
                                 }
 
