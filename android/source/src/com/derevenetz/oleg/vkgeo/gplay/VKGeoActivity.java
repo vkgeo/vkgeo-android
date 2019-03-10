@@ -257,7 +257,7 @@ public class VKGeoActivity extends QtActivity
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_TEXT, text);
 
-            startActivity(Intent.createChooser(intent, getResources().getString(R.string.activity_header_send_invitation)));
+            startActivity(Intent.createChooser(intent, getResources().getString(R.string.send_invitation_chooser_title)));
         } catch (Exception ex) {
             Log.w("VKGeoActivity", "sendInvitation() : " + ex.toString());
         }

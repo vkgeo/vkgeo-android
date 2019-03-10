@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Друзья на Карте</string>
-    <string name="activity_header_send_invitation">Пригласить друзей</string>
+    <string name="send_invitation_chooser_title">Пригласить друзей</string>
     <string name="service_notification_channel_name">Фоновый сервис</string>
     <string name="authorization_state_notification_channel_name">Состояние авторизации</string>
     <string name="friends_nearby_notification_channel_name">Друзья поблизости</string>
     <string name="service_notification_title">Сервис Друзья на Карте запущен</string>
-    <string name="service_notification_title_provider">Сервис Друзья на Карте: %s</string>
+    <string name="service_notification_title_with_provider">Сервис Друзья на Карте: %s</string>
     <string name="service_notification_text">Коснитесь, чтобы перейти в приложение</string>
     <string name="not_logged_in_notification_title">Вы не авторизованы в сети ВКонтакте</string>
     <string name="not_logged_in_notification_text">Коснитесь, чтобы перейти в приложение</string>
     <string name="friends_nearby_notification_title">Новые друзья поблизости</string>
     <string name="friends_nearby_notification_text">%s сейчас поблизости</string>
-    <string name="location_provider_gps">GPS</string>
-    <string name="location_provider_network">сотовая сеть, Wi-Fi</string>
-    <string name="location_provider_passive">пассивный режим</string>
+    <string name="gps_location_provider">GPS</string>
+    <string name="network_location_provider">сотовая сеть, Wi-Fi</string>
+    <string name="passive_location_provider">пассивный режим</string>
 </resources>
