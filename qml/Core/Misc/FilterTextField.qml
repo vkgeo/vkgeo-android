@@ -34,6 +34,8 @@ Pane {
 
             onEditingFinished: {
                 focus = false;
+
+                filterTextField.forceActiveFocus();
             }
         }
 
