@@ -24,9 +24,9 @@ int main(int argc, char *argv[])
             QGuiApplication::installTranslator(&translator);
         }
 
-        AndroidGW   *android_gw   = new AndroidGW(&app);
-        AdMobHelper *admob_helper = new AdMobHelper(&app);
-        VKHelper    *vk_helper    = new VKHelper("ACTIVITY", &app);
+        auto android_gw   = new AndroidGW(&app);
+        auto admob_helper = new AdMobHelper(&app);
+        auto vk_helper    = new VKHelper("ACTIVITY", &app);
 
         QObject::connect(android_gw, &AndroidGW::setBannerViewHeight, admob_helper, &AdMobHelper::setBannerViewHeight);
         QObject::connect(android_gw, &AndroidGW::setAuthState,        vk_helper,    &VKHelper::setAuthState);
@@ -54,9 +54,9 @@ int main(int argc, char *argv[])
     } else if (argc == 2 && QString(argv[1]) == "-service") {
         QAndroidService app(argc, argv);
 
-        AndroidGW *android_gw = new AndroidGW(&app);
-        VKHelper  *vk_helper  = new VKHelper("SERVICE", &app);
-        VKService *vk_service = new VKService(&app);
+        auto android_gw = new AndroidGW(&app);
+        auto vk_helper  = new VKHelper("SERVICE", &app);
+        auto vk_service = new VKService(&app);
 
         QObject::connect(android_gw, &AndroidGW::setAuthState,               vk_helper,  &VKHelper::setAuthState);
         QObject::connect(android_gw, &AndroidGW::processResponse,            vk_helper,  &VKHelper::processResponse);

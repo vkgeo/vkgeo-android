@@ -701,11 +701,7 @@ void VKHelper::ContextTrackerDelRequest(const QVariantMap &request)
 
 bool VKHelper::ContextHasActiveRequests(const QString &context)
 {
-    if (ContextTracker.contains(context) && ContextTracker[context] > 0) {
-        return true;
-    } else {
-        return false;
-    }
+    return (ContextTracker.contains(context) && ContextTracker[context] > 0);
 }
 
 void VKHelper::EnqueueRequest(const QVariantMap &request)
@@ -1008,7 +1004,7 @@ void VKHelper::ProcessFriendsGetResponse(const QString &response, const QVariant
                                     frnd["bigPhotoUrl"] = DEFAULT_PHOTO_URL;
                                 }
                                 if (json_friend.contains("online")) {
-                                    frnd["online"] = json_friend.value("online").toInt() ? true : false;
+                                    frnd["online"] = (json_friend.value("online").toInt() != 0);
                                 } else {
                                     frnd["online"] = false;
                                 }
