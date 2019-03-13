@@ -10,7 +10,7 @@ class BatteryHelper : public QObject
 
 public:
     explicit BatteryHelper(QObject *parent = nullptr);
-    virtual ~BatteryHelper();
+    ~BatteryHelper() override = default;
 
     Q_INVOKABLE QString getBatteryStatus();
     Q_INVOKABLE int getBatteryLevel();

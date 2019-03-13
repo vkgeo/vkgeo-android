@@ -10,7 +10,7 @@ class StoreHelper : public QObject
 
 public:
     explicit StoreHelper(QObject *parent = nullptr);
-    virtual ~StoreHelper();
+    ~StoreHelper() override = default;
 
     Q_INVOKABLE QString getPackageName();
 };

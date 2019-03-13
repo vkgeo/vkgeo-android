@@ -9,7 +9,7 @@ class UIHelper : public QObject
 
 public:
     explicit UIHelper(QObject *parent = nullptr);
-    virtual ~UIHelper();
+    ~UIHelper() override = default;
 
     Q_INVOKABLE int getScreenDPI();
 

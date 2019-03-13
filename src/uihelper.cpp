@@ -7,10 +7,6 @@ UIHelper::UIHelper(QObject *parent) : QObject(parent)
 {
 }
 
-UIHelper::~UIHelper()
-{
-}
-
 int UIHelper::getScreenDPI()
 {
     return QtAndroid::androidActivity().callMethod<jint>("getScreenDPI");
