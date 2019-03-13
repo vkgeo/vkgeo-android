@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
         QGuiApplication app(argc, argv);
 
         if (translator.load(QString(":/tr/vkgeo_%1").arg(QLocale::system().name()))) {
-            app.installTranslator(&translator);
+            QGuiApplication::installTranslator(&translator);
         }
 
         AndroidGW   *android_gw   = new AndroidGW(&app);
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
         if (engine.rootObjects().isEmpty())
             return -1;
 
-        return app.exec();
+        return QGuiApplication::exec();
     } else if (argc == 2 && QString(argv[1]) == "-service") {
         QAndroidService app(argc, argv);
 
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
         QObject::connect(vk_service, &VKService::updateFriends,              vk_helper,  &VKHelper::updateFriends);
         QObject::connect(vk_service, &VKService::updateTrackedFriendsData,   vk_helper,  &VKHelper::updateTrackedFriendsData);
 
-        return app.exec();
+        return QGuiApplication::exec();
     } else {
         return 0;
     }
