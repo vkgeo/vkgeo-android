@@ -24,7 +24,7 @@ public slots:
     void authStateChanged(int auth_state);
     void dataSent();
     void friendsUpdated();
-    void trackedFriendDataUpdated(QString id, QVariantMap data);
+    void trackedFriendDataUpdated(const QString &id, const QVariantMap &data);
 
 private slots:
     void updateFriendsOnAuthSingleShot();

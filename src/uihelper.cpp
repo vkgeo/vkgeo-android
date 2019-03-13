@@ -17,7 +17,7 @@ void UIHelper::showAppSettings()
     QtAndroid::androidActivity().callMethod<void>("showAppSettings");
 }
 
-void UIHelper::sendInvitation(QString text)
+void UIHelper::sendInvitation(const QString &text)
 {
     QAndroidJniObject j_text = QAndroidJniObject::fromString(text);
 

@@ -61,7 +61,7 @@ void VKService::friendsUpdated()
     emit updateTrackedFriendsData(true);
 }
 
-void VKService::trackedFriendDataUpdated(QString id, QVariantMap data)
+void VKService::trackedFriendDataUpdated(const QString &id, const QVariantMap &data)
 {
     VKHelper *vk_helper = qobject_cast<VKHelper *>(QObject::sender());
 
