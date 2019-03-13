@@ -60,7 +60,7 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
     }
 }
 
-VKHelper::VKHelper(QString context, QObject *parent) : QObject(parent)
+VKHelper::VKHelper(const QString &context, QObject *parent) : QObject(parent)
 {
     CurrentDataState                 = DataNotUpdated;
     AuthState                        = VKAuthState::StateUnknown;
@@ -250,7 +250,7 @@ void VKHelper::updateLocation(qreal latitude, qreal longitude)
     SendDataOnUpdateTimer.start();
 }
 
-void VKHelper::updateBatteryStatus(QString status, int level)
+void VKHelper::updateBatteryStatus(const QString &status, int level)
 {
     CurrentDataState              = DataUpdated;
     CurrentData["update_time"]    = QDateTime::currentSecsSinceEpoch();
@@ -299,7 +299,7 @@ QVariantList VKHelper::getFriendsList()
     return friends_list;
 }
 
-void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
+void VKHelper::updateTrustedFriendsList(const QVariantList &trusted_friends_list)
 {
     if (!ContextHasActiveRequests("updateTrustedFriendsList")) {
         QStringList user_id_list;
@@ -349,7 +349,7 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
     }
 }
 
-void VKHelper::updateTrackedFriendsList(QVariantList tracked_friends_list)
+void VKHelper::updateTrackedFriendsList(const QVariantList &tracked_friends_list)
 {
     if (!ContextHasActiveRequests("updateTrackedFriendsList")) {
         QStringList user_id_list;
@@ -433,7 +433,7 @@ void VKHelper::updateTrackedFriendsData(bool expedited)
     }
 }
 
-void VKHelper::joinGroup(QString group_id)
+void VKHelper::joinGroup(const QString &group_id)
 {
     QVariantMap request, parameters;
 
@@ -467,7 +467,7 @@ void VKHelper::setAuthState(int state)
     }
 }
 
-void VKHelper::processResponse(QString response, QString resp_request_str)
+void VKHelper::processResponse(const QString &response, const QString &resp_request_str)
 {
     QVariantMap resp_request = QJsonDocument::fromJson(resp_request_str.toUtf8()).toVariant().toMap();
 
@@ -500,7 +500,7 @@ void VKHelper::processResponse(QString response, QString resp_request_str)
     }
 }
 
-void VKHelper::processError(QString error_message, QString err_request_str)
+void VKHelper::processError(const QString &error_message, const QString &err_request_str)
 {
     QVariantMap err_request = QJsonDocument::fromJson(err_request_str.toUtf8()).toVariant().toMap();
 
@@ -565,7 +565,7 @@ void VKHelper::processLocationUpdate(qreal latitude, qreal longitude)
     updateLocation(latitude, longitude);
 }
 
-void VKHelper::processBatteryStatusUpdate(QString status, int level)
+void VKHelper::processBatteryStatusUpdate(const QString &status, int level)
 {
     updateBatteryStatus(status, level);
 }
@@ -665,7 +665,7 @@ void VKHelper::SendData(bool expedited)
     }
 }
 
-void VKHelper::ContextTrackerAddRequest(QVariantMap request)
+void VKHelper::ContextTrackerAddRequest(const QVariantMap &request)
 {
     if (request.contains("context")) {
         QString context = request["context"].toString();
@@ -680,7 +680,7 @@ void VKHelper::ContextTrackerAddRequest(QVariantMap request)
     }
 }
 
-void VKHelper::ContextTrackerDelRequest(QVariantMap request)
+void VKHelper::ContextTrackerDelRequest(const QVariantMap &request)
 {
     if (request.contains("context")) {
         QString context = request["context"].toString();
@@ -699,7 +699,7 @@ void VKHelper::ContextTrackerDelRequest(QVariantMap request)
     }
 }
 
-bool VKHelper::ContextHasActiveRequests(QString context)
+bool VKHelper::ContextHasActiveRequests(const QString &context)
 {
     if (ContextTracker.contains(context) && ContextTracker[context] > 0) {
         return true;
@@ -708,7 +708,7 @@ bool VKHelper::ContextHasActiveRequests(QString context)
     }
 }
 
-void VKHelper::EnqueueRequest(QVariantMap request)
+void VKHelper::EnqueueRequest(const QVariantMap &request)
 {
     RequestQueue.enqueue(request);
 
@@ -722,7 +722,7 @@ void VKHelper::EnqueueRequest(QVariantMap request)
     }
 }
 
-void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessNotesGetResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "sendData") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -884,12 +884,12 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
     }
 }
 
-void VKHelper::ProcessNotesGetError(QVariantMap err_request)
+void VKHelper::ProcessNotesGetError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessNotesAddResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
 
@@ -924,23 +924,23 @@ void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_reques
     }
 }
 
-void VKHelper::ProcessNotesAddError(QVariantMap err_request)
+void VKHelper::ProcessNotesAddError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessNotesDeleteResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessNotesDeleteResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
     Q_UNUSED(resp_request)
 }
 
-void VKHelper::ProcessNotesDeleteError(QVariantMap err_request)
+void VKHelper::ProcessNotesDeleteError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessFriendsGetResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "updateFriends") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1113,12 +1113,12 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
     }
 }
 
-void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
+void VKHelper::ProcessFriendsGetError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessFriendsGetListsResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "sendData") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1360,12 +1360,12 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
     }
 }
 
-void VKHelper::ProcessFriendsGetListsError(QVariantMap err_request)
+void VKHelper::ProcessFriendsGetListsError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessFriendsAddListResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "updateTrustedFriendsList") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1398,18 +1398,18 @@ void VKHelper::ProcessFriendsAddListResponse(QString response, QVariantMap resp_
     }
 }
 
-void VKHelper::ProcessFriendsAddListError(QVariantMap err_request)
+void VKHelper::ProcessFriendsAddListError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessFriendsEditListResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessFriendsEditListResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
     Q_UNUSED(resp_request)
 }
 
-void VKHelper::ProcessFriendsEditListError(QVariantMap err_request)
+void VKHelper::ProcessFriendsEditListError(const QVariantMap &err_request)
 {
     if (err_request["context"].toString() == "updateTrustedFriendsList") {
         TrustedFriendsListId = "";
@@ -1418,18 +1418,18 @@ void VKHelper::ProcessFriendsEditListError(QVariantMap err_request)
     }
 }
 
-void VKHelper::ProcessGroupsJoinResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessGroupsJoinResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
     Q_UNUSED(resp_request)
 }
 
-void VKHelper::ProcessGroupsJoinError(QVariantMap err_request)
+void VKHelper::ProcessGroupsJoinError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessUsersGetResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessUsersGetResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "updateUser") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1488,7 +1488,7 @@ void VKHelper::ProcessUsersGetResponse(QString response, QVariantMap resp_reques
     }
 }
 
-void VKHelper::ProcessUsersGetError(QVariantMap err_request)
+void VKHelper::ProcessUsersGetError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
