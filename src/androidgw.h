@@ -11,7 +11,7 @@ class AndroidGW : public QObject
 
 public:
     explicit AndroidGW(QObject *parent = nullptr);
-    virtual ~AndroidGW();
+    ~AndroidGW() override = default;
 
     static AndroidGW *instance();
 

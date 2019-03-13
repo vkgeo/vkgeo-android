@@ -16,10 +16,6 @@ VKService::VKService(QObject *parent) : QObject(parent)
     UpdateFriendsTimer.start();
 }
 
-VKService::~VKService()
-{
-}
-
 void VKService::authStateChanged(int auth_state)
 {
     if (auth_state == VKAuthState::StateNotAuthorized) {

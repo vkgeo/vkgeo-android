@@ -18,7 +18,7 @@ public:
                      NEARBY_DISTANCE               = 500;
 
     explicit VKService(QObject *parent = nullptr);
-    virtual ~VKService();
+    ~VKService() override = default;
 
 public slots:
     void authStateChanged(int auth_state);

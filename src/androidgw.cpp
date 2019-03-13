@@ -10,10 +10,6 @@ AndroidGW::AndroidGW(QObject *parent) : QObject(parent)
     Instance = this;
 }
 
-AndroidGW::~AndroidGW()
-{
-}
-
 AndroidGW *AndroidGW::instance()
 {
     return Instance;

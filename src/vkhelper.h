@@ -65,7 +65,7 @@ public:
                          TRACKED_FRIENDS_LIST_NAME;
 
     explicit VKHelper(QString context, QObject *parent = nullptr);
-    virtual ~VKHelper();
+    ~VKHelper() override = default;
 
     bool locationValid() const;
     qint64 locationUpdateTime() const;
