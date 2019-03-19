@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/tr">
+        <file alias="qt_extra_ru.qm">translations/qt_extra_ru.qm</file>
         <file alias="vkgeo_ru.qm">translations/vkgeo_ru.qm</file>
     </qresource>
 </RCC>
