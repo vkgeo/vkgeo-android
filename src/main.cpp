@@ -16,15 +16,11 @@
 int main(int argc, char *argv[])
 {
     if (argc == 1) {
-        QTranslator     qt_extra_translator,
-                        app_translator;
+        QTranslator     translator;
         QGuiApplication app(argc, argv);
 
-        if (qt_extra_translator.load(QString(":/tr/qt_extra_%1").arg(QLocale::system().name()))) {
-            QGuiApplication::installTranslator(&qt_extra_translator);
-        }
-        if (app_translator.load(QString(":/tr/vkgeo_%1").arg(QLocale::system().name()))) {
-            QGuiApplication::installTranslator(&app_translator);
+        if (translator.load(QString(":/tr/vkgeo_%1").arg(QLocale::system().name()))) {
+            QGuiApplication::installTranslator(&translator);
         }
 
         auto android_gw   = new AndroidGW(&app);
