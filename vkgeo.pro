@@ -27,7 +27,6 @@ RESOURCES += \
     translations.qrc
 
 TRANSLATIONS += \
-    translations/qt_extra_ru.ts \
     translations/vkgeo_ru.ts
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
