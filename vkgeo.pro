@@ -1,3 +1,6 @@
+TEMPLATE = app
+TARGET = vkgeo
+
 QT += quick quickcontrols2 sql location positioning
 CONFIG += c++11
 
@@ -95,6 +98,3 @@ android {
 CONFIG(release, debug|release) {
     CONFIG += qtquickcompiler
 }
-
-# Default rules for deployment.
-include(deployment.pri)
