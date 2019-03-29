@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.Notification.Builder;
 import android.app.NotificationChannel;
@@ -455,7 +456,7 @@ public class VKGeoService extends QtService implements LocationListener
     private void selectLocationSource()
     {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-            checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
             if (manager != null) {
