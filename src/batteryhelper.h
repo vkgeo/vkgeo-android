@@ -10,7 +10,14 @@ class BatteryHelper : public QObject
 
 public:
     explicit BatteryHelper(QObject *parent = nullptr);
-    ~BatteryHelper() override = default;
+
+    BatteryHelper(const BatteryHelper&) = delete;
+    BatteryHelper(const BatteryHelper&&) noexcept = delete;
+
+    BatteryHelper& operator=(const BatteryHelper&) = delete;
+    BatteryHelper& operator=(const BatteryHelper&&) noexcept = delete;
+
+    ~BatteryHelper() noexcept override = default;
 
     Q_INVOKABLE QString getBatteryStatus();
     Q_INVOKABLE int getBatteryLevel();
