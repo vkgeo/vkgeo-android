@@ -14,6 +14,8 @@ VKGeo  –  лучшее мобильное приложение для опре
 Посетите   [официальный  сайт  проекта](https://vkgeo.sourceforge.io/)  для
 получения дополнительной информации.
 
+---
+
 | SonarCloud Quality Gate Status |
 | :---: |
 | [![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-android&metric=alert_status)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-android) |
