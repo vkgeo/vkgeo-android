@@ -13,3 +13,14 @@ VKGeo  –  лучшее мобильное приложение для опре
 
 Посетите   [официальный  сайт  проекта](https://vkgeo.sourceforge.io/)  для
 получения дополнительной информации.
+
+---
+
+| SonarCloud Quality Gate Status |
+| :---: |
+| [![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-android&metric=alert_status)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-android) |
+
+| Reliability | Security | Maintainability |
+| :---: | :---: | :---: |
+| [![SonarCloud Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-android&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-android) | [![SonarCloud Security Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-android&metric=security_rating)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-android) | [![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-android&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-android) |
+| [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-android&metric=bugs)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-android) | [![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-android&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-android) | [![SonarCloud Code Smells](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-android&metric=code_smells)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-android) |
