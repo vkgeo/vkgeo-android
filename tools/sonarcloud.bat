@@ -23,4 +23,4 @@ sonar-scanner.bat -D"sonar.projectKey=vkgeo:vkgeo-android" ^
                   -D"sonar.sourceEncoding=UTF-8" ^
                   -D"sonar.cfamily.build-wrapper-output=__BUILD__\\bw-output" ^
                   -D"sonar.host.url=https://sonarcloud.io" ^
-                  -D"sonar.login=%1"
+                  -D"sonar.login=%~1"
