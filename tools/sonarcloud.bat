@@ -14,7 +14,6 @@ IF NOT "%~1"=="" (
      && CD .. ^
      && sonar-scanner.bat -D"sonar.projectKey=vkgeo:vkgeo-android" ^
                           -D"sonar.projectName=VKGeo Android" ^
-                          -D"sonar.projectVersion=master" ^
                           -D"sonar.organization=vkgeo-github" ^
                           -D"sonar.sources=." ^
                           -D"sonar.sourceEncoding=UTF-8" ^
