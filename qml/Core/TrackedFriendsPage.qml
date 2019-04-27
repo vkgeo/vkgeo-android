@@ -99,7 +99,7 @@ Page {
             var frnd = friendsList[i];
 
             if ("%1 %2".arg(frnd.firstName).arg(frnd.lastName).toUpperCase()
-                       .includes(filterTextField.text.toUpperCase())) {
+                       .includes(filterTextField.filterText.toUpperCase())) {
                 trackedFriendsListModel.append(frnd);
             }
         }
@@ -152,7 +152,7 @@ Page {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
 
-            onTextChanged: {
+            onFilterTextChanged: {
                 trackedFriendsPage.updateModel();
             }
         }
