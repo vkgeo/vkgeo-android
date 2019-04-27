@@ -14,7 +14,7 @@ Pane {
         border.color: "steelblue"
     }
 
-    property string text:            textField.text
+    property string filterText:      textField.displayText
     property string placeholderText: ""
 
     RowLayout {
@@ -43,7 +43,7 @@ Pane {
             width:            textField.implicitHeight
             height:           textField.implicitHeight
             color:            "transparent"
-            visible:          textField.text !== ""
+            visible:          textField.displayText !== ""
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Image {
