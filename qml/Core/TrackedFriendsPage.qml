@@ -123,7 +123,7 @@ Page {
                 var model_frnd = trackedFriendsListModel.get(j);
 
                 if (user_id === model_frnd.userId) {
-                    trackedFriendsListModel.set(j, { "tracked": tracked });
+                    trackedFriendsListModel.set(j, {"tracked": tracked});
 
                     break;
                 }

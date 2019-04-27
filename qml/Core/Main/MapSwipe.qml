@@ -50,7 +50,7 @@ Item {
                 var frnd = friends_list[j];
 
                 if (frnd.trusted || frnd.tracked) {
-                    var new_map_item = component.createObject(map, { "userId": frnd.userId, "photoUrl": frnd.photoUrl });
+                    var new_map_item = component.createObject(map, {"userId": frnd.userId, "photoUrl": frnd.photoUrl});
 
                     new_map_item.openProfilePage.connect(mapSwipe.openProfilePage);
 

@@ -123,7 +123,7 @@ Page {
                 var model_frnd = trustedFriendsListModel.get(j);
 
                 if (user_id === model_frnd.userId) {
-                    trustedFriendsListModel.set(j, { "trusted": trusted });
+                    trustedFriendsListModel.set(j, {"trusted": trusted});
 
                     break;
                 }
