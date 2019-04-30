@@ -66,10 +66,10 @@ public:
     explicit VKHelper(const QString &context, QObject *parent = nullptr);
 
     VKHelper(const VKHelper&) = delete;
-    VKHelper(const VKHelper&&) noexcept = delete;
+    VKHelper(VKHelper&&) noexcept = delete;
 
     VKHelper& operator=(const VKHelper&) = delete;
-    VKHelper& operator=(const VKHelper&&) noexcept = delete;
+    VKHelper& operator=(VKHelper&&) noexcept = delete;
 
     ~VKHelper() noexcept override = default;
 
