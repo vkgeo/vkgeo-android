@@ -12,10 +12,10 @@ public:
     explicit BatteryHelper(QObject *parent = nullptr);
 
     BatteryHelper(const BatteryHelper&) = delete;
-    BatteryHelper(const BatteryHelper&&) noexcept = delete;
+    BatteryHelper(BatteryHelper&&) noexcept = delete;
 
     BatteryHelper& operator=(const BatteryHelper&) = delete;
-    BatteryHelper& operator=(const BatteryHelper&&) noexcept = delete;
+    BatteryHelper& operator=(BatteryHelper&&) noexcept = delete;
 
     ~BatteryHelper() noexcept override = default;
 

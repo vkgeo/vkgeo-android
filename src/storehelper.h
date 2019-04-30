@@ -12,10 +12,10 @@ public:
     explicit StoreHelper(QObject *parent = nullptr);
 
     StoreHelper(const StoreHelper&) = delete;
-    StoreHelper(const StoreHelper&&) noexcept = delete;
+    StoreHelper(StoreHelper&&) noexcept = delete;
 
     StoreHelper& operator=(const StoreHelper&) = delete;
-    StoreHelper& operator=(const StoreHelper&&) noexcept = delete;
+    StoreHelper& operator=(StoreHelper&&) noexcept = delete;
 
     ~StoreHelper() noexcept override = default;
 

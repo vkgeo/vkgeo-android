@@ -20,10 +20,10 @@ public:
     explicit VKService(QObject *parent = nullptr);
 
     VKService(const VKService&) = delete;
-    VKService(const VKService&&) noexcept = delete;
+    VKService(VKService&&) noexcept = delete;
 
     VKService& operator=(const VKService&) = delete;
-    VKService& operator=(const VKService&&) noexcept = delete;
+    VKService& operator=(VKService&&) noexcept = delete;
 
     ~VKService() noexcept override = default;
 
