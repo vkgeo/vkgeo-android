@@ -68,10 +68,6 @@
 <context>
     <name>SettingsSwipe</name>
     <message>
-        <source>Group membership request sent</source>
-        <translation>Запрос на вступление в группу отправлен</translation>
-    </message>
-    <message>
         <source>You can see the location of trusted friends, if they also treat you as a trusted friend, and they &lt;b&gt;can see your location&lt;/b&gt;.</source>
         <translation>Вы можете видеть местоположение доверенных друзей, если они также считают вас доверенным другом, и они &lt;b&gt;могут видеть ваше местоположение&lt;/b&gt;.</translation>
     </message>
@@ -134,6 +130,22 @@
     <message>
         <source>Currently you can&apos;t have tracked friends.</source>
         <translation>В данный момент вы не можете иметь отслеживаемых друзей.</translation>
+    </message>
+    <message>
+        <source>Settings has been updated successfully</source>
+        <translation>Настройки успешно обновлены</translation>
+    </message>
+    <message>
+        <source>Failed to update settings, please try again later</source>
+        <translation>Не удалось обновить настройки, повторите попытку позже</translation>
+    </message>
+    <message>
+        <source>You have successfully joined the group</source>
+        <translation>Вы присоединились к группе</translation>
+    </message>
+    <message>
+        <source>Failed to join group, please try again later</source>
+        <translation>Не удалось присоединиться к группе, повторите попытку позже</translation>
     </message>
 </context>
 <context>
