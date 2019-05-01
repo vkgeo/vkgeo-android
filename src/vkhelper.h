@@ -143,6 +143,8 @@ signals:
     void trackedFriendsListUpdated();
     void trackedFriendsListUpdateFailed();
     void trackedFriendDataUpdated(const QString &id, const QVariantMap &data);
+    void joiningGroupCompleted();
+    void joiningGroupFailed();
 
 private:
     void SendData(bool expedited);

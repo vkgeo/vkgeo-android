@@ -18,6 +18,14 @@ Item {
         friendsListUpdateFailedToast.visible = true;
     }
 
+    function joiningVKGeoGroupCompleted() {
+        joiningVKGeoGroupCompletedToast.visible = true;
+    }
+
+    function joiningVKGeoGroupFailed() {
+        joiningVKGeoGroupFailedToast.visible = true;
+    }
+
     Toast {
         id:              friendsListUpdatedToast
         anchors.top:     parent.top
@@ -42,14 +50,26 @@ Item {
     }
 
     Toast {
-        id:              joinGroupToast
+        id:              joiningVKGeoGroupCompletedToast
         anchors.top:     parent.top
         anchors.left:    parent.left
         anchors.right:   parent.right
         anchors.margins: UtilScript.pt(4)
         height:          UtilScript.pt(48)
         z:               1
-        text:            qsTr("Group membership request sent")
+        text:            qsTr("You have successfully joined the group")
+    }
+
+    Toast {
+        id:              joiningVKGeoGroupFailedToast
+        anchors.top:     parent.top
+        anchors.left:    parent.left
+        anchors.right:   parent.right
+        anchors.margins: UtilScript.pt(4)
+        height:          UtilScript.pt(48)
+        z:               1
+        text:            qsTr("Failed to join group, please try again later")
+        backgroundColor: "red"
     }
 
     Flickable {
@@ -308,8 +328,6 @@ Item {
 
         onYes: {
             VKHelper.joinGroup("166101702");
-
-            joinGroupToast.visible = true;
         }
     }
 
@@ -319,5 +337,8 @@ Item {
 
         VKHelper.trackedFriendsListUpdated.connect(friendsListUpdated);
         VKHelper.trackedFriendsListUpdateFailed.connect(friendsListUpdateFailed);
+
+        VKHelper.joiningGroupCompleted.connect(joiningVKGeoGroupCompleted);
+        VKHelper.joiningGroupFailed.connect(joiningVKGeoGroupFailed);
     }
 }
