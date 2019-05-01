@@ -69,10 +69,6 @@ Page {
 
                     VKHelper.updateTrustedFriendsList(trusted_friends_list);
 
-                    if (trusted_friends_list.length > 0) {
-                        mainWindow.showInterstitial();
-                    }
-
                     mainStackView.pop();
                 }
             }

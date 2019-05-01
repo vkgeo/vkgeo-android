@@ -4,11 +4,14 @@ import "../../Util.js" as UtilScript
 
 Rectangle {
     id:      toast
-    color:   "lightsteelblue"
+    color:   backgroundColor
     radius:  UtilScript.pt(8)
     visible: false
 
-    property string text: ""
+    property string text:           ""
+
+    property color textColor:       "white"
+    property color backgroundColor: "steelblue"
 
     onVisibleChanged: {
         if (visible) {
@@ -20,7 +23,7 @@ Rectangle {
         anchors.fill:        parent
         anchors.margins:     UtilScript.pt(2)
         text:                toast.text
-        color:               "white"
+        color:               toast.textColor
         font.pointSize:      16
         font.family:         "Helvetica"
         font.bold:           true
