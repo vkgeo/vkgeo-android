@@ -1438,12 +1438,17 @@ void VKHelper::ProcessFriendsEditListError(const QVariantMap &err_request)
 void VKHelper::ProcessGroupsJoinResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
-    Q_UNUSED(resp_request)
+
+    if (resp_request["context"].toString() == "joinGroup") {
+        emit joiningGroupCompleted();
+    }
 }
 
 void VKHelper::ProcessGroupsJoinError(const QVariantMap &err_request)
 {
-    Q_UNUSED(err_request)
+    if (err_request["context"].toString() == "joinGroup") {
+        emit joiningGroupFailed();
+    }
 }
 
 void VKHelper::ProcessUsersGetResponse(const QString &response, const QVariantMap &resp_request)
