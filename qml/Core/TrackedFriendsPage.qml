@@ -69,10 +69,6 @@ Page {
 
                     VKHelper.updateTrackedFriendsList(tracked_friends_list);
 
-                    if (tracked_friends_list.length > 0) {
-                        mainWindow.showInterstitial();
-                    }
-
                     mainStackView.pop();
                 }
             }

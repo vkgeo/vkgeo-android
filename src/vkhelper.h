@@ -138,6 +138,10 @@ signals:
     void batteryStatusUpdated();
     void dataSent();
     void friendsUpdated();
+    void trustedFriendsListUpdated();
+    void trustedFriendsListUpdateFailed();
+    void trackedFriendsListUpdated();
+    void trackedFriendsListUpdateFailed();
     void trackedFriendDataUpdated(const QString &id, const QVariantMap &data);
 
 private:
