@@ -1289,12 +1289,18 @@ void VKHelper::ProcessFriendsGetListsResponse(const QString &response, const QVa
                     EnqueueRequest(request);
                 } else {
                     qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+
+                    emit trustedFriendsListUpdateFailed();
                 }
             } else {
                 qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
+
+                emit trustedFriendsListUpdateFailed();
             }
         } else {
             qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
+
+            emit trustedFriendsListUpdateFailed();
         }
     } else if (resp_request["context"].toString() == "updateTrackedFriendsList") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1346,12 +1352,18 @@ void VKHelper::ProcessFriendsGetListsResponse(const QString &response, const QVa
                     EnqueueRequest(request);
                 } else {
                     qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+
+                    emit trackedFriendsListUpdateFailed();
                 }
             } else {
                 qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
+
+                emit trackedFriendsListUpdateFailed();
             }
         } else {
             qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
+
+            emit trackedFriendsListUpdateFailed();
         }
     }
 }
@@ -1379,9 +1391,13 @@ void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVar
                 emit trustedFriendsListUpdated();
             } else {
                 qWarning() << "ProcessFriendsAddListResponse() : invalid response";
+
+                emit trustedFriendsListUpdateFailed();
             }
         } else {
             qWarning() << "ProcessFriendsAddListResponse() : invalid json";
+
+            emit trustedFriendsListUpdateFailed();
         }
     } else if (resp_request["context"].toString() == "updateTrackedFriendsList") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1395,9 +1411,13 @@ void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVar
                 emit trackedFriendsListUpdated();
             } else {
                 qWarning() << "ProcessFriendsAddListResponse() : invalid response";
+
+                emit trackedFriendsListUpdateFailed();
             }
         } else {
             qWarning() << "ProcessFriendsAddListResponse() : invalid json";
+
+            emit trackedFriendsListUpdateFailed();
         }
     }
 }
