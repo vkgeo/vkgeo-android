@@ -193,15 +193,7 @@ public class VKGeoActivity extends QtActivity
             bannerView = null;
         }
 
-       /*
-        * This call hangs when foreground service is running,
-        * so we just kill activity process instead (service
-        * is running in a different process).
-        *
-        * super.onDestroy();
-        */
-
-        Process.killProcess(Process.myPid());
+        super.onDestroy();
     }
 
     public int getScreenDPI()
