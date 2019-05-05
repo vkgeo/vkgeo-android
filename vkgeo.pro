@@ -49,23 +49,33 @@ android {
         android/source/settings.gradle \
         android/source/gradle/wrapper/gradle-wrapper.jar \
         android/source/gradle/wrapper/gradle-wrapper.properties \
+        android/source/lib/arm64-v8a/libcrypto.so \
+        android/source/lib/arm64-v8a/libssl.so \
+        android/source/lib/armeabi-v7a/libcrypto.so \
+        android/source/lib/armeabi-v7a/libssl.so \
         android/source/res/drawable/splash_qt.xml \
         android/source/res/drawable/splash_theme.xml \
+        android/source/res/drawable-hdpi/ic_launcher_foreground.png \
         android/source/res/drawable-hdpi/ic_splash_qt.png \
         android/source/res/drawable-hdpi/ic_splash_theme.png \
         android/source/res/drawable-hdpi/ic_stat_notify_service.png \
+        android/source/res/drawable-mdpi/ic_launcher_foreground.png \
         android/source/res/drawable-mdpi/ic_splash_qt.png \
         android/source/res/drawable-mdpi/ic_splash_theme.png \
         android/source/res/drawable-mdpi/ic_stat_notify_service.png \
+        android/source/res/drawable-xhdpi/ic_launcher_foreground.png \
         android/source/res/drawable-xhdpi/ic_splash_qt.png \
         android/source/res/drawable-xhdpi/ic_splash_theme.png \
         android/source/res/drawable-xhdpi/ic_stat_notify_service.png \
+        android/source/res/drawable-xxhdpi/ic_launcher_foreground.png \
         android/source/res/drawable-xxhdpi/ic_splash_qt.png \
         android/source/res/drawable-xxhdpi/ic_splash_theme.png \
         android/source/res/drawable-xxhdpi/ic_stat_notify_service.png \
+        android/source/res/drawable-xxxhdpi/ic_launcher_foreground.png \
         android/source/res/drawable-xxxhdpi/ic_splash_qt.png \
         android/source/res/drawable-xxxhdpi/ic_splash_theme.png \
         android/source/res/drawable-xxxhdpi/ic_stat_notify_service.png \
+        android/source/res/mipmap-anydpi-v26/ic_launcher.xml \
         android/source/res/mipmap-hdpi/ic_launcher.png \
         android/source/res/mipmap-mdpi/ic_launcher.png \
         android/source/res/mipmap-xhdpi/ic_launcher.png \
@@ -76,7 +86,6 @@ android {
         android/source/res/values/numbers.xml \
         android/source/res/values/strings.xml \
         android/source/res/values/themes.xml \
-        android/source/res/values-ru/numbers.xml \
         android/source/res/values-ru/strings.xml \
         android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoActivity.java \
         android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoApplication.java \
