@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.Process;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -56,7 +55,7 @@ public class VKGeoActivity extends QtActivity
     private Messenger                   serviceMessenger = null;
     private AdView                      bannerView       = null;
     private InterstitialAd              interstitial     = null;
-    private HashMap<VKRequest, Boolean> vkRequestTracker = new HashMap<VKRequest, Boolean>();
+    private HashMap<VKRequest, Boolean> vkRequestTracker = new HashMap<>();
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -443,11 +442,7 @@ public class VKGeoActivity extends QtActivity
             {
                 vkAccessTokenTracker.startTracking();
 
-                if (VKSdk.isLoggedIn()) {
-                    vkAuthChanged(true);
-                } else {
-                    vkAuthChanged(false);
-                }
+                vkAuthChanged(VKSdk.isLoggedIn());
             }
         });
     }
@@ -463,7 +458,7 @@ public class VKGeoActivity extends QtActivity
             {
                 try {
                     JSONArray         json_auth_scope = new JSONArray(f_auth_scope);
-                    ArrayList<String> vk_auth_scope   = new ArrayList<String>();
+                    ArrayList<String> vk_auth_scope   = new ArrayList<>();
 
                     for (int i = 0; i < json_auth_scope.length(); i++) {
                         vk_auth_scope.add(json_auth_scope.get(i).toString());
@@ -508,25 +503,25 @@ public class VKGeoActivity extends QtActivity
                     final JSONArray json_request_list = new JSONArray(f_request_list);
 
                     if (json_request_list.length() > 0) {
-                        String execute_code = "return [";
+                        StringBuilder execute_code = new StringBuilder("return [");
 
                         for (int i = 0; i < json_request_list.length(); i++) {
                             JSONObject json_request = json_request_list.getJSONObject(i);
 
                             if (json_request.has("method")) {
-                                execute_code = execute_code + String.format("API.%s(%s)", json_request.getString("method"), json_request.optString("parameters"));
+                                execute_code.append(String.format("API.%s(%s)", json_request.getString("method"), json_request.optString("parameters")));
 
                                 if (i < json_request_list.length() - 1) {
-                                    execute_code = execute_code + ",";
+                                    execute_code.append(",");
                                 }
                             } else {
                                 Log.w("VKGeoActivity", "executeVKBatch() : invalid request");
                             }
                         }
 
-                        execute_code = execute_code + "];";
+                        execute_code.append("];");
 
-                        final VKRequest vk_request = new VKRequest("execute", VKParameters.from("code", execute_code));
+                        final VKRequest vk_request = new VKRequest("execute", VKParameters.from("code", execute_code.toString()));
 
                         vkRequestTracker.put(vk_request, true);
 
@@ -558,7 +553,7 @@ public class VKGeoActivity extends QtActivity
                                             }
                                         } else if (response.json.has("response")) {
                                             String            error_str = null;
-                                            ArrayList<String> responses = new ArrayList<String>();
+                                            ArrayList<String> responses = new ArrayList<>();
 
                                             try {
                                                 JSONArray json_response_list = response.json.getJSONArray("response");
@@ -646,6 +641,7 @@ public class VKGeoActivity extends QtActivity
             @Override
             public void onResult(VKAccessToken token)
             {
+                // Ignore
             }
 
             @Override

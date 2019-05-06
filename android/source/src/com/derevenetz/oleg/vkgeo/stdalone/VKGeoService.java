@@ -8,7 +8,6 @@ import java.util.Iterator;
 
 import android.Manifest;
 import android.app.Notification;
-import android.app.Notification.Builder;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -44,9 +43,7 @@ import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKRequest.VKRequestListener;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
-import com.vk.sdk.VKSdk.LoginState;
 
 public class VKGeoService extends QtService implements LocationListener
 {
@@ -55,7 +52,7 @@ public class VKGeoService extends QtService implements LocationListener
 
         MessageHandler(VKGeoService service)
         {
-            serviceWeakRef = new WeakReference<VKGeoService>(service);
+            serviceWeakRef = new WeakReference<>(service);
         }
 
         @Override
@@ -100,7 +97,7 @@ public class VKGeoService extends QtService implements LocationListener
     private Criteria                    locationSourceSelectionCriteria    = new Criteria();
     private Notification.Builder        serviceNotificationBuilder         = null;
     private Messenger                   messenger                          = new Messenger(new MessageHandler(this));
-    private HashMap<VKRequest, Boolean> vkRequestTracker                   = new HashMap<VKRequest, Boolean>();
+    private HashMap<VKRequest, Boolean> vkRequestTracker                   = new HashMap<>();
 
     private static native void locationUpdated(double latitude, double longitude);
     private static native void batteryStatusUpdated(String status, int level);
@@ -197,6 +194,7 @@ public class VKGeoService extends QtService implements LocationListener
     @Override
     public void onProviderEnabled(String provider)
     {
+        // Ignore
     }
 
     @Override
@@ -290,21 +288,19 @@ public class VKGeoService extends QtService implements LocationListener
             @Override
             public void run()
             {
-                if (VKSdk.isLoggedIn()) {
-                    vkAuthChanged(true);
-                } else {
-                    vkAuthChanged(false);
-                }
+                vkAuthChanged(VKSdk.isLoggedIn());
             }
         });
     }
 
     public void loginVK(String auth_scope)
     {
+        // Ignore
     }
 
     public void logoutVK()
     {
+        // Ignore
     }
 
     public void executeVKBatch(String request_list)
@@ -319,25 +315,25 @@ public class VKGeoService extends QtService implements LocationListener
                     final JSONArray json_request_list = new JSONArray(f_request_list);
 
                     if (json_request_list.length() > 0) {
-                        String execute_code = "return [";
+                        StringBuilder execute_code = new StringBuilder("return [");
 
                         for (int i = 0; i < json_request_list.length(); i++) {
                             JSONObject json_request = json_request_list.getJSONObject(i);
 
                             if (json_request.has("method")) {
-                                execute_code = execute_code + String.format("API.%s(%s)", json_request.getString("method"), json_request.optString("parameters"));
+                                execute_code.append(String.format("API.%s(%s)", json_request.getString("method"), json_request.optString("parameters")));
 
                                 if (i < json_request_list.length() - 1) {
-                                    execute_code = execute_code + ",";
+                                    execute_code.append(",");
                                 }
                             } else {
                                 Log.w("VKGeoService", "executeVKBatch() : invalid request");
                             }
                         }
 
-                        execute_code = execute_code + "];";
+                        execute_code.append("];");
 
-                        final VKRequest vk_request = new VKRequest("execute", VKParameters.from("code", execute_code));
+                        final VKRequest vk_request = new VKRequest("execute", VKParameters.from("code", execute_code.toString()));
 
                         vkRequestTracker.put(vk_request, true);
 
@@ -369,7 +365,7 @@ public class VKGeoService extends QtService implements LocationListener
                                             }
                                         } else if (response.json.has("response")) {
                                             String            error_str = null;
-                                            ArrayList<String> responses = new ArrayList<String>();
+                                            ArrayList<String> responses = new ArrayList<>();
 
                                             try {
                                                 JSONArray json_response_list = response.json.getJSONArray("response");
