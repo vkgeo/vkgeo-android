@@ -55,6 +55,10 @@ Pane {
                     anchors.fill: parent
 
                     onClicked: {
+                        textField.focus = false;
+
+                        filterTextField.forceActiveFocus();
+
                         textField.clear();
                     }
                 }
