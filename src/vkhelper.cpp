@@ -17,6 +17,8 @@ const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
 
+QAndroidJniObject VKHelper::AndroidContext;
+
 bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 {
     bool friend_1_trusted = friend_1.toMap().contains("trusted") ? (friend_1.toMap())["trusted"].toBool() : false;
@@ -60,7 +62,7 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
     }
 }
 
-VKHelper::VKHelper(const QString &context, QObject *parent) : QObject(parent)
+VKHelper::VKHelper(QObject *parent) : QObject(parent)
 {
     CurrentDataState                 = DataNotUpdated;
     AuthState                        = VKAuthState::StateUnknown;
@@ -73,13 +75,7 @@ VKHelper::VKHelper(const QString &context, QObject *parent) : QObject(parent)
     PhotoUrl                         = DEFAULT_PHOTO_URL;
     BigPhotoUrl                      = DEFAULT_PHOTO_URL;
 
-    if (context == "SERVICE") {
-        Context = QtAndroid::androidService();
-    } else {
-        Context = QtAndroid::androidActivity();
-    }
-
-    Context.callMethod<void>("initVK");
+    AndroidContext.callMethod<void>("initVK");
 
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
 
@@ -95,9 +91,9 @@ VKHelper::VKHelper(const QString &context, QObject *parent) : QObject(parent)
     SendDataTimer.setInterval(SEND_DATA_TIMER_INTERVAL);
 }
 
-VKHelper &VKHelper::GetInstance(const QString &context)
+VKHelper &VKHelper::GetInstance()
 {
-    static VKHelper instance(context);
+    static VKHelper instance;
 
     return instance;
 }
@@ -222,7 +218,7 @@ void VKHelper::cleanup()
 
     RequestQueueTimer.stop();
 
-    Context.callMethod<void>("cancelAllVKRequests");
+    AndroidContext.callMethod<void>("cancelAllVKRequests");
 
     FriendsData.clear();
     FriendsDataTmp.clear();
@@ -235,12 +231,12 @@ void VKHelper::login()
 {
     QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
 
-    Context.callMethod<void>("loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
+    AndroidContext.callMethod<void>("loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
 }
 
 void VKHelper::logout()
 {
-    Context.callMethod<void>("logoutVK");
+    AndroidContext.callMethod<void>("logoutVK");
 
     setAuthState(VKAuthState::StateNotAuthorized);
 }
@@ -601,7 +597,7 @@ void VKHelper::requestQueueTimerTimeout()
         if (request_list.count() > 0) {
             QAndroidJniObject j_request_list = QAndroidJniObject::fromString(QJsonDocument::fromVariant(request_list).toJson(QJsonDocument::Compact));
 
-            Context.callMethod<void>("executeVKBatch", "(Ljava/lang/String;)V", j_request_list.object<jstring>());
+            AndroidContext.callMethod<void>("executeVKBatch", "(Ljava/lang/String;)V", j_request_list.object<jstring>());
         }
     }
 

@@ -45,7 +45,7 @@ class VKHelper : public QObject
     Q_PROPERTY(int maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
 
 private:
-    explicit VKHelper(const QString &context, QObject *parent = nullptr);
+    explicit VKHelper(QObject *parent = nullptr);
     ~VKHelper() noexcept override = default;
 
 public:
@@ -73,7 +73,7 @@ public:
     VKHelper &operator=(const VKHelper&) = delete;
     VKHelper &operator=(VKHelper&&) noexcept = delete;
 
-    static VKHelper &GetInstance(const QString &context);
+    static VKHelper &GetInstance();
 
     bool locationValid() const;
     qint64 locationUpdateTime() const;
@@ -113,6 +113,8 @@ public:
     Q_INVOKABLE void updateTrackedFriendsData(bool expedited);
 
     Q_INVOKABLE void joinGroup(const QString &group_id);
+
+    static QAndroidJniObject AndroidContext;
 
 public slots:
     void setAuthState(int state);
@@ -201,7 +203,6 @@ private:
     QQueue<QVariantMap> RequestQueue;
     QMap<QString, int>  ContextTracker;
     QVariantMap         CurrentData, FriendsData, FriendsDataTmp;
-    QAndroidJniObject   Context;
 };
 
 #endif // VKHELPER_H
