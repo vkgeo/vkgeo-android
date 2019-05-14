@@ -24,8 +24,8 @@ public:
     VKService(const VKService&) = delete;
     VKService(VKService&&) noexcept = delete;
 
-    VKService& operator=(const VKService&) = delete;
-    VKService& operator=(VKService&&) noexcept = delete;
+    VKService &operator=(const VKService&) = delete;
+    VKService &operator=(VKService&&) noexcept = delete;
 
     static VKService &GetInstance();
 
