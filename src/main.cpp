@@ -24,23 +24,19 @@ int main(int argc, char *argv[])
             QGuiApplication::installTranslator(&translator);
         }
 
-        auto android_gw   = new AndroidGW(&app);
-        auto admob_helper = new AdMobHelper(&app);
-        auto vk_helper    = new VKHelper("ACTIVITY", &app);
-
-        QObject::connect(android_gw, &AndroidGW::setBannerViewHeight, admob_helper, &AdMobHelper::setBannerViewHeight);
-        QObject::connect(android_gw, &AndroidGW::setAuthState,        vk_helper,    &VKHelper::setAuthState);
-        QObject::connect(android_gw, &AndroidGW::processResponse,     vk_helper,    &VKHelper::processResponse);
-        QObject::connect(android_gw, &AndroidGW::processError,        vk_helper,    &VKHelper::processError);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::setBannerViewHeight, &AdMobHelper::GetInstance(),        &AdMobHelper::setBannerViewHeight);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::setAuthState,        &VKHelper::GetInstance("ACTIVITY"), &VKHelper::setAuthState);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::processResponse,     &VKHelper::GetInstance("ACTIVITY"), &VKHelper::processResponse);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::processError,        &VKHelper::GetInstance("ACTIVITY"), &VKHelper::processError);
 
         qmlRegisterType<VKAuthState>("VKHelper", 1, 0, "VKAuthState");
 
         QQmlApplicationEngine engine;
 
-        engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), admob_helper);
-        engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), new BatteryHelper(&app));
-        engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), new UIHelper(&app));
-        engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), vk_helper);
+        engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), &AdMobHelper::GetInstance());
+        engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
+        engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), &UIHelper::GetInstance());
+        engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), &VKHelper::GetInstance("ACTIVITY"));
 
         engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 
@@ -53,21 +49,17 @@ int main(int argc, char *argv[])
     } else if (argc == 2 && QString(argv[1]) == "-service") {
         QAndroidService app(argc, argv);
 
-        auto android_gw = new AndroidGW(&app);
-        auto vk_helper  = new VKHelper("SERVICE", &app);
-        auto vk_service = new VKService(&app);
-
-        QObject::connect(android_gw, &AndroidGW::setAuthState,               vk_helper,  &VKHelper::setAuthState);
-        QObject::connect(android_gw, &AndroidGW::processResponse,            vk_helper,  &VKHelper::processResponse);
-        QObject::connect(android_gw, &AndroidGW::processError,               vk_helper,  &VKHelper::processError);
-        QObject::connect(android_gw, &AndroidGW::processLocationUpdate,      vk_helper,  &VKHelper::processLocationUpdate);
-        QObject::connect(android_gw, &AndroidGW::processBatteryStatusUpdate, vk_helper,  &VKHelper::processBatteryStatusUpdate);
-        QObject::connect(vk_helper,  &VKHelper::authStateChanged,            vk_service, &VKService::authStateChanged);
-        QObject::connect(vk_helper,  &VKHelper::dataSent,                    vk_service, &VKService::dataSent);
-        QObject::connect(vk_helper,  &VKHelper::friendsUpdated,              vk_service, &VKService::friendsUpdated);
-        QObject::connect(vk_helper,  &VKHelper::trackedFriendDataUpdated,    vk_service, &VKService::trackedFriendDataUpdated);
-        QObject::connect(vk_service, &VKService::updateFriends,              vk_helper,  &VKHelper::updateFriends);
-        QObject::connect(vk_service, &VKService::updateTrackedFriendsData,   vk_helper,  &VKHelper::updateTrackedFriendsData);
+        QObject::connect(&AndroidGW::GetInstance(),         &AndroidGW::setAuthState,               &VKHelper::GetInstance("SERVICE"), &VKHelper::setAuthState);
+        QObject::connect(&AndroidGW::GetInstance(),         &AndroidGW::processResponse,            &VKHelper::GetInstance("SERVICE"), &VKHelper::processResponse);
+        QObject::connect(&AndroidGW::GetInstance(),         &AndroidGW::processError,               &VKHelper::GetInstance("SERVICE"), &VKHelper::processError);
+        QObject::connect(&AndroidGW::GetInstance(),         &AndroidGW::processLocationUpdate,      &VKHelper::GetInstance("SERVICE"), &VKHelper::processLocationUpdate);
+        QObject::connect(&AndroidGW::GetInstance(),         &AndroidGW::processBatteryStatusUpdate, &VKHelper::GetInstance("SERVICE"), &VKHelper::processBatteryStatusUpdate);
+        QObject::connect(&VKHelper::GetInstance("SERVICE"), &VKHelper::authStateChanged,            &VKService::GetInstance(),         &VKService::authStateChanged);
+        QObject::connect(&VKHelper::GetInstance("SERVICE"), &VKHelper::dataSent,                    &VKService::GetInstance(),         &VKService::dataSent);
+        QObject::connect(&VKHelper::GetInstance("SERVICE"), &VKHelper::friendsUpdated,              &VKService::GetInstance(),         &VKService::friendsUpdated);
+        QObject::connect(&VKHelper::GetInstance("SERVICE"), &VKHelper::trackedFriendDataUpdated,    &VKService::GetInstance(),         &VKService::trackedFriendDataUpdated);
+        QObject::connect(&VKService::GetInstance(),         &VKService::updateFriends,              &VKHelper::GetInstance("SERVICE"), &VKHelper::updateFriends);
+        QObject::connect(&VKService::GetInstance(),         &VKService::updateTrackedFriendsData,   &VKHelper::GetInstance("SERVICE"), &VKHelper::updateTrackedFriendsData);
 
         return QGuiApplication::exec();
     } else {

@@ -7,6 +7,13 @@ BatteryHelper::BatteryHelper(QObject *parent) : QObject(parent)
 {
 }
 
+BatteryHelper &BatteryHelper::GetInstance()
+{
+    static BatteryHelper instance;
+
+    return instance;
+}
+
 QString BatteryHelper::getBatteryStatus()
 {
     QAndroidJniObject j_battery_status = QtAndroid::androidActivity().callObjectMethod<jstring>("getBatteryStatus");
