@@ -7,6 +7,13 @@ StoreHelper::StoreHelper(QObject *parent) : QObject(parent)
 {
 }
 
+StoreHelper &StoreHelper::GetInstance()
+{
+    static StoreHelper instance;
+
+    return instance;
+}
+
 QString StoreHelper::getPackageName()
 {
     QAndroidJniObject j_package_name = QtAndroid::androidActivity().callObjectMethod<jstring>("getPackageName");

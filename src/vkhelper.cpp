@@ -95,6 +95,13 @@ VKHelper::VKHelper(const QString &context, QObject *parent) : QObject(parent)
     SendDataTimer.setInterval(SEND_DATA_TIMER_INTERVAL);
 }
 
+VKHelper &VKHelper::GetInstance(const QString &context)
+{
+    static VKHelper instance(context);
+
+    return instance;
+}
+
 bool VKHelper::locationValid() const
 {
     return CurrentData.contains("update_time") &&
