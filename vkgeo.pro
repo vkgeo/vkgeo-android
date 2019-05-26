@@ -49,10 +49,10 @@ android {
         android/source/settings.gradle \
         android/source/gradle/wrapper/gradle-wrapper.jar \
         android/source/gradle/wrapper/gradle-wrapper.properties \
-        android/source/lib/arm64-v8a/libcrypto.so \
-        android/source/lib/arm64-v8a/libssl.so \
-        android/source/lib/armeabi-v7a/libcrypto.so \
-        android/source/lib/armeabi-v7a/libssl.so \
+        android/source/libssl/arm64-v8a/libcrypto.so \
+        android/source/libssl/arm64-v8a/libssl.so \
+        android/source/libssl/armeabi-v7a/libcrypto.so \
+        android/source/libssl/armeabi-v7a/libssl.so \
         android/source/res/drawable/splash_qt.xml \
         android/source/res/drawable/splash_theme.xml \
         android/source/res/drawable-hdpi/ic_launcher_foreground.png \
@@ -96,13 +96,13 @@ android {
 
     contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
         ANDROID_EXTRA_LIBS = \
-            $$PWD/android/source/lib/armeabi-v7a/libcrypto.so \
-            $$PWD/android/source/lib/armeabi-v7a/libssl.so
+            $$PWD/android/source/libssl/armeabi-v7a/libcrypto.so \
+            $$PWD/android/source/libssl/armeabi-v7a/libssl.so
     }
     contains(ANDROID_TARGET_ARCH,arm64-v8a) {
         ANDROID_EXTRA_LIBS = \
-            $$PWD/android/source/lib/arm64-v8a/libcrypto.so \
-            $$PWD/android/source/lib/arm64-v8a/libssl.so
+            $$PWD/android/source/libssl/arm64-v8a/libcrypto.so \
+            $$PWD/android/source/libssl/arm64-v8a/libssl.so
     }
 }
 
