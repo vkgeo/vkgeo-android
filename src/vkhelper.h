@@ -124,6 +124,7 @@ public slots:
     void processBatteryStatusUpdate(const QString &status, int level);
 
 private slots:
+    void initVKTimerTimeout();
     void requestQueueTimerTimeout();
     void sendDataOnUpdateTimerTimeout();
     void sendDataTimerTimeout();
