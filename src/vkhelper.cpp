@@ -75,7 +75,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     PhotoUrl                         = DEFAULT_PHOTO_URL;
     BigPhotoUrl                      = DEFAULT_PHOTO_URL;
 
-    AndroidContext.callMethod<void>("initVK");
+    QTimer::singleShot(0, this, &VKHelper::initVKTimerTimeout);
 
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
 
@@ -571,6 +571,11 @@ void VKHelper::processLocationUpdate(qreal latitude, qreal longitude)
 void VKHelper::processBatteryStatusUpdate(const QString &status, int level)
 {
     updateBatteryStatus(status, level);
+}
+
+void VKHelper::initVKTimerTimeout()
+{
+    AndroidContext.callMethod<void>("initVK");
 }
 
 void VKHelper::requestQueueTimerTimeout()
