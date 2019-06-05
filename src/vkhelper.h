@@ -94,6 +94,8 @@ public:
     int maxTrackedFriendsCount() const;
     void setMaxTrackedFriendsCount(int count);
 
+    void initVK();
+
     Q_INVOKABLE void cleanup();
 
     Q_INVOKABLE void login();
@@ -124,7 +126,6 @@ public slots:
     void processBatteryStatusUpdate(const QString &status, int level);
 
 private slots:
-    void initVKTimerTimeout();
     void requestQueueTimerTimeout();
     void sendDataOnUpdateTimerTimeout();
     void sendDataTimerTimeout();

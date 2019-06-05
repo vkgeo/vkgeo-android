@@ -32,6 +32,8 @@ int main(int argc, char *argv[])
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::processResponse,     &VKHelper::GetInstance(),    &VKHelper::processResponse);
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::processError,        &VKHelper::GetInstance(),    &VKHelper::processError);
 
+        VKHelper::GetInstance().initVK();
+
         qmlRegisterType<VKAuthState>("VKHelper", 1, 0, "VKAuthState");
 
         QQmlApplicationEngine engine;
@@ -66,6 +68,8 @@ int main(int argc, char *argv[])
         QObject::connect(&VKHelper::GetInstance(),  &VKHelper::trackedFriendDataUpdated,    &VKService::GetInstance(), &VKService::trackedFriendDataUpdated);
         QObject::connect(&VKService::GetInstance(), &VKService::updateFriends,              &VKHelper::GetInstance(),  &VKHelper::updateFriends);
         QObject::connect(&VKService::GetInstance(), &VKService::updateTrackedFriendsData,   &VKHelper::GetInstance(),  &VKHelper::updateTrackedFriendsData);
+
+        VKHelper::GetInstance().initVK();
 
         return QGuiApplication::exec();
     } else {
