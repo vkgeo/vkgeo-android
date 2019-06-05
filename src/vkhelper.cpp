@@ -75,8 +75,6 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     PhotoUrl                         = DEFAULT_PHOTO_URL;
     BigPhotoUrl                      = DEFAULT_PHOTO_URL;
 
-    QTimer::singleShot(0, this, &VKHelper::initVKTimerTimeout);
-
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
 
     RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
@@ -189,6 +187,11 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
     MaxTrackedFriendsCount = count;
 
     emit maxTrackedFriendsCountChanged(MaxTrackedFriendsCount);
+}
+
+void VKHelper::initVK()
+{
+    AndroidContext.callMethod<void>("initVK");
 }
 
 void VKHelper::cleanup()
@@ -571,11 +574,6 @@ void VKHelper::processLocationUpdate(qreal latitude, qreal longitude)
 void VKHelper::processBatteryStatusUpdate(const QString &status, int level)
 {
     updateBatteryStatus(status, level);
-}
-
-void VKHelper::initVKTimerTimeout()
-{
-    AndroidContext.callMethod<void>("initVK");
 }
 
 void VKHelper::requestQueueTimerTimeout()
