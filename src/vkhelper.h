@@ -96,8 +96,6 @@ public:
 
     void initVK();
 
-    Q_INVOKABLE void cleanup();
-
     Q_INVOKABLE void login();
     Q_INVOKABLE void logout();
 
@@ -153,6 +151,8 @@ signals:
     void joiningGroupFailed();
 
 private:
+    void Cleanup();
+
     void SendData(bool expedited);
 
     void ContextTrackerAddRequest(const QVariantMap &request);

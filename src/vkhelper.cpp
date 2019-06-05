@@ -194,42 +194,6 @@ void VKHelper::initVK()
     AndroidContext.callMethod<void>("initVK");
 }
 
-void VKHelper::cleanup()
-{
-    LastSendDataTime                 = 0;
-    LastUpdateTrackedFriendsDataTime = 0;
-    NextRequestQueueTimerTimeout     = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
-    UserId                           = "";
-    FirstName                        = "";
-    LastName                         = "";
-    PhotoUrl                         = DEFAULT_PHOTO_URL;
-    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
-    TrustedFriendsListId             = "";
-    TrackedFriendsListId             = "";
-
-    emit userIdChanged(UserId);
-    emit firstNameChanged(FirstName);
-    emit lastNameChanged(LastName);
-    emit photoUrlChanged(PhotoUrl);
-    emit bigPhotoUrlChanged(BigPhotoUrl);
-
-    while (!RequestQueue.isEmpty()) {
-        QVariantMap request = RequestQueue.dequeue();
-
-        ContextTrackerDelRequest(request);
-    }
-
-    RequestQueueTimer.stop();
-
-    AndroidContext.callMethod<void>("cancelAllVKRequests");
-
-    FriendsData.clear();
-    FriendsDataTmp.clear();
-
-    emit friendsCountChanged(FriendsData.count());
-    emit friendsUpdated();
-}
-
 void VKHelper::login()
 {
     QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
@@ -469,7 +433,7 @@ void VKHelper::setAuthState(int state)
 
         EnqueueRequest(request);
     } else if (AuthState == VKAuthState::StateNotAuthorized) {
-        cleanup();
+        Cleanup();
     }
 }
 
@@ -621,6 +585,42 @@ void VKHelper::sendDataOnUpdateTimerTimeout()
 void VKHelper::sendDataTimerTimeout()
 {
     SendData(false);
+}
+
+void VKHelper::Cleanup()
+{
+    LastSendDataTime                 = 0;
+    LastUpdateTrackedFriendsDataTime = 0;
+    NextRequestQueueTimerTimeout     = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
+    UserId                           = "";
+    FirstName                        = "";
+    LastName                         = "";
+    PhotoUrl                         = DEFAULT_PHOTO_URL;
+    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
+    TrustedFriendsListId             = "";
+    TrackedFriendsListId             = "";
+
+    emit userIdChanged(UserId);
+    emit firstNameChanged(FirstName);
+    emit lastNameChanged(LastName);
+    emit photoUrlChanged(PhotoUrl);
+    emit bigPhotoUrlChanged(BigPhotoUrl);
+
+    while (!RequestQueue.isEmpty()) {
+        QVariantMap request = RequestQueue.dequeue();
+
+        ContextTrackerDelRequest(request);
+    }
+
+    RequestQueueTimer.stop();
+
+    AndroidContext.callMethod<void>("cancelAllVKRequests");
+
+    FriendsData.clear();
+    FriendsDataTmp.clear();
+
+    emit friendsCountChanged(FriendsData.count());
+    emit friendsUpdated();
 }
 
 void VKHelper::SendData(bool expedited)
