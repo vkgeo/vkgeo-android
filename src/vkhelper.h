@@ -94,7 +94,7 @@ public:
     int maxTrackedFriendsCount() const;
     void setMaxTrackedFriendsCount(int count);
 
-    void initVK();
+    Q_INVOKABLE void initVK();
 
     Q_INVOKABLE void login();
     Q_INVOKABLE void logout();
