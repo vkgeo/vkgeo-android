@@ -1,5 +1,6 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
+#include <QtCore/QVariant>
 #include <QtCore/QStringList>
 #include <QtCore/QRandomGenerator>
 #include <QtCore/QJsonObject>
