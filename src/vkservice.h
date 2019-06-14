@@ -21,11 +21,11 @@ public:
                      UPDATE_FRIENDS_ON_AUTH_DELAY  = 15000,
                      NEARBY_DISTANCE               = 500;
 
-    VKService(const VKService&) = delete;
-    VKService(VKService&&) noexcept = delete;
+    VKService(const VKService &) = delete;
+    VKService(VKService &&) noexcept = delete;
 
-    VKService &operator=(const VKService&) = delete;
-    VKService &operator=(VKService&&) noexcept = delete;
+    VKService &operator=(const VKService &) = delete;
+    VKService &operator=(VKService &&) noexcept = delete;
 
     static VKService &GetInstance();
 

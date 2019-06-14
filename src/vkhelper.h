@@ -67,11 +67,11 @@ public:
                          TRUSTED_FRIENDS_LIST_NAME,
                          TRACKED_FRIENDS_LIST_NAME;
 
-    VKHelper(const VKHelper&) = delete;
-    VKHelper(VKHelper&&) noexcept = delete;
+    VKHelper(const VKHelper &) = delete;
+    VKHelper(VKHelper &&) noexcept = delete;
 
-    VKHelper &operator=(const VKHelper&) = delete;
-    VKHelper &operator=(VKHelper&&) noexcept = delete;
+    VKHelper &operator=(const VKHelper &) = delete;
+    VKHelper &operator=(VKHelper &&) noexcept = delete;
 
     static VKHelper &GetInstance();
 
