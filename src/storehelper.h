@@ -13,11 +13,11 @@ private:
     ~StoreHelper() noexcept override = default;
 
 public:
-    StoreHelper(const StoreHelper&) = delete;
-    StoreHelper(StoreHelper&&) noexcept = delete;
+    StoreHelper(const StoreHelper &) = delete;
+    StoreHelper(StoreHelper &&) noexcept = delete;
 
-    StoreHelper &operator=(const StoreHelper&) = delete;
-    StoreHelper &operator=(StoreHelper&&) noexcept = delete;
+    StoreHelper &operator=(const StoreHelper &) = delete;
+    StoreHelper &operator=(StoreHelper &&) noexcept = delete;
 
     static StoreHelper &GetInstance();
 
