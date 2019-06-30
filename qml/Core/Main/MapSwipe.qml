@@ -91,12 +91,12 @@ Item {
             var map_item = map.mapItems[i];
 
             if (user_id === map_item.userId) {
-                if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
-                                                       && !isNaN(data.update_time) && isFinite(data.update_time) &&
-                    data.hasOwnProperty("latitude")    && typeof data.latitude === "number"
-                                                       && !isNaN(data.latitude) && isFinite(data.latitude) &&
-                    data.hasOwnProperty("longitude")   && typeof data.longitude === "number"
-                                                       && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                if (typeof data.update_time === "number" && !isNaN(data.update_time) &&
+                                                             isFinite(data.update_time) &&
+                    typeof data.latitude    === "number" && !isNaN(data.latitude) &&
+                                                             isFinite(data.latitude) &&
+                    typeof data.longitude   === "number" && !isNaN(data.longitude) &&
+                                                             isFinite(data.longitude)) {
                     map_item.coordinate = QtPositioning.coordinate(data.latitude, data.longitude);
                     map_item.updateTime = data.update_time;
                 }

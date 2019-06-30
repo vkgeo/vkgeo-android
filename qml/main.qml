@@ -96,7 +96,7 @@ Window {
     }
 
     function updateFeatures() {
-        if (mainStackView.depth > 0 && mainStackView.currentItem.hasOwnProperty("bannerViewHeight")) {
+        if (mainStackView.depth > 0 && typeof mainStackView.currentItem.bannerViewHeight === "number") {
             if (disableAds) {
                 AdMobHelper.hideBannerView();
             } else {
@@ -219,7 +219,7 @@ Window {
             if (depth > 0) {
                 currentItem.forceActiveFocus();
 
-                if (currentItem.hasOwnProperty("bannerViewHeight")) {
+                if (typeof currentItem.bannerViewHeight === "number") {
                     if (mainWindow.disableAds) {
                         AdMobHelper.hideBannerView();
                     } else {
