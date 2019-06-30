@@ -53,23 +53,23 @@ Item {
             var frnd = friendsList[i];
 
             if (user_id === frnd.userId) {
-                if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
-                                                       && !isNaN(data.update_time) && isFinite(data.update_time)) {
+                if (typeof data.update_time === "number" && !isNaN(data.update_time) &&
+                                                             isFinite(data.update_time)) {
                     frnd.dataAvailable = true;
                     frnd.updateTime    = data.update_time;
 
-                    if (data.hasOwnProperty("latitude")  && typeof data.latitude === "number"
-                                                         && !isNaN(data.latitude) && isFinite(data.latitude) &&
-                        data.hasOwnProperty("longitude") && typeof data.longitude === "number"
-                                                         && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                    if (typeof data.latitude  === "number" && !isNaN(data.latitude) &&
+                                                               isFinite(data.latitude) &&
+                        typeof data.longitude === "number" && !isNaN(data.longitude) &&
+                                                               isFinite(data.longitude)) {
                         frnd.locationAvailable = true;
                         frnd.latitude          = data.latitude;
                         frnd.longitude         = data.longitude;
                     }
 
-                    if (data.hasOwnProperty("battery_status") && typeof data.battery_status === "string" &&
-                        data.hasOwnProperty("battery_level")  && typeof data.battery_level  === "number"
-                                                              && !isNaN(data.battery_level) && isFinite(data.battery_level)) {
+                    if (typeof data.battery_status === "string" &&
+                        typeof data.battery_level  === "number" && !isNaN(data.battery_level) &&
+                                                                    isFinite(data.battery_level)) {
                         frnd.batteryStatus = data.battery_status;
                         frnd.batteryLevel  = data.battery_level;
                     }
@@ -85,23 +85,23 @@ Item {
             var model_frnd = friendsListModel.get(j);
 
             if (user_id === model_frnd.userId) {
-                if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
-                                                       && !isNaN(data.update_time) && isFinite(data.update_time)) {
+                if (typeof data.update_time === "number" && !isNaN(data.update_time) &&
+                                                             isFinite(data.update_time)) {
                     friendsListModel.set(j, {"dataAvailable" : true,
                                              "updateTime"    : data.update_time});
 
-                    if (data.hasOwnProperty("latitude")  && typeof data.latitude === "number"
-                                                         && !isNaN(data.latitude) && isFinite(data.latitude) &&
-                        data.hasOwnProperty("longitude") && typeof data.longitude === "number"
-                                                         && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                    if (typeof data.latitude  === "number" && !isNaN(data.latitude) &&
+                                                               isFinite(data.latitude) &&
+                        typeof data.longitude === "number" && !isNaN(data.longitude) &&
+                                                               isFinite(data.longitude)) {
                         friendsListModel.set(j, {"locationAvailable" : true,
                                                  "latitude"          : data.latitude,
                                                  "longitude"         : data.longitude});
                     }
 
-                    if (data.hasOwnProperty("battery_status") && typeof data.battery_status === "string" &&
-                        data.hasOwnProperty("battery_level")  && typeof data.battery_level  === "number"
-                                                              && !isNaN(data.battery_level) && isFinite(data.battery_level)) {
+                    if (typeof data.battery_status === "string" &&
+                        typeof data.battery_level  === "number" && !isNaN(data.battery_level) &&
+                                                                    isFinite(data.battery_level)) {
                         friendsListModel.set(j, {"batteryStatus" : data.battery_status,
                                                  "batteryLevel"  : data.battery_level});
                     }

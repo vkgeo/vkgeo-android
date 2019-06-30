@@ -92,7 +92,7 @@ Window {
             if (depth > 0) {
                 currentItem.forceActiveFocus();
 
-                if (currentItem.hasOwnProperty("bannerViewHeight")) {
+                if (typeof currentItem.bannerViewHeight === "number") {
                     AdMobHelper.showBannerView();
                 } else {
                     AdMobHelper.hideBannerView();
