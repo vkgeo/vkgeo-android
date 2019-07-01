@@ -115,18 +115,18 @@ Item {
         id:           map
         anchors.fill: parent
 
-        property bool wasTouched:           false
-        property bool wasCenterOnMyMapItem: false
-        property bool autoAction:           false
+        readonly property int autoActionTriesCount: 10
 
-        property int  autoActionTriesCount: 10
+        readonly property real centerBearing:       0.0
+        readonly property real centerTilt:          0.0
+        readonly property real centerZoomLevel:     16.0
 
-        property real centerBearing:        0.0
-        property real centerTilt:           0.0
-        property real centerZoomLevel:      16.0
+        property bool wasTouched:                   false
+        property bool wasCenterOnMyMapItem:         false
+        property bool autoAction:                   false
 
-        property var myMapItem:             null
-        property var trackedMapItem:        null
+        property var myMapItem:                     null
+        property var trackedMapItem:                null
 
         plugin: Plugin {
             name: "osm"

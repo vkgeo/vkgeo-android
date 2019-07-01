@@ -10,7 +10,7 @@ import "../Util.js" as UtilScript
 Page {
     id: loginPage
 
-    property int vkAuthState: VKHelper.authState
+    readonly property int vkAuthState: VKHelper.authState
 
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateAuthorized) {

@@ -12,11 +12,11 @@ Image {
     opacity:  calculateOpacity(height, listViewOriginY, listViewContentY, shiftDenominator)
     visible:  listViewContentY < listViewOriginY
 
-    property int refreshTimeout:    500
+    readonly property int refreshTimeout: 500
 
-    property real listViewOriginY:  0.0
-    property real listViewContentY: 0.0
-    property real shiftDenominator: 2.0
+    property real listViewOriginY:        0.0
+    property real listViewContentY:       0.0
+    property real shiftDenominator:       2.0
 
     signal refresh()
 

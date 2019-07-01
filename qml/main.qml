@@ -9,9 +9,9 @@ Window {
     title:   qsTr("Friends on Map")
     visible: true
 
-    property int vkAuthState: VKHelper.authState
+    readonly property int vkAuthState: VKHelper.authState
 
-    property var loginPage:   null
+    property var loginPage:            null
 
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateNotAuthorized) {

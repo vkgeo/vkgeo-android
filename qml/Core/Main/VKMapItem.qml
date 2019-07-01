@@ -12,14 +12,14 @@ MapQuickItem {
     anchorPoint: Qt.point(width / 2, height / 2)
     visible:     false
 
-    property bool dataObsolete: false
+    readonly property int dataTimeout: 24 * 60 * 60
 
-    property int dataTimeout:   24 * 60 * 60
+    property bool dataObsolete:        false
 
-    property double updateTime: 0.0
+    property double updateTime:        0.0
 
-    property string userId:     ""
-    property string photoUrl:   ""
+    property string userId:            ""
+    property string photoUrl:          ""
 
     signal openProfilePage(string user_id)
 
@@ -59,7 +59,7 @@ MapQuickItem {
             fillMode: Image.PreserveAspectFit
             visible:  vkMapItem.dataObsolete
 
-            property real angle: Math.PI / 4
+            readonly property real angle: Math.PI / 4
         }
 
         MouseArea {

@@ -75,10 +75,11 @@ Page {
         }
     }
 
-    property int bannerViewHeight:    AdMobHelper.bannerViewHeight
-    property int trustedFriendsCount: 0
+    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
-    property var friendsList:         []
+    property int trustedFriendsCount:       0
+
+    property var friendsList:               []
 
     Keys.onReleased: {
         if (event.key === Qt.Key_Back) {
@@ -172,7 +173,7 @@ Page {
                 border.width: UtilScript.pt(1)
                 border.color: "lightsteelblue"
 
-                property var listView: ListView.view
+                readonly property var listView: ListView.view
 
                 RowLayout {
                     anchors.fill:        parent
