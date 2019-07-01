@@ -234,7 +234,7 @@ Item {
                     border.width: UtilScript.pt(1)
                     border.color: "lightsteelblue"
 
-                    property var listView: ListView.view
+                    readonly property var listView: ListView.view
 
                     RowLayout {
                         anchors.fill:        parent
@@ -279,7 +279,7 @@ Item {
                                 fillMode: Image.PreserveAspectFit
                                 visible:  online
 
-                                property real angle: -Math.PI / 4
+                                readonly property real angle: -Math.PI / 4
                             }
 
                             MouseArea {

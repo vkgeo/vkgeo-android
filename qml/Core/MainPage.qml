@@ -75,10 +75,10 @@ Page {
         }
     }
 
-    property bool appInForeground: Qt.application.state === Qt.ApplicationActive
+    readonly property bool appInForeground: Qt.application.state === Qt.ApplicationActive
 
-    property int bannerViewHeight: AdMobHelper.bannerViewHeight
-    property int vkAuthState:      VKHelper.authState
+    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
+    readonly property int vkAuthState:      VKHelper.authState
 
     onAppInForegroundChanged: {
         if (appInForeground) {

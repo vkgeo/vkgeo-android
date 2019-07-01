@@ -58,7 +58,7 @@ Page {
         }
     }
 
-    property int bannerViewHeight: AdMobHelper.bannerViewHeight
+    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
     Keys.onReleased: {
         if (event.key === Qt.Key_Back) {

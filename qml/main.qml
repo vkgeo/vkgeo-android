@@ -10,12 +10,12 @@ Window {
     title:   qsTr("Friends on Map")
     visible: true
 
+    readonly property int vkAuthState:    VKHelper.authState
+
     property bool disableAds:             false
     property bool enableTrackedFriends:   false
     property bool increaseTrackingLimits: false
     property bool appRated:               false
-
-    property int vkAuthState:             VKHelper.authState
 
     property var loginPage:               null
 

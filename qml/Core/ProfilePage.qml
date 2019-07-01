@@ -59,25 +59,26 @@ Page {
         }
     }
 
-    property bool online:            false
-    property bool dataAvailable:     false
-    property bool locationAvailable: false
+    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
-    property int bannerViewHeight:   AdMobHelper.bannerViewHeight
-    property int batteryLevel:       0
+    property bool online:                   false
+    property bool dataAvailable:            false
+    property bool locationAvailable:        false
 
-    property real latitude:          0.0
-    property real longitude:         0.0
+    property int batteryLevel:              0
 
-    property double updateTime:      0.0
+    property real latitude:                 0.0
+    property real longitude:                0.0
 
-    property string userId:          ""
-    property string firstName:       ""
-    property string lastName:        ""
-    property string bigPhotoUrl:     ""
-    property string screenName:      ""
-    property string status:          ""
-    property string batteryStatus:   ""
+    property double updateTime:             0.0
+
+    property string userId:                 ""
+    property string firstName:              ""
+    property string lastName:               ""
+    property string bigPhotoUrl:            ""
+    property string screenName:             ""
+    property string status:                 ""
+    property string batteryStatus:          ""
 
     signal locateOnMap(string user_id)
 
@@ -144,7 +145,7 @@ Page {
                     fillMode: Image.PreserveAspectFit
                     visible:  profilePage.online
 
-                    property real angle: -Math.PI / 4
+                    readonly property real angle: -Math.PI / 4
                 }
 
                 Image {
@@ -157,7 +158,7 @@ Page {
                     fillMode: Image.PreserveAspectFit
                     visible:  imageVisible(profilePage.batteryStatus)
 
-                    property real angle: Math.PI / 4
+                    readonly property real angle: Math.PI / 4
 
                     function imageToShow(battery_status, battery_level) {
                         if (battery_level < 25) {

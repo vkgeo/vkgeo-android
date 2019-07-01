@@ -14,8 +14,9 @@ Pane {
         border.color: "steelblue"
     }
 
-    property string filterText:      textField.displayText
-    property string placeholderText: ""
+    readonly property string filterText: textField.displayText
+
+    property string placeholderText:     ""
 
     RowLayout {
         anchors.fill: parent
