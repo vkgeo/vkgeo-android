@@ -189,11 +189,7 @@ Page {
                     }
 
                     function imageVisible(battery_status) {
-                        if (battery_status === "CHARGING" || battery_status === "DISCHARGING") {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return (battery_status === "CHARGING" || battery_status === "DISCHARGING");
                     }
                 }
             }
