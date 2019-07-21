@@ -4,6 +4,7 @@
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
+#include <QtQuickControls2/QQuickStyle>
 #include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidService>
 
@@ -41,6 +42,8 @@ int main(int argc, char *argv[])
         engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), &UIHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), &VKHelper::GetInstance());
+
+        QQuickStyle::setStyle("Default");
 
         engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 
