@@ -34,7 +34,7 @@ Rectangle {
         minimumPointSize:    8
     }
 
-    MouseArea {
+    MultiPointTouchArea {
         anchors.fill: parent
     }
 
