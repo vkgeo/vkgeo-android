@@ -103,10 +103,9 @@ Window {
         }
     }
 
-    MouseArea {
-        id:           screenLockMouseArea
+    MultiPointTouchArea {
         anchors.fill: parent
-        z:            100
+        z:            1
         enabled:      mainStackView.busy
     }
 
