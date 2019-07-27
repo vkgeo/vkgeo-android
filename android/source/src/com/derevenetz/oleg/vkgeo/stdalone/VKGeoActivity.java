@@ -31,6 +31,8 @@ import org.json.JSONObject;
 
 import org.qtproject.qt5.android.bindings.QtActivity;
 
+import com.google.ads.mediation.admob.AdMobAdapter;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -50,12 +52,13 @@ import com.vk.sdk.VKSdk;
 
 public class VKGeoActivity extends QtActivity
 {
-    private boolean                     statusBarVisible = false;
-    private int                         statusBarHeight  = 0;
-    private Messenger                   serviceMessenger = null;
-    private AdView                      bannerView       = null;
-    private InterstitialAd              interstitial     = null;
-    private HashMap<VKRequest, Boolean> vkRequestTracker = new HashMap<>();
+    private boolean                     statusBarVisible    = false,
+                                        showPersonalizedAds = false;
+    private int                         statusBarHeight     = 0;
+    private Messenger                   serviceMessenger    = null;
+    private AdView                      bannerView          = null;
+    private InterstitialAd              interstitial        = null;
+    private HashMap<VKRequest, Boolean> vkRequestTracker    = new HashMap<>();
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -277,7 +280,15 @@ public class VKGeoActivity extends QtActivity
                         if (interstitial != null) {
                             AdRequest.Builder builder = new AdRequest.Builder();
 
-                            interstitial.loadAd(builder.build());
+                            if (showPersonalizedAds) {
+                                interstitial.loadAd(builder.build());
+                            } else {
+                                Bundle extras = new Bundle();
+
+                                extras.putString("npa", "1");
+
+                                interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+                            }
                         }
                     }
 
@@ -292,7 +303,15 @@ public class VKGeoActivity extends QtActivity
                                     if (interstitial != null) {
                                         AdRequest.Builder builder = new AdRequest.Builder();
 
-                                        interstitial.loadAd(builder.build());
+                                        if (showPersonalizedAds) {
+                                            interstitial.loadAd(builder.build());
+                                        } else {
+                                            Bundle extras = new Bundle();
+
+                                            extras.putString("npa", "1");
+
+                                            interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+                                        }
                                     }
                                 }
                             }, 60000);
@@ -302,7 +321,28 @@ public class VKGeoActivity extends QtActivity
 
                 AdRequest.Builder builder = new AdRequest.Builder();
 
-                interstitial.loadAd(builder.build());
+                if (showPersonalizedAds) {
+                    interstitial.loadAd(builder.build());
+                } else {
+                    Bundle extras = new Bundle();
+
+                    extras.putString("npa", "1");
+
+                    interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+                }
+            }
+        });
+    }
+
+    public void setAdsPersonalization(boolean personalized)
+    {
+        final boolean f_personalized = personalized;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                showPersonalizedAds = f_personalized;
             }
         });
     }
@@ -390,7 +430,15 @@ public class VKGeoActivity extends QtActivity
 
                     AdRequest.Builder builder = new AdRequest.Builder();
 
-                    bannerView.loadAd(builder.build());
+                    if (showPersonalizedAds) {
+                        bannerView.loadAd(builder.build());
+                    } else {
+                        Bundle extras = new Bundle();
+
+                        extras.putString("npa", "1");
+
+                        bannerView.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+                    }
                 }
             }
         });

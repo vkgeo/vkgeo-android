@@ -3,6 +3,8 @@ import QtQuick.Controls 2.5
 import QtQuick.LocalStorage 2.12
 import VKHelper 1.0
 
+import "Core/Dialog"
+
 ApplicationWindow {
     id:      mainWindow
     title:   qsTr("Friends on Map")
@@ -10,12 +12,20 @@ ApplicationWindow {
 
     readonly property int vkAuthState: VKHelper.authState
 
+    property string adMobConsent:      ""
+
     property var loginPage:            null
 
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
             showLoginPage();
         }
+    }
+
+    onAdMobConsentChanged: {
+        setSetting("AdMobConsent", adMobConsent);
+
+        updateFeatures();
     }
 
     function setSetting(key, value) {
@@ -67,12 +77,28 @@ ApplicationWindow {
     }
 
     function updateFeatures() {
+        if (adMobConsent === "PERSONALIZED" || adMobConsent === "NON_PERSONALIZED") {
+            AdMobHelper.setPersonalization(adMobConsent === "PERSONALIZED");
+
+            AdMobHelper.initAds();
+        }
+
+        if (mainStackView.depth > 0 && typeof mainStackView.currentItem.bannerViewHeight === "number") {
+            AdMobHelper.showBannerView();
+        } else {
+            AdMobHelper.hideBannerView();
+        }
+
         VKHelper.maxTrustedFriendsCount = 15;
         VKHelper.maxTrackedFriendsCount = 15;
     }
 
     function showInterstitial() {
         AdMobHelper.showInterstitial();
+    }
+
+    function showAdMobConsentDialog() {
+        adMobConsentDialog.open();
     }
 
     StackView {
@@ -108,7 +134,21 @@ ApplicationWindow {
         enabled:      mainStackView.busy
     }
 
+    AdMobConsentDialog {
+        id: adMobConsentDialog
+
+        onShowPersonalizedAds: {
+            mainWindow.adMobConsent = "PERSONALIZED";
+        }
+
+        onShowNonPersonalizedAds: {
+            mainWindow.adMobConsent = "NON_PERSONALIZED";
+        }
+    }
+
     Component.onCompleted: {
+        adMobConsent = getSetting("AdMobConsent", "");
+
         updateFeatures();
 
         var component = Qt.createComponent("Core/MainPage.qml");
@@ -121,6 +161,10 @@ ApplicationWindow {
 
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
             showLoginPage();
+        }
+
+        if (adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
+            adMobConsentDialog.open();
         }
     }
 }
