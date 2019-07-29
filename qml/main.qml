@@ -4,6 +4,8 @@ import QtQuick.LocalStorage 2.12
 import QtPurchasing 1.0
 import VKHelper 1.0
 
+import "Core/Dialog"
+
 ApplicationWindow {
     id:      mainWindow
     title:   qsTr("Friends on Map")
@@ -16,7 +18,15 @@ ApplicationWindow {
     property bool increaseTrackingLimits: false
     property bool appRated:               false
 
+    property string adMobConsent:         ""
+
     property var loginPage:               null
+
+    onVkAuthStateChanged: {
+        if (vkAuthState === VKAuthState.StateNotAuthorized) {
+            showLoginPage();
+        }
+    }
 
     onDisableAdsChanged: {
         setSetting("DisableAds", disableAds ? "true" : "false");
@@ -40,10 +50,10 @@ ApplicationWindow {
         setSetting("AppRated", appRated ? "true" : "false");
     }
 
-    onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateNotAuthorized) {
-            showLoginPage();
-        }
+    onAdMobConsentChanged: {
+        setSetting("AdMobConsent", adMobConsent);
+
+        updateFeatures();
     }
 
     function setSetting(key, value) {
@@ -95,6 +105,12 @@ ApplicationWindow {
     }
 
     function updateFeatures() {
+        if (!disableAds && (adMobConsent === "PERSONALIZED" || adMobConsent === "NON_PERSONALIZED")) {
+            AdMobHelper.setPersonalization(adMobConsent === "PERSONALIZED");
+
+            AdMobHelper.initAds();
+        }
+
         if (mainStackView.depth > 0 && typeof mainStackView.currentItem.bannerViewHeight === "number") {
             if (disableAds) {
                 AdMobHelper.hideBannerView();
@@ -202,6 +218,10 @@ ApplicationWindow {
         }
     }
 
+    function showAdMobConsentDialog() {
+        adMobConsentDialog.open();
+    }
+
     StackView {
         id:           mainStackView
         anchors.fill: parent
@@ -239,11 +259,24 @@ ApplicationWindow {
         enabled:      mainStackView.busy
     }
 
+    AdMobConsentDialog {
+        id: adMobConsentDialog
+
+        onShowPersonalizedAds: {
+            mainWindow.adMobConsent = "PERSONALIZED";
+        }
+
+        onShowNonPersonalizedAds: {
+            mainWindow.adMobConsent = "NON_PERSONALIZED";
+        }
+    }
+
     Component.onCompleted: {
         disableAds             = (getSetting("DisableAds",             "false") === "true");
         enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
         increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
         appRated               = (getSetting("AppRated",               "false") === "true");
+        adMobConsent           =  getSetting("AdMobConsent",           "");
 
         updateFeatures();
 
@@ -257,6 +290,10 @@ ApplicationWindow {
 
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
             showLoginPage();
+        }
+
+        if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
+            adMobConsentDialog.open();
         }
     }
 }

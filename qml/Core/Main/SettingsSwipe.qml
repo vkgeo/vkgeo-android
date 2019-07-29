@@ -231,6 +231,18 @@ Item {
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
+                text:             qsTr("Ad privacy settings")
+                enabled:          !mainWindow.disableAds
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    mainWindow.showAdMobConsentDialog();
+                }
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
                 text:             qsTr("Additional settings")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
