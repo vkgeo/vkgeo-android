@@ -14,8 +14,8 @@ Dialog {
     signal showNonPersonalizedAds()
 
     contentItem: Rectangle {
-        implicitWidth:  UtilScript.pt(320)
-        implicitHeight: UtilScript.pt(320)
+        implicitWidth:  UtilScript.pt(300)
+        implicitHeight: UtilScript.pt(300)
         color:          "white"
 
         ColumnLayout {
