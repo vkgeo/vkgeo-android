@@ -15,62 +15,52 @@ Page {
         color:  "lightsteelblue"
     }
 
-    footer: Rectangle {
-        height: tabBar.height
-        color:  "lightsteelblue"
+    footer: TabBar {
+        id: tabBar
 
-        TabBar {
-            id:            tabBar
-            anchors.top:   parent.top
-            anchors.left:  parent.left
-            anchors.right: parent.right
-            contentHeight: Math.max(Math.max(mapTabButton.implicitHeight, peopleTabButton.implicitHeight),
-                                    settingsTabButton.implicitHeight)
+        background: Rectangle {
+            color: "lightsteelblue"
+        }
+
+        TabButton {
+            id:             mapTabButton
+            implicitHeight: UtilScript.pt(48)
 
             background: Rectangle {
-                color: "transparent"
+                color: tabBar.currentIndex === 0 ? "steelblue" : "lightsteelblue"
             }
 
-            TabButton {
-                id:             mapTabButton
-                implicitHeight: UtilScript.pt(48)
+            contentItem: Image {
+                source:   "qrc:/resources/images/main/tab_map.png"
+                fillMode: Image.PreserveAspectFit
+            }
+        }
 
-                background: Rectangle {
-                    color: tabBar.currentIndex === 0 ? "steelblue" : "lightsteelblue"
-                }
+        TabButton {
+            id:             peopleTabButton
+            implicitHeight: UtilScript.pt(48)
 
-                contentItem: Image {
-                    source:   "qrc:/resources/images/main/tab_map.png"
-                    fillMode: Image.PreserveAspectFit
-                }
+            background: Rectangle {
+                color: tabBar.currentIndex === 1 ? "steelblue" : "lightsteelblue"
             }
 
-            TabButton {
-                id:             peopleTabButton
-                implicitHeight: UtilScript.pt(48)
+            contentItem: Image {
+                source:   "qrc:/resources/images/main/tab_people.png"
+                fillMode: Image.PreserveAspectFit
+            }
+        }
 
-                background: Rectangle {
-                    color: tabBar.currentIndex === 1 ? "steelblue" : "lightsteelblue"
-                }
+        TabButton {
+            id:             settingsTabButton
+            implicitHeight: UtilScript.pt(48)
 
-                contentItem: Image {
-                    source:   "qrc:/resources/images/main/tab_people.png"
-                    fillMode: Image.PreserveAspectFit
-                }
+            background: Rectangle {
+                color: tabBar.currentIndex === 2 ? "steelblue" : "lightsteelblue"
             }
 
-            TabButton {
-                id:             settingsTabButton
-                implicitHeight: UtilScript.pt(48)
-
-                background: Rectangle {
-                    color: tabBar.currentIndex === 2 ? "steelblue" : "lightsteelblue"
-                }
-
-                contentItem: Image {
-                    source:   "qrc:/resources/images/main/tab_settings.png"
-                    fillMode: Image.PreserveAspectFit
-                }
+            contentItem: Image {
+                source:   "qrc:/resources/images/main/tab_settings.png"
+                fillMode: Image.PreserveAspectFit
             }
         }
     }
