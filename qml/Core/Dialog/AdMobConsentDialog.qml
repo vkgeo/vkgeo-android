@@ -27,7 +27,7 @@ Dialog {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                qsTr("We keep this app free by showing ads. Ad network will <a href=\"https://policies.google.com/technologies/ads\">collect data and use a unique identifier on your device</a> to show you ads. Do you allow to use your data to tailor ads for you? You can change your choice anytime in the app settings.")
+                text:                qsTr("We keep this app free by showing ads. Ad network will <a href=\"https://policies.google.com/technologies/ads\">collect data and use a unique identifier on your device</a> to show you ads. <b>Do you allow to use your data to tailor ads for you?</b> You can change your choice anytime in the app settings.")
                 color:               "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
