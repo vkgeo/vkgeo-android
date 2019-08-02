@@ -144,6 +144,10 @@ ApplicationWindow {
         }
     }
 
+    function showAdMobConsentDialog() {
+        adMobConsentDialog.open();
+    }
+
     Store {
         id: store
 
@@ -216,10 +220,6 @@ ApplicationWindow {
                 transaction.finalize();
             }
         }
-    }
-
-    function showAdMobConsentDialog() {
-        adMobConsentDialog.open();
     }
 
     StackView {
