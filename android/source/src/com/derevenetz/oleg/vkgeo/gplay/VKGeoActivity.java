@@ -287,7 +287,8 @@ public class VKGeoActivity extends QtActivity
 
                                 extras.putString("npa", "1");
 
-                                interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+                                interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                                                           .build());
                             }
                         }
                     }
@@ -310,7 +311,8 @@ public class VKGeoActivity extends QtActivity
 
                                             extras.putString("npa", "1");
 
-                                            interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+                                            interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                                                                       .build());
                                         }
                                     }
                                 }
@@ -328,7 +330,8 @@ public class VKGeoActivity extends QtActivity
 
                     extras.putString("npa", "1");
 
-                    interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+                    interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                                               .build());
                 }
             }
         });
@@ -437,7 +440,8 @@ public class VKGeoActivity extends QtActivity
 
                         extras.putString("npa", "1");
 
-                        bannerView.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+                        bannerView.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                                                 .build());
                     }
                 }
             }
