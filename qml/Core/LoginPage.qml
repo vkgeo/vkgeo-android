@@ -10,14 +10,6 @@ import "../Util.js" as UtilScript
 Page {
     id: loginPage
 
-    readonly property int vkAuthState: VKHelper.authState
-
-    onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateAuthorized) {
-            mainWindow.closeLoginPage();
-        }
-    }
-
     Rectangle {
         anchors.fill: parent
         color:        "lightsteelblue"
