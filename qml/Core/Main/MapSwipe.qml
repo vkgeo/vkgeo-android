@@ -11,99 +11,9 @@ Item {
 
     signal openProfilePage(string user_id)
 
-    function updateMyLocation() {
-        if (VKHelper.locationValid && map.myMapItem !== null) {
-            map.myMapItem.coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
-            map.myMapItem.updateTime = VKHelper.locationUpdateTime;
-
-            if (!map.wasTouched && map.trackedMapItem === null) {
-                map.centerOnMyMapItemOnce();
-            }
-        }
-    }
-
-    function updateMapItems() {
-        var tracked_map_item_id = null;
-
-        if (map.trackedMapItem !== null) {
-            tracked_map_item_id = map.trackedMapItem.userId;
-        }
-
-        map.trackMapItem(null);
-
-        for (var i = map.mapItems.length - 1; i >= 0; i--) {
-            var map_item = map.mapItems[i];
-
-            map.removeMapItem(map_item);
-
-            if (map_item !== map.myMapItem) {
-                map_item.destroy();
-            }
-        }
-
-        var friends_list = VKHelper.getFriendsList();
-
-        var component = Qt.createComponent("VKMapItem.qml");
-
-        if (component.status === Component.Ready) {
-            for (var j = 0; j < friends_list.length; j++) {
-                var frnd = friends_list[j];
-
-                if (frnd.trusted || frnd.tracked) {
-                    var new_map_item = component.createObject(map, {"userId": frnd.userId, "photoUrl": frnd.photoUrl});
-
-                    new_map_item.openProfilePage.connect(mapSwipe.openProfilePage);
-
-                    map.addMapItem(new_map_item);
-
-                    if (new_map_item.userId === tracked_map_item_id) {
-                        map.trackMapItem(new_map_item);
-                    }
-                }
-            }
-        } else {
-            console.log(component.errorString());
-        }
-
-        map.addMapItem(map.myMapItem);
-
-        if (tracked_map_item_id === "") {
-            map.trackMapItem(map.myMapItem);
-        }
-
-        if (map.mapItems.length > 1) {
-            if (Math.random() < 0.10) {
-                if (!mainWindow.appRated) {
-                    requestReviewMessageDialog.open();
-                }
-            }
-        }
-    }
-
     function updateMapItemsStates() {
         for (var i = 0; i < map.mapItems.length; i++) {
             map.mapItems[i].updateState();
-        }
-    }
-
-    function updateMapItemLocation(user_id, data) {
-        for (var i = 0; i < map.mapItems.length; i++) {
-            var map_item = map.mapItems[i];
-
-            if (user_id === map_item.userId) {
-                if (typeof data.update_time === "number" && isFinite(data.update_time) &&
-                    typeof data.latitude    === "number" && isFinite(data.latitude) &&
-                    typeof data.longitude   === "number" && isFinite(data.longitude)) {
-                    map_item.coordinate = QtPositioning.coordinate(data.latitude, data.longitude);
-                    map_item.updateTime = data.update_time;
-                }
-
-                break;
-            }
-        }
-
-        if (!map.wasTouched && map.trackedMapItem === null) {
-            map.showAllMapItems();
         }
     }
 
@@ -336,6 +246,100 @@ Item {
         }
     }
 
+    Connections {
+        target: VKHelper
+
+        onLocationUpdated: {
+            if (VKHelper.locationValid && map.myMapItem !== null) {
+                map.myMapItem.coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
+                map.myMapItem.updateTime = VKHelper.locationUpdateTime;
+
+                if (!map.wasTouched && map.trackedMapItem === null) {
+                    map.centerOnMyMapItemOnce();
+                }
+            }
+        }
+
+        onFriendsUpdated: {
+            var tracked_map_item_id = null;
+
+            if (map.trackedMapItem !== null) {
+                tracked_map_item_id = map.trackedMapItem.userId;
+            }
+
+            map.trackMapItem(null);
+
+            for (var i = map.mapItems.length - 1; i >= 0; i--) {
+                var map_item = map.mapItems[i];
+
+                map.removeMapItem(map_item);
+
+                if (map_item !== map.myMapItem) {
+                    map_item.destroy();
+                }
+            }
+
+            var friends_list = VKHelper.getFriendsList();
+
+            var component = Qt.createComponent("VKMapItem.qml");
+
+            if (component.status === Component.Ready) {
+                for (var j = 0; j < friends_list.length; j++) {
+                    var frnd = friends_list[j];
+
+                    if (frnd.trusted || frnd.tracked) {
+                        var new_map_item = component.createObject(map, {"userId": frnd.userId, "photoUrl": frnd.photoUrl});
+
+                        new_map_item.openProfilePage.connect(mapSwipe.openProfilePage);
+
+                        map.addMapItem(new_map_item);
+
+                        if (new_map_item.userId === tracked_map_item_id) {
+                            map.trackMapItem(new_map_item);
+                        }
+                    }
+                }
+            } else {
+                console.log(component.errorString());
+            }
+
+            map.addMapItem(map.myMapItem);
+
+            if (tracked_map_item_id === "") {
+                map.trackMapItem(map.myMapItem);
+            }
+
+            if (map.mapItems.length > 1) {
+                if (Math.random() < 0.10) {
+                    if (!mainWindow.appRated) {
+                        requestReviewMessageDialog.open();
+                    }
+                }
+            }
+        }
+
+        onTrackedFriendDataUpdated: {
+            for (var i = 0; i < map.mapItems.length; i++) {
+                var map_item = map.mapItems[i];
+
+                if (id === map_item.userId) {
+                    if (typeof data.update_time === "number" && isFinite(data.update_time) &&
+                        typeof data.latitude    === "number" && isFinite(data.latitude) &&
+                        typeof data.longitude   === "number" && isFinite(data.longitude)) {
+                        map_item.coordinate = QtPositioning.coordinate(data.latitude, data.longitude);
+                        map_item.updateTime = data.update_time;
+                    }
+
+                    break;
+                }
+            }
+
+            if (!map.wasTouched && map.trackedMapItem === null) {
+                map.showAllMapItems();
+            }
+        }
+    }
+
     Component.onCompleted: {
         var component = Qt.createComponent("VKMapItem.qml");
 
@@ -351,9 +355,5 @@ Item {
         } else {
             console.log(component.errorString());
         }
-
-        VKHelper.locationUpdated.connect(updateMyLocation);
-        VKHelper.friendsUpdated.connect(updateMapItems);
-        VKHelper.trackedFriendDataUpdated.connect(updateMapItemLocation);
     }
 }

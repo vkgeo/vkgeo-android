@@ -10,22 +10,6 @@ import "../../Util.js" as UtilScript
 Item {
     id: settingsSwipe
 
-    function friendsListUpdated() {
-        friendsListUpdatedToast.visible = true;
-    }
-
-    function friendsListUpdateFailed() {
-        friendsListUpdateFailedToast.visible = true;
-    }
-
-    function joiningVKGeoGroupCompleted() {
-        joiningVKGeoGroupCompletedToast.visible = true;
-    }
-
-    function joiningVKGeoGroupFailed() {
-        joiningVKGeoGroupFailedToast.visible = true;
-    }
-
     Toast {
         id:              friendsListUpdatedToast
         anchors.top:     parent.top
@@ -360,14 +344,31 @@ Item {
         }
     }
 
-    Component.onCompleted: {
-        VKHelper.trustedFriendsListUpdated.connect(friendsListUpdated);
-        VKHelper.trustedFriendsListUpdateFailed.connect(friendsListUpdateFailed);
+    Connections {
+        target: VKHelper
 
-        VKHelper.trackedFriendsListUpdated.connect(friendsListUpdated);
-        VKHelper.trackedFriendsListUpdateFailed.connect(friendsListUpdateFailed);
+        onTrustedFriendsListUpdated: {
+            friendsListUpdatedToast.visible = true;
+        }
 
-        VKHelper.joiningGroupCompleted.connect(joiningVKGeoGroupCompleted);
-        VKHelper.joiningGroupFailed.connect(joiningVKGeoGroupFailed);
+        onTrustedFriendsListUpdateFailed: {
+            friendsListUpdateFailedToast.visible = true;
+        }
+
+        onTrackedFriendsListUpdated: {
+            friendsListUpdatedToast.visible = true;
+        }
+
+        onTrackedFriendsListUpdateFailed: {
+            friendsListUpdateFailedToast.visible = true;
+        }
+
+        onJoiningGroupCompleted: {
+            joiningVKGeoGroupCompletedToast.visible = true;
+        }
+
+        onJoiningGroupFailed: {
+            joiningVKGeoGroupFailedToast.visible = true;
+        }
     }
 }
