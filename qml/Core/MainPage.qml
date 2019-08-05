@@ -70,22 +70,10 @@ Page {
     readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
     readonly property int vkAuthState:      VKHelper.authState
 
-    property bool componentCompleted:       false
-
     onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateAuthorized && componentCompleted) {
+        if (vkAuthState === VKAuthState.StateAuthorized) {
             VKHelper.updateFriends();
         }
-    }
-
-    onComponentCompletedChanged: {
-        if (vkAuthState === VKAuthState.StateAuthorized && componentCompleted) {
-            VKHelper.updateFriends();
-        }
-    }
-
-    function updateTrackedFriendsData() {
-        VKHelper.updateTrackedFriendsData(true);
     }
 
     SwipeView {
@@ -146,10 +134,15 @@ Page {
         }
     }
 
-    Component.onCompleted: {
-        VKHelper.dataSent.connect(updateTrackedFriendsData);
-        VKHelper.friendsUpdated.connect(updateTrackedFriendsData);
+    Connections {
+        target: VKHelper
 
-        componentCompleted = true;
+        onDataSent: {
+            VKHelper.updateTrackedFriendsData(true);
+        }
+
+        onFriendsUpdated: {
+            VKHelper.updateTrackedFriendsData(true);
+        }
     }
 }
