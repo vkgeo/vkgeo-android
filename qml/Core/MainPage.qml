@@ -70,8 +70,16 @@ Page {
     readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
     readonly property int vkAuthState:      VKHelper.authState
 
+    property bool componentCompleted:       false
+
     onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateAuthorized) {
+        if (vkAuthState === VKAuthState.StateAuthorized && componentCompleted) {
+            VKHelper.updateFriends();
+        }
+    }
+
+    onComponentCompletedChanged: {
+        if (vkAuthState === VKAuthState.StateAuthorized && componentCompleted) {
             VKHelper.updateFriends();
         }
     }
@@ -147,8 +155,6 @@ Page {
     }
 
     Component.onCompleted: {
-        if (vkAuthState === VKAuthState.StateAuthorized) {
-            VKHelper.updateFriends();
-        }
+        componentCompleted = true;
     }
 }
