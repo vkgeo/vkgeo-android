@@ -248,7 +248,7 @@ public class VKGeoService extends QtService implements LocationListener
         notification_manager.cancel(getResources().getInteger(R.integer.not_logged_in_notification_id));
     }
 
-    public void showFriendsNearbyNotification(String friend_id, String friend_name)
+    public void showFriendsNearbyNotification(String user_id, String user_name)
     {
         NotificationManager  notification_manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder notification_builder = null;
@@ -266,7 +266,7 @@ public class VKGeoService extends QtService implements LocationListener
                                                            .setAutoCancel(true)
                                                            .setSmallIcon(R.drawable.ic_stat_notify_service)
                                                            .setContentTitle(getResources().getString(R.string.friends_nearby_notification_title))
-                                                           .setContentText(String.format(getResources().getString(R.string.friends_nearby_notification_text), friend_name))
+                                                           .setContentText(String.format(getResources().getString(R.string.friends_nearby_notification_text), user_name))
                                                            .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
         } else {
             notification_builder = new Notification.Builder(this)
@@ -275,11 +275,11 @@ public class VKGeoService extends QtService implements LocationListener
                                                            .setAutoCancel(true)
                                                            .setSmallIcon(R.drawable.ic_stat_notify_service)
                                                            .setContentTitle(getResources().getString(R.string.friends_nearby_notification_title))
-                                                           .setContentText(String.format(getResources().getString(R.string.friends_nearby_notification_text), friend_name))
+                                                           .setContentText(String.format(getResources().getString(R.string.friends_nearby_notification_text), user_name))
                                                            .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, VKGeoActivity.class), 0));
         }
 
-        notification_manager.notify(getResources().getInteger(R.integer.friends_nearby_notification_first_id) + (friend_id.hashCode() & 0xFFFF), notification_builder.build());
+        notification_manager.notify(getResources().getInteger(R.integer.friends_nearby_notification_first_id) + (user_id.hashCode() & 0xFFFF), notification_builder.build());
     }
 
     public void initVK()

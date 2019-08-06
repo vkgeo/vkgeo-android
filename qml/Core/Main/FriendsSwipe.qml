@@ -13,7 +13,7 @@ Item {
 
     property var friendsList: []
 
-    signal locateFriendOnMap(string user_id)
+    signal locateFriendOnMap(string userId)
 
     function updateModel() {
         friendsListModel.clear();
@@ -305,22 +305,22 @@ Item {
             for (var i = 0; i < friendsSwipe.friendsList.length; i++) {
                 var frnd = friendsSwipe.friendsList[i];
 
-                if (id === frnd.userId) {
-                    if (typeof data.update_time === "number" && isFinite(data.update_time)) {
+                if (friendUserId === frnd.userId) {
+                    if (typeof friendData.update_time === "number" && isFinite(friendData.update_time)) {
                         frnd.dataAvailable = true;
-                        frnd.updateTime    = data.update_time;
+                        frnd.updateTime    = friendData.update_time;
 
-                        if (typeof data.latitude  === "number" && isFinite(data.latitude) &&
-                            typeof data.longitude === "number" && isFinite(data.longitude)) {
+                        if (typeof friendData.latitude  === "number" && isFinite(friendData.latitude) &&
+                            typeof friendData.longitude === "number" && isFinite(friendData.longitude)) {
                             frnd.locationAvailable = true;
-                            frnd.latitude          = data.latitude;
-                            frnd.longitude         = data.longitude;
+                            frnd.latitude          = friendData.latitude;
+                            frnd.longitude         = friendData.longitude;
                         }
 
-                        if (typeof data.battery_status === "string" &&
-                            typeof data.battery_level  === "number" && isFinite(data.battery_level)) {
-                            frnd.batteryStatus = data.battery_status;
-                            frnd.batteryLevel  = data.battery_level;
+                        if (typeof friendData.battery_status === "string" &&
+                            typeof friendData.battery_level  === "number" && isFinite(friendData.battery_level)) {
+                            frnd.batteryStatus = friendData.battery_status;
+                            frnd.batteryLevel  = friendData.battery_level;
                         }
                     }
 
@@ -333,22 +333,22 @@ Item {
             for (var j = 0; j < friendsListModel.count; j++) {
                 var model_frnd = friendsListModel.get(j);
 
-                if (id === model_frnd.userId) {
-                    if (typeof data.update_time === "number" && isFinite(data.update_time)) {
+                if (friendUserId === model_frnd.userId) {
+                    if (typeof friendData.update_time === "number" && isFinite(friendData.update_time)) {
                         friendsListModel.set(j, {"dataAvailable" : true,
-                                                 "updateTime"    : data.update_time});
+                                                 "updateTime"    : friendData.update_time});
 
-                        if (typeof data.latitude  === "number" && isFinite(data.latitude) &&
-                            typeof data.longitude === "number" && isFinite(data.longitude)) {
+                        if (typeof friendData.latitude  === "number" && isFinite(friendData.latitude) &&
+                            typeof friendData.longitude === "number" && isFinite(friendData.longitude)) {
                             friendsListModel.set(j, {"locationAvailable" : true,
-                                                     "latitude"          : data.latitude,
-                                                     "longitude"         : data.longitude});
+                                                     "latitude"          : friendData.latitude,
+                                                     "longitude"         : friendData.longitude});
                         }
 
-                        if (typeof data.battery_status === "string" &&
-                            typeof data.battery_level  === "number" && isFinite(data.battery_level)) {
-                            friendsListModel.set(j, {"batteryStatus" : data.battery_status,
-                                                     "batteryLevel"  : data.battery_level});
+                        if (typeof friendData.battery_status === "string" &&
+                            typeof friendData.battery_level  === "number" && isFinite(friendData.battery_level)) {
+                            friendsListModel.set(j, {"batteryStatus" : friendData.battery_status,
+                                                     "batteryLevel"  : friendData.battery_level});
                         }
                     }
 
