@@ -145,4 +145,10 @@ Page {
             VKHelper.updateTrackedFriendsData(true);
         }
     }
+
+    Component.onCompleted: {
+        if (vkAuthState === VKAuthState.StateAuthorized) {
+            VKHelper.updateFriends();
+        }
+    }
 }
