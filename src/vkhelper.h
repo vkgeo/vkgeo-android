@@ -146,7 +146,7 @@ signals:
     void trustedFriendsListUpdateFailed();
     void trackedFriendsListUpdated();
     void trackedFriendsListUpdateFailed();
-    void trackedFriendDataUpdated(const QString &id, const QVariantMap &data);
+    void trackedFriendDataUpdated(const QString &friendUserId, const QVariantMap &friendData);
     void joiningGroupCompleted();
     void joiningGroupFailed();
 

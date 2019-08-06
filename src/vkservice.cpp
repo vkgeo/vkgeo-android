@@ -68,33 +68,33 @@ void VKService::friendsUpdated()
     emit updateTrackedFriendsData(true);
 }
 
-void VKService::trackedFriendDataUpdated(const QString &id, const QVariantMap &data)
+void VKService::trackedFriendDataUpdated(const QString &friend_user_id, const QVariantMap &friend_data)
 {
     auto vk_helper = qobject_cast<VKHelper *>(QObject::sender());
 
     if (vk_helper != nullptr) {
-        if (data.contains("latitude") && data.contains("longitude")) {
-            qreal latitude  = data["latitude"].toDouble();
-            qreal longitude = data["longitude"].toDouble();
+        if (friend_data.contains("latitude") && friend_data.contains("longitude")) {
+            qreal latitude  = friend_data["latitude"].toDouble();
+            qreal longitude = friend_data["longitude"].toDouble();
 
-            if (FriendsData.contains(id)) {
-                QVariantMap frnd = FriendsData[id].toMap();
+            if (FriendsData.contains(friend_user_id)) {
+                QVariantMap frnd = FriendsData[friend_user_id].toMap();
 
                 if (vk_helper->locationValid()) {
                     QGeoCoordinate my_coordinate(vk_helper->locationLatitude(), vk_helper->locationLongitude());
-                    QGeoCoordinate frnd_coordinate(latitude, longitude);
+                    QGeoCoordinate friend_coordinate(latitude, longitude);
 
-                    if (my_coordinate.distanceTo(frnd_coordinate) < NEARBY_DISTANCE) {
+                    if (my_coordinate.distanceTo(friend_coordinate) < NEARBY_DISTANCE) {
                         if (!frnd.contains("nearby") || !frnd["nearby"].toBool()) {
                             frnd["nearby"] = true;
 
                             if (frnd.contains("firstName") && frnd.contains("lastName")) {
-                                QAndroidJniObject j_friend_id   = QAndroidJniObject::fromString(id);
-                                QAndroidJniObject j_friend_name = QAndroidJniObject::fromString(QString("%1 %2").arg(frnd["firstName"].toString())
+                                QAndroidJniObject j_user_id   = QAndroidJniObject::fromString(friend_user_id);
+                                QAndroidJniObject j_user_name = QAndroidJniObject::fromString(QString("%1 %2").arg(frnd["firstName"].toString())
                                                                                                                 .arg(frnd["lastName"].toString()));
 
-                                QtAndroid::androidService().callMethod<void>("showFriendsNearbyNotification", "(Ljava/lang/String;Ljava/lang/String;)V", j_friend_id.object<jstring>(),
-                                                                                                                                                         j_friend_name.object<jstring>());
+                                QtAndroid::androidService().callMethod<void>("showFriendsNearbyNotification", "(Ljava/lang/String;Ljava/lang/String;)V", j_user_id.object<jstring>(),
+                                                                                                                                                         j_user_name.object<jstring>());
                             }
                         }
                     } else {
@@ -102,7 +102,7 @@ void VKService::trackedFriendDataUpdated(const QString &id, const QVariantMap &d
                     }
                 }
 
-                FriendsData[id] = frnd;
+                FriendsData[friend_user_id] = frnd;
             }
         }
     }

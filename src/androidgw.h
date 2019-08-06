@@ -26,8 +26,8 @@ signals:
     void setBannerViewHeight(int height);
 
     void setAuthState(int state);
-    void processResponse(const QString &response, const QString &resp_request_str);
-    void processError(const QString &error_message, const QString &err_request_str);
+    void processResponse(const QString &response, const QString &respRequestStr);
+    void processError(const QString &errorMessage, const QString &errRequestStr);
     void processLocationUpdate(qreal latitude, qreal longitude);
     void processBatteryStatusUpdate(const QString &status, int level);
 };

@@ -9,7 +9,7 @@ import "../../Util.js" as UtilScript
 Item {
     id: mapSwipe
 
-    signal openProfilePage(string user_id)
+    signal openProfilePage(string userId)
 
     function updateMapItemsStates() {
         for (var i = 0; i < map.mapItems.length; i++) {
@@ -296,12 +296,12 @@ Item {
             for (var i = 0; i < map.mapItems.length; i++) {
                 var map_item = map.mapItems[i];
 
-                if (id === map_item.userId) {
-                    if (typeof data.update_time === "number" && isFinite(data.update_time) &&
-                        typeof data.latitude    === "number" && isFinite(data.latitude) &&
-                        typeof data.longitude   === "number" && isFinite(data.longitude)) {
-                        map_item.coordinate = QtPositioning.coordinate(data.latitude, data.longitude);
-                        map_item.updateTime = data.update_time;
+                if (friendUserId === map_item.userId) {
+                    if (typeof friendData.update_time === "number" && isFinite(friendData.update_time) &&
+                        typeof friendData.latitude    === "number" && isFinite(friendData.latitude) &&
+                        typeof friendData.longitude   === "number" && isFinite(friendData.longitude)) {
+                        map_item.coordinate = QtPositioning.coordinate(friendData.latitude, friendData.longitude);
+                        map_item.updateTime = friendData.update_time;
                     }
 
                     break;

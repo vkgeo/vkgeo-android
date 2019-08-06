@@ -284,17 +284,17 @@ void VKHelper::updateTrustedFriendsList(const QVariantList &trusted_friends_list
         }
 
         for (int i = 0; i < trusted_friends_list.count() && i < MaxTrustedFriendsCount; i++) {
-            QString friend_id = trusted_friends_list[i].toString();
+            QString user_id = trusted_friends_list[i].toString();
 
-            user_id_list.append(friend_id);
+            user_id_list.append(user_id);
 
-            if (FriendsData.contains(friend_id)) {
-                QVariantMap frnd = FriendsData[friend_id].toMap();
+            if (FriendsData.contains(user_id)) {
+                QVariantMap frnd = FriendsData[user_id].toMap();
 
                 frnd["trusted"] = true;
                 frnd["tracked"] = false;
 
-                FriendsData[friend_id] = frnd;
+                FriendsData[user_id] = frnd;
             }
         }
 
@@ -334,18 +334,18 @@ void VKHelper::updateTrackedFriendsList(const QVariantList &tracked_friends_list
         }
 
         for (int i = 0; i < tracked_friends_list.count() && i < MaxTrackedFriendsCount; i++) {
-            QString friend_id = tracked_friends_list[i].toString();
+            QString user_id = tracked_friends_list[i].toString();
 
-            user_id_list.append(friend_id);
+            user_id_list.append(user_id);
 
-            if (FriendsData.contains(friend_id)) {
-                QVariantMap frnd = FriendsData[friend_id].toMap();
+            if (FriendsData.contains(user_id)) {
+                QVariantMap frnd = FriendsData[user_id].toMap();
 
                 if (!frnd.contains("trusted") || !frnd["trusted"].toBool()) {
                     frnd["tracked"] = true;
                 }
 
-                FriendsData[friend_id] = frnd;
+                FriendsData[user_id] = frnd;
             }
         }
 
@@ -1045,29 +1045,29 @@ void VKHelper::ProcessFriendsGetResponse(const QString &response, const QVariant
                     }
                 } else if (list_id == TrustedFriendsListId) {
                     for (int i = 0; i < json_items.count() && offset + i < MaxTrustedFriendsCount; i++) {
-                        QString friend_id = QString::number(json_items.at(i).toVariant().toLongLong());
+                        QString user_id = QString::number(json_items.at(i).toVariant().toLongLong());
 
-                        if (FriendsDataTmp.contains(friend_id)) {
-                            QVariantMap frnd = FriendsDataTmp[friend_id].toMap();
+                        if (FriendsDataTmp.contains(user_id)) {
+                            QVariantMap frnd = FriendsDataTmp[user_id].toMap();
 
                             frnd["trusted"] = true;
                             frnd["tracked"] = false;
 
-                            FriendsDataTmp[friend_id] = frnd;
+                            FriendsDataTmp[user_id] = frnd;
                         }
                     }
                 } else if (list_id == TrackedFriendsListId) {
                     for (int i = 0; i < json_items.count() && offset + i < MaxTrackedFriendsCount; i++) {
-                        QString friend_id = QString::number(json_items.at(i).toVariant().toLongLong());
+                        QString user_id = QString::number(json_items.at(i).toVariant().toLongLong());
 
-                        if (FriendsDataTmp.contains(friend_id)) {
-                            QVariantMap frnd = FriendsDataTmp[friend_id].toMap();
+                        if (FriendsDataTmp.contains(user_id)) {
+                            QVariantMap frnd = FriendsDataTmp[user_id].toMap();
 
                             if (!frnd.contains("trusted") || !frnd["trusted"].toBool()) {
                                 frnd["tracked"] = true;
                             }
 
-                            FriendsDataTmp[friend_id] = frnd;
+                            FriendsDataTmp[user_id] = frnd;
                         }
                     }
                 } else {

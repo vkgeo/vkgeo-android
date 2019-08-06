@@ -21,7 +21,7 @@ MapQuickItem {
     property string userId:            ""
     property string photoUrl:          ""
 
-    signal openProfilePage(string user_id)
+    signal openProfilePage(string userId)
 
     sourceItem: Rectangle {
         width:  UtilScript.pt(48)
