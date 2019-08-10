@@ -281,13 +281,17 @@ public class VKGeoActivity extends QtActivity
                             AdRequest.Builder builder = new AdRequest.Builder();
 
                             if (showPersonalizedAds) {
-                                interstitial.loadAd(builder.build());
+                                interstitial.loadAd(builder.setMaxAdContentRating(AdRequest.MAX_AD_CONTENT_RATING_G)
+                                                           .tagForChildDirectedTreatment(true)
+                                                           .build());
                             } else {
                                 Bundle extras = new Bundle();
 
                                 extras.putString("npa", "1");
 
-                                interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                                interstitial.loadAd(builder.setMaxAdContentRating(AdRequest.MAX_AD_CONTENT_RATING_G)
+                                                           .tagForChildDirectedTreatment(true)
+                                                           .addNetworkExtrasBundle(AdMobAdapter.class, extras)
                                                            .build());
                             }
                         }
@@ -305,13 +309,17 @@ public class VKGeoActivity extends QtActivity
                                         AdRequest.Builder builder = new AdRequest.Builder();
 
                                         if (showPersonalizedAds) {
-                                            interstitial.loadAd(builder.build());
+                                            interstitial.loadAd(builder.setMaxAdContentRating(AdRequest.MAX_AD_CONTENT_RATING_G)
+                                                                       .tagForChildDirectedTreatment(true)
+                                                                       .build());
                                         } else {
                                             Bundle extras = new Bundle();
 
                                             extras.putString("npa", "1");
 
-                                            interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                                            interstitial.loadAd(builder.setMaxAdContentRating(AdRequest.MAX_AD_CONTENT_RATING_G)
+                                                                       .tagForChildDirectedTreatment(true)
+                                                                       .addNetworkExtrasBundle(AdMobAdapter.class, extras)
                                                                        .build());
                                         }
                                     }
@@ -324,13 +332,17 @@ public class VKGeoActivity extends QtActivity
                 AdRequest.Builder builder = new AdRequest.Builder();
 
                 if (showPersonalizedAds) {
-                    interstitial.loadAd(builder.build());
+                    interstitial.loadAd(builder.setMaxAdContentRating(AdRequest.MAX_AD_CONTENT_RATING_G)
+                                               .tagForChildDirectedTreatment(true)
+                                               .build());
                 } else {
                     Bundle extras = new Bundle();
 
                     extras.putString("npa", "1");
 
-                    interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                    interstitial.loadAd(builder.setMaxAdContentRating(AdRequest.MAX_AD_CONTENT_RATING_G)
+                                               .tagForChildDirectedTreatment(true)
+                                               .addNetworkExtrasBundle(AdMobAdapter.class, extras)
                                                .build());
                 }
             }
@@ -434,13 +446,17 @@ public class VKGeoActivity extends QtActivity
                     AdRequest.Builder builder = new AdRequest.Builder();
 
                     if (showPersonalizedAds) {
-                        bannerView.loadAd(builder.build());
+                        bannerView.loadAd(builder.setMaxAdContentRating(AdRequest.MAX_AD_CONTENT_RATING_G)
+                                                 .tagForChildDirectedTreatment(true)
+                                                 .build());
                     } else {
                         Bundle extras = new Bundle();
 
                         extras.putString("npa", "1");
 
-                        bannerView.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                        bannerView.loadAd(builder.setMaxAdContentRating(AdRequest.MAX_AD_CONTENT_RATING_G)
+                                                 .tagForChildDirectedTreatment(true)
+                                                 .addNetworkExtrasBundle(AdMobAdapter.class, extras)
                                                  .build());
                     }
                 }
