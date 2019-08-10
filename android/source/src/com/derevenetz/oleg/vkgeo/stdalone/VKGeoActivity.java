@@ -52,13 +52,15 @@ import com.vk.sdk.VKSdk;
 
 public class VKGeoActivity extends QtActivity
 {
-    private boolean                     statusBarVisible    = false,
-                                        showPersonalizedAds = false;
-    private int                         statusBarHeight     = 0;
-    private Messenger                   serviceMessenger    = null;
-    private AdView                      bannerView          = null;
-    private InterstitialAd              interstitial        = null;
-    private HashMap<VKRequest, Boolean> vkRequestTracker    = new HashMap<>();
+    private static final long           AD_RELOAD_ON_FAILURE_DELAY = 60000;
+
+    private boolean                     statusBarVisible           = false,
+                                        showPersonalizedAds        = false;
+    private int                         statusBarHeight            = 0;
+    private Messenger                   serviceMessenger           = null;
+    private AdView                      bannerView                 = null;
+    private InterstitialAd              interstitial               = null;
+    private HashMap<VKRequest, Boolean> vkRequestTracker           = new HashMap<>();
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -324,7 +326,7 @@ public class VKGeoActivity extends QtActivity
                                         }
                                     }
                                 }
-                            }, 60000);
+                            }, AD_RELOAD_ON_FAILURE_DELAY);
                         }
                     }
                 });
