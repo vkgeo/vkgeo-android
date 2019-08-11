@@ -16,8 +16,8 @@ Item {
         anchors.left:    parent.left
         anchors.right:   parent.right
         anchors.margins: UtilScript.pt(4)
-        height:          UtilScript.pt(48)
         z:               1
+        height:          UtilScript.pt(48)
         text:            qsTr("Settings has been updated successfully")
     }
 
@@ -27,8 +27,8 @@ Item {
         anchors.left:    parent.left
         anchors.right:   parent.right
         anchors.margins: UtilScript.pt(4)
-        height:          UtilScript.pt(48)
         z:               1
+        height:          UtilScript.pt(48)
         text:            qsTr("Failed to update settings, please try again later")
         backgroundColor: "red"
     }
@@ -39,8 +39,8 @@ Item {
         anchors.left:    parent.left
         anchors.right:   parent.right
         anchors.margins: UtilScript.pt(4)
-        height:          UtilScript.pt(48)
         z:               1
+        height:          UtilScript.pt(48)
         text:            qsTr("You have successfully joined the group")
     }
 
@@ -50,8 +50,8 @@ Item {
         anchors.left:    parent.left
         anchors.right:   parent.right
         anchors.margins: UtilScript.pt(4)
-        height:          UtilScript.pt(48)
         z:               1
+        height:          UtilScript.pt(48)
         text:            qsTr("Failed to join group, please try again later")
         backgroundColor: "red"
     }
