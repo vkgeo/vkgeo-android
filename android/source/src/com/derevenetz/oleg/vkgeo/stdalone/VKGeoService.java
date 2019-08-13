@@ -103,8 +103,8 @@ public class VKGeoService extends QtService implements LocationListener
     private static native void batteryStatusUpdated(String status, int level);
 
     private static native void vkAuthChanged(boolean authorized);
-    private static native void vkRequestComplete(String request, String response);
-    private static native void vkRequestError(String request, String error_message);
+    private static native void vkRequestCompleted(String request, String response);
+    private static native void vkRequestFailed(String request, String error_message);
 
     @Override
     public void onCreate()
@@ -361,7 +361,7 @@ public class VKGeoService extends QtService implements LocationListener
                                             }
 
                                             for (int i = 0; i < json_request_list.length(); i++) {
-                                                vkRequestError(json_request_list.optString(i), error_str);
+                                                vkRequestFailed(json_request_list.optString(i), error_str);
                                             }
                                         } else if (response.json.has("response")) {
                                             String            error_str = null;
@@ -383,21 +383,21 @@ public class VKGeoService extends QtService implements LocationListener
 
                                             if (error_str == null) {
                                                 for (int i = 0; i < json_request_list.length(); i++) {
-                                                    vkRequestComplete(json_request_list.optString(i), responses.get(i));
+                                                    vkRequestCompleted(json_request_list.optString(i), responses.get(i));
                                                 }
                                             } else {
                                                 for (int i = 0; i < json_request_list.length(); i++) {
-                                                    vkRequestError(json_request_list.optString(i), error_str);
+                                                    vkRequestFailed(json_request_list.optString(i), error_str);
                                                 }
                                             }
                                         } else {
                                             for (int i = 0; i < json_request_list.length(); i++) {
-                                                vkRequestComplete(json_request_list.optString(i), "");
+                                                vkRequestCompleted(json_request_list.optString(i), "");
                                             }
                                         }
                                     } else {
                                         for (int i = 0; i < json_request_list.length(); i++) {
-                                            vkRequestComplete(json_request_list.optString(i), "");
+                                            vkRequestCompleted(json_request_list.optString(i), "");
                                         }
                                     }
                                 }
@@ -421,7 +421,7 @@ public class VKGeoService extends QtService implements LocationListener
                                     }
 
                                     for (int i = 0; i < json_request_list.length(); i++) {
-                                        vkRequestError(json_request_list.optString(i), error_str);
+                                        vkRequestFailed(json_request_list.optString(i), error_str);
                                     }
                                 }
                             }

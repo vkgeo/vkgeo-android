@@ -118,15 +118,15 @@ public:
 
 public slots:
     void setAuthState(int state);
-    void processResponse(const QString &response, const QString &resp_request_str);
-    void processError(const QString &error_message, const QString &err_request_str);
-    void processLocationUpdate(qreal latitude, qreal longitude);
-    void processBatteryStatusUpdate(const QString &status, int level);
+    void handleResponse(const QString &response, const QString &resp_request_str);
+    void handleError(const QString &error_message, const QString &err_request_str);
+    void handleLocationUpdate(qreal latitude, qreal longitude);
+    void handleBatteryStatusUpdate(const QString &status, int level);
 
 private slots:
-    void requestQueueTimerTimeout();
-    void sendDataOnUpdateTimerTimeout();
-    void sendDataTimerTimeout();
+    void handleRequestQueueTimerTimeout();
+    void handleSendDataOnUpdateTimerTimeout();
+    void handleSendDataTimerTimeout();
 
 signals:
     void authStateChanged(int authState);
@@ -162,32 +162,32 @@ private:
 
     void EnqueueRequest(const QVariantMap &request);
 
-    void ProcessNotesGetResponse(const QString &response, const QVariantMap &resp_request);
-    void ProcessNotesGetError(const QVariantMap &err_request);
+    void HandleNotesGetResponse(const QString &response, const QVariantMap &resp_request);
+    void HandleNotesGetError(const QVariantMap &err_request);
 
-    void ProcessNotesAddResponse(const QString &response, const QVariantMap &resp_request);
-    void ProcessNotesAddError(const QVariantMap &err_request);
+    void HandleNotesAddResponse(const QString &response, const QVariantMap &resp_request);
+    void HandleNotesAddError(const QVariantMap &err_request);
 
-    void ProcessNotesDeleteResponse(const QString &response, const QVariantMap &resp_request);
-    void ProcessNotesDeleteError(const QVariantMap &err_request);
+    void HandleNotesDeleteResponse(const QString &response, const QVariantMap &resp_request);
+    void HandleNotesDeleteError(const QVariantMap &err_request);
 
-    void ProcessFriendsGetResponse(const QString &response, const QVariantMap &resp_request);
-    void ProcessFriendsGetError(const QVariantMap &err_request);
+    void HandleFriendsGetResponse(const QString &response, const QVariantMap &resp_request);
+    void HandleFriendsGetError(const QVariantMap &err_request);
 
-    void ProcessFriendsGetListsResponse(const QString &response, const QVariantMap &resp_request);
-    void ProcessFriendsGetListsError(const QVariantMap &err_request);
+    void HandleFriendsGetListsResponse(const QString &response, const QVariantMap &resp_request);
+    void HandleFriendsGetListsError(const QVariantMap &err_request);
 
-    void ProcessFriendsAddListResponse(const QString &response, const QVariantMap &resp_request);
-    void ProcessFriendsAddListError(const QVariantMap &err_request);
+    void HandleFriendsAddListResponse(const QString &response, const QVariantMap &resp_request);
+    void HandleFriendsAddListError(const QVariantMap &err_request);
 
-    void ProcessFriendsEditListResponse(const QString &response, const QVariantMap &resp_request);
-    void ProcessFriendsEditListError(const QVariantMap &err_request);
+    void HandleFriendsEditListResponse(const QString &response, const QVariantMap &resp_request);
+    void HandleFriendsEditListError(const QVariantMap &err_request);
 
-    void ProcessGroupsJoinResponse(const QString &response, const QVariantMap &resp_request);
-    void ProcessGroupsJoinError(const QVariantMap &err_request);
+    void HandleGroupsJoinResponse(const QString &response, const QVariantMap &resp_request);
+    void HandleGroupsJoinError(const QVariantMap &err_request);
 
-    void ProcessUsersGetResponse(const QString &response, const QVariantMap &resp_request);
-    void ProcessUsersGetError(const QVariantMap &err_request);
+    void HandleUsersGetResponse(const QString &response, const QVariantMap &resp_request);
+    void HandleUsersGetError(const QVariantMap &err_request);
 
     enum DataState {
         DataNotUpdated,

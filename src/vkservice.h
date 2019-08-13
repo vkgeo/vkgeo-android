@@ -30,18 +30,18 @@ public:
     static VKService &GetInstance();
 
 public slots:
-    void authStateChanged(int auth_state);
-    void dataSent();
-    void friendsUpdated();
-    void trackedFriendDataUpdated(const QString &friend_user_id, const QVariantMap &friend_data);
+    void handleAuthStateChange(int auth_state);
+    void handleDataSending();
+    void handleFriendsUpdate();
+    void handleTrackedFriendDataUpdate(const QString &friend_user_id, const QVariantMap &friend_data);
 
 private slots:
-    void updateFriendsOnAuthSingleShot();
-    void updateFriendsTimerTimeout();
+    void handleUpdateFriendsOnAuthSingleShot();
+    void handleUpdateFriendsTimerTimeout();
 
 signals:
-    void updateFriends();
-    void updateTrackedFriendsData(bool expedited);
+    void friendsUpdateRequested();
+    void trackedFriendsDataUpdateRequested(bool expedited);
 
 private:
     qint64      LastUpdateFriendsTime;

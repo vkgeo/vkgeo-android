@@ -76,16 +76,16 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     PhotoUrl                         = DEFAULT_PHOTO_URL;
     BigPhotoUrl                      = DEFAULT_PHOTO_URL;
 
-    connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
+    connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::handleRequestQueueTimerTimeout);
 
     RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
 
-    connect(&SendDataOnUpdateTimer, &QTimer::timeout, this, &VKHelper::sendDataOnUpdateTimerTimeout);
+    connect(&SendDataOnUpdateTimer, &QTimer::timeout, this, &VKHelper::handleSendDataOnUpdateTimerTimeout);
 
     SendDataOnUpdateTimer.setInterval(SEND_DATA_ON_UPDATE_TIMER_INTERVAL);
     SendDataOnUpdateTimer.setSingleShot(true);
 
-    connect(&SendDataTimer, &QTimer::timeout, this, &VKHelper::sendDataTimerTimeout);
+    connect(&SendDataTimer, &QTimer::timeout, this, &VKHelper::handleSendDataTimerTimeout);
 
     SendDataTimer.setInterval(SEND_DATA_TIMER_INTERVAL);
 }
@@ -438,7 +438,7 @@ void VKHelper::setAuthState(int state)
     }
 }
 
-void VKHelper::processResponse(const QString &response, const QString &resp_request_str)
+void VKHelper::handleResponse(const QString &response, const QString &resp_request_str)
 {
     QVariantMap resp_request = QJsonDocument::fromJson(resp_request_str.toUtf8()).toVariant().toMap();
 
@@ -446,32 +446,32 @@ void VKHelper::processResponse(const QString &response, const QString &resp_requ
         ContextTrackerDelRequest(resp_request);
 
         if (resp_request["method"].toString() == "notes.get") {
-            ProcessNotesGetResponse(response, resp_request);
+            HandleNotesGetResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "notes.add") {
-            ProcessNotesAddResponse(response, resp_request);
+            HandleNotesAddResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "notes.delete") {
-            ProcessNotesDeleteResponse(response, resp_request);
+            HandleNotesDeleteResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "friends.get") {
-            ProcessFriendsGetResponse(response, resp_request);
+            HandleFriendsGetResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "friends.getLists") {
-            ProcessFriendsGetListsResponse(response, resp_request);
+            HandleFriendsGetListsResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "friends.addList") {
-            ProcessFriendsAddListResponse(response, resp_request);
+            HandleFriendsAddListResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "friends.editList") {
-            ProcessFriendsEditListResponse(response, resp_request);
+            HandleFriendsEditListResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "groups.join") {
-            ProcessGroupsJoinResponse(response, resp_request);
+            HandleGroupsJoinResponse(response, resp_request);
         } else if (resp_request["method"].toString() == "users.get") {
-            ProcessUsersGetResponse(response, resp_request);
+            HandleUsersGetResponse(response, resp_request);
         } else {
-            qWarning() << QString("processResponse() : unknown request method: %1").arg(resp_request["method"].toString());
+            qWarning() << QString("handleResponse() : unknown request method: %1").arg(resp_request["method"].toString());
         }
     } else {
-        qWarning() << "processResponse() : invalid request";
+        qWarning() << "handleResponse() : invalid request";
     }
 }
 
-void VKHelper::processError(const QString &error_message, const QString &err_request_str)
+void VKHelper::handleError(const QString &error_message, const QString &err_request_str)
 {
     QVariantMap err_request = QJsonDocument::fromJson(err_request_str.toUtf8()).toVariant().toMap();
 
@@ -479,69 +479,69 @@ void VKHelper::processError(const QString &error_message, const QString &err_req
         ContextTrackerDelRequest(err_request);
 
         if (err_request["method"].toString() == "notes.get") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
+            qWarning() << QString("handleError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                           .arg(error_message);
 
-            ProcessNotesGetError(err_request);
+            HandleNotesGetError(err_request);
         } else if (err_request["method"].toString() == "notes.add") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
+            qWarning() << QString("handleError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                           .arg(error_message);
 
-            ProcessNotesAddError(err_request);
+            HandleNotesAddError(err_request);
         } else if (err_request["method"].toString() == "notes.delete") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
+            qWarning() << QString("handleError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                           .arg(error_message);
 
-            ProcessNotesDeleteError(err_request);
+            HandleNotesDeleteError(err_request);
         } else if (err_request["method"].toString() == "friends.get") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
+            qWarning() << QString("handleError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                           .arg(error_message);
 
-            ProcessFriendsGetError(err_request);
+            HandleFriendsGetError(err_request);
         } else if (err_request["method"].toString() == "friends.getLists") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
+            qWarning() << QString("handleError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                           .arg(error_message);
 
-            ProcessFriendsGetListsError(err_request);
+            HandleFriendsGetListsError(err_request);
         } else if (err_request["method"].toString() == "friends.addList") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
+            qWarning() << QString("handleError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                           .arg(error_message);
 
-            ProcessFriendsAddListError(err_request);
+            HandleFriendsAddListError(err_request);
         } else if (err_request["method"].toString() == "friends.editList") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
+            qWarning() << QString("handleError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                           .arg(error_message);
 
-            ProcessFriendsEditListError(err_request);
+            HandleFriendsEditListError(err_request);
         } else if (err_request["method"].toString() == "groups.join") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
+            qWarning() << QString("handleError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                           .arg(error_message);
 
-            ProcessGroupsJoinError(err_request);
+            HandleGroupsJoinError(err_request);
         } else if (err_request["method"].toString() == "users.get") {
-            qWarning() << QString("processError() : %1 request failed : %2").arg(err_request["method"].toString())
-                                                                            .arg(error_message);
+            qWarning() << QString("handleError() : %1 request failed : %2").arg(err_request["method"].toString())
+                                                                           .arg(error_message);
 
-            ProcessUsersGetError(err_request);
+            HandleUsersGetError(err_request);
         } else {
-            qWarning() << QString("processError() : unknown request method: %1").arg(err_request["method"].toString());
+            qWarning() << QString("handleError() : unknown request method: %1").arg(err_request["method"].toString());
         }
     } else {
-        qWarning() << "processError() : invalid request";
+        qWarning() << "handleError() : invalid request";
     }
 }
 
-void VKHelper::processLocationUpdate(qreal latitude, qreal longitude)
+void VKHelper::handleLocationUpdate(qreal latitude, qreal longitude)
 {
     updateLocation(latitude, longitude);
 }
 
-void VKHelper::processBatteryStatusUpdate(const QString &status, int level)
+void VKHelper::handleBatteryStatusUpdate(const QString &status, int level)
 {
     updateBatteryStatus(status, level);
 }
 
-void VKHelper::requestQueueTimerTimeout()
+void VKHelper::handleRequestQueueTimerTimeout()
 {
     if (!RequestQueue.isEmpty()) {
         QVariantList request_list;
@@ -578,12 +578,12 @@ void VKHelper::requestQueueTimerTimeout()
     }
 }
 
-void VKHelper::sendDataOnUpdateTimerTimeout()
+void VKHelper::handleSendDataOnUpdateTimerTimeout()
 {
     SendData(false);
 }
 
-void VKHelper::sendDataTimerTimeout()
+void VKHelper::handleSendDataTimerTimeout()
 {
     SendData(false);
 }
@@ -725,7 +725,7 @@ void VKHelper::EnqueueRequest(const QVariantMap &request)
     }
 }
 
-void VKHelper::ProcessNotesGetResponse(const QString &response, const QVariantMap &resp_request)
+void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "sendData") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -801,13 +801,13 @@ void VKHelper::ProcessNotesGetResponse(const QString &response, const QVariantMa
 
                     EnqueueRequest(request);
                 } else {
-                    qWarning() << "ProcessNotesGetResponse() : invalid request";
+                    qWarning() << "HandleNotesGetResponse() : invalid request";
                 }
             } else {
-                qWarning() << "ProcessNotesGetResponse() : invalid response";
+                qWarning() << "HandleNotesGetResponse() : invalid response";
             }
         } else {
-            qWarning() << "ProcessNotesGetResponse() : invalid json";
+            qWarning() << "HandleNotesGetResponse() : invalid json";
         }
     } else if (resp_request["context"].toString() == "updateTrackedFriendsData") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -847,10 +847,10 @@ void VKHelper::ProcessNotesGetResponse(const QString &response, const QVariantMa
 
                                     emit trackedFriendDataUpdated(user_id, QJsonDocument::fromJson(QByteArray::fromBase64(note_base64.toUtf8())).toVariant().toMap());
                                 } else {
-                                    qWarning() << "ProcessNotesGetResponse() : invalid user data";
+                                    qWarning() << "HandleNotesGetResponse() : invalid user data";
                                 }
                             } else {
-                                qWarning() << "ProcessNotesGetResponse() : invalid request";
+                                qWarning() << "HandleNotesGetResponse() : invalid request";
                             }
 
                             break;
@@ -875,24 +875,24 @@ void VKHelper::ProcessNotesGetResponse(const QString &response, const QVariantMa
                             EnqueueRequest(request);
                         }
                     } else {
-                        qWarning() << "ProcessNotesGetResponse() : invalid request";
+                        qWarning() << "HandleNotesGetResponse() : invalid request";
                     }
                 }
             } else {
-                qWarning() << "ProcessNotesGetResponse() : invalid response";
+                qWarning() << "HandleNotesGetResponse() : invalid response";
             }
         } else {
-            qWarning() << "ProcessNotesGetResponse() : invalid json";
+            qWarning() << "HandleNotesGetResponse() : invalid json";
         }
     }
 }
 
-void VKHelper::ProcessNotesGetError(const QVariantMap &err_request)
+void VKHelper::HandleNotesGetError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessNotesAddResponse(const QString &response, const QVariantMap &resp_request)
+void VKHelper::HandleNotesAddResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
 
@@ -927,23 +927,23 @@ void VKHelper::ProcessNotesAddResponse(const QString &response, const QVariantMa
     }
 }
 
-void VKHelper::ProcessNotesAddError(const QVariantMap &err_request)
+void VKHelper::HandleNotesAddError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessNotesDeleteResponse(const QString &response, const QVariantMap &resp_request)
+void VKHelper::HandleNotesDeleteResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
     Q_UNUSED(resp_request)
 }
 
-void VKHelper::ProcessNotesDeleteError(const QVariantMap &err_request)
+void VKHelper::HandleNotesDeleteError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessFriendsGetResponse(const QString &response, const QVariantMap &resp_request)
+void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "updateFriends") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1040,7 +1040,7 @@ void VKHelper::ProcessFriendsGetResponse(const QString &response, const QVariant
                                 FriendsDataTmp[frnd["userId"].toString()] = frnd;
                             }
                         } else {
-                            qWarning() << "ProcessFriendsGetResponse() : invalid entry";
+                            qWarning() << "HandleFriendsGetResponse() : invalid entry";
                         }
                     }
                 } else if (list_id == TrustedFriendsListId) {
@@ -1071,7 +1071,7 @@ void VKHelper::ProcessFriendsGetResponse(const QString &response, const QVariant
                         }
                     }
                 } else {
-                    qWarning() << "ProcessFriendsGetResponse() : unknown list id";
+                    qWarning() << "HandleFriendsGetResponse() : unknown list id";
                 }
 
                 if (json_items.count() > 0 && offset + json_items.count() < friends_count) {
@@ -1108,20 +1108,20 @@ void VKHelper::ProcessFriendsGetResponse(const QString &response, const QVariant
                     emit friendsUpdated();
                 }
             } else {
-                qWarning() << "ProcessFriendsGetResponse() : invalid response";
+                qWarning() << "HandleFriendsGetResponse() : invalid response";
             }
         } else {
-            qWarning() << "ProcessFriendsGetResponse() : invalid json";
+            qWarning() << "HandleFriendsGetResponse() : invalid json";
         }
     }
 }
 
-void VKHelper::ProcessFriendsGetError(const QVariantMap &err_request)
+void VKHelper::HandleFriendsGetError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }
 
-void VKHelper::ProcessFriendsGetListsResponse(const QString &response, const QVariantMap &resp_request)
+void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "sendData") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1170,13 +1170,13 @@ void VKHelper::ProcessFriendsGetListsResponse(const QString &response, const QVa
 
                     EnqueueRequest(request);
                 } else {
-                    qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+                    qWarning() << "HandleFriendsGetListsResponse() : invalid request";
                 }
             } else {
-                qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
+                qWarning() << "HandleFriendsGetListsResponse() : invalid response";
             }
         } else {
-            qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
+            qWarning() << "HandleFriendsGetListsResponse() : invalid json";
         }
     } else if (resp_request["context"].toString() == "updateFriends") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1241,10 +1241,10 @@ void VKHelper::ProcessFriendsGetListsResponse(const QString &response, const QVa
                     emit friendsUpdated();
                 }
             } else {
-                qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
+                qWarning() << "HandleFriendsGetListsResponse() : invalid response";
             }
         } else {
-            qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
+            qWarning() << "HandleFriendsGetListsResponse() : invalid json";
         }
     } else if (resp_request["context"].toString() == "updateTrustedFriendsList") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1295,17 +1295,17 @@ void VKHelper::ProcessFriendsGetListsResponse(const QString &response, const QVa
 
                     EnqueueRequest(request);
                 } else {
-                    qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+                    qWarning() << "HandleFriendsGetListsResponse() : invalid request";
 
                     emit trustedFriendsListUpdateFailed();
                 }
             } else {
-                qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
+                qWarning() << "HandleFriendsGetListsResponse() : invalid response";
 
                 emit trustedFriendsListUpdateFailed();
             }
         } else {
-            qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
+            qWarning() << "HandleFriendsGetListsResponse() : invalid json";
 
             emit trustedFriendsListUpdateFailed();
         }
@@ -1358,24 +1358,24 @@ void VKHelper::ProcessFriendsGetListsResponse(const QString &response, const QVa
 
                     EnqueueRequest(request);
                 } else {
-                    qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+                    qWarning() << "HandleFriendsGetListsResponse() : invalid request";
 
                     emit trackedFriendsListUpdateFailed();
                 }
             } else {
-                qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
+                qWarning() << "HandleFriendsGetListsResponse() : invalid response";
 
                 emit trackedFriendsListUpdateFailed();
             }
         } else {
-            qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
+            qWarning() << "HandleFriendsGetListsResponse() : invalid json";
 
             emit trackedFriendsListUpdateFailed();
         }
     }
 }
 
-void VKHelper::ProcessFriendsGetListsError(const QVariantMap &err_request)
+void VKHelper::HandleFriendsGetListsError(const QVariantMap &err_request)
 {
     if (err_request["context"].toString() == "updateTrustedFriendsList") {
         emit trustedFriendsListUpdateFailed();
@@ -1384,7 +1384,7 @@ void VKHelper::ProcessFriendsGetListsError(const QVariantMap &err_request)
     }
 }
 
-void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVariantMap &resp_request)
+void VKHelper::HandleFriendsAddListResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "updateTrustedFriendsList") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1397,12 +1397,12 @@ void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVar
 
                 emit trustedFriendsListUpdated();
             } else {
-                qWarning() << "ProcessFriendsAddListResponse() : invalid response";
+                qWarning() << "HandleFriendsAddListResponse() : invalid response";
 
                 emit trustedFriendsListUpdateFailed();
             }
         } else {
-            qWarning() << "ProcessFriendsAddListResponse() : invalid json";
+            qWarning() << "HandleFriendsAddListResponse() : invalid json";
 
             emit trustedFriendsListUpdateFailed();
         }
@@ -1417,19 +1417,19 @@ void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVar
 
                 emit trackedFriendsListUpdated();
             } else {
-                qWarning() << "ProcessFriendsAddListResponse() : invalid response";
+                qWarning() << "HandleFriendsAddListResponse() : invalid response";
 
                 emit trackedFriendsListUpdateFailed();
             }
         } else {
-            qWarning() << "ProcessFriendsAddListResponse() : invalid json";
+            qWarning() << "HandleFriendsAddListResponse() : invalid json";
 
             emit trackedFriendsListUpdateFailed();
         }
     }
 }
 
-void VKHelper::ProcessFriendsAddListError(const QVariantMap &err_request)
+void VKHelper::HandleFriendsAddListError(const QVariantMap &err_request)
 {
     if (err_request["context"].toString() == "updateTrustedFriendsList") {
         emit trustedFriendsListUpdateFailed();
@@ -1438,7 +1438,7 @@ void VKHelper::ProcessFriendsAddListError(const QVariantMap &err_request)
     }
 }
 
-void VKHelper::ProcessFriendsEditListResponse(const QString &response, const QVariantMap &resp_request)
+void VKHelper::HandleFriendsEditListResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
 
@@ -1449,7 +1449,7 @@ void VKHelper::ProcessFriendsEditListResponse(const QString &response, const QVa
     }
 }
 
-void VKHelper::ProcessFriendsEditListError(const QVariantMap &err_request)
+void VKHelper::HandleFriendsEditListError(const QVariantMap &err_request)
 {
     if (err_request["context"].toString() == "updateTrustedFriendsList") {
         TrustedFriendsListId = "";
@@ -1462,7 +1462,7 @@ void VKHelper::ProcessFriendsEditListError(const QVariantMap &err_request)
     }
 }
 
-void VKHelper::ProcessGroupsJoinResponse(const QString &response, const QVariantMap &resp_request)
+void VKHelper::HandleGroupsJoinResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
 
@@ -1471,14 +1471,14 @@ void VKHelper::ProcessGroupsJoinResponse(const QString &response, const QVariant
     }
 }
 
-void VKHelper::ProcessGroupsJoinError(const QVariantMap &err_request)
+void VKHelper::HandleGroupsJoinError(const QVariantMap &err_request)
 {
     if (err_request["context"].toString() == "joinGroup") {
         emit joiningGroupFailed();
     }
 }
 
-void VKHelper::ProcessUsersGetResponse(const QString &response, const QVariantMap &resp_request)
+void VKHelper::HandleUsersGetResponse(const QString &response, const QVariantMap &resp_request)
 {
     if (resp_request["context"].toString() == "updateUser") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1529,15 +1529,15 @@ void VKHelper::ProcessUsersGetResponse(const QString &response, const QVariantMa
 
                 emit bigPhotoUrlChanged(BigPhotoUrl);
             } else {
-                qWarning() << "ProcessUsersGetResponse() : invalid response";
+                qWarning() << "HandleUsersGetResponse() : invalid response";
             }
         } else {
-            qWarning() << "ProcessUsersGetResponse() : invalid json";
+            qWarning() << "HandleUsersGetResponse() : invalid json";
         }
     }
 }
 
-void VKHelper::ProcessUsersGetError(const QVariantMap &err_request)
+void VKHelper::HandleUsersGetError(const QVariantMap &err_request)
 {
     Q_UNUSED(err_request)
 }

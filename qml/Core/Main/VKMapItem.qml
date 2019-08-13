@@ -21,7 +21,7 @@ MapQuickItem {
     property string userId:            ""
     property string photoUrl:          ""
 
-    signal openProfilePage(string userId)
+    signal profilePageRequested(string userId)
 
     sourceItem: Rectangle {
         width:  UtilScript.pt(48)
@@ -66,7 +66,7 @@ MapQuickItem {
             anchors.fill: parent
 
             onClicked: {
-                vkMapItem.openProfilePage(vkMapItem.userId);
+                vkMapItem.profilePageRequested(vkMapItem.userId);
             }
         }
     }

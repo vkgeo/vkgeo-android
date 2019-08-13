@@ -23,13 +23,13 @@ public:
     static AndroidGW &GetInstance();
 
 signals:
-    void setBannerViewHeight(int height);
+    void bannerViewHeightChanged(int bannerViewHeight);
 
-    void setAuthState(int state);
-    void processResponse(const QString &response, const QString &respRequestStr);
-    void processError(const QString &errorMessage, const QString &errRequestStr);
-    void processLocationUpdate(qreal latitude, qreal longitude);
-    void processBatteryStatusUpdate(const QString &status, int level);
+    void authStateChanged(int authState);
+    void vkRequestCompleted(const QString &response, const QString &request);
+    void vkRequestFailed(const QString &errorMessage, const QString &request);
+    void locationUpdated(qreal latitude, qreal longitude);
+    void batteryStatusUpdated(const QString &status, int level);
 };
 
 #endif // ANDROIDGW_H
