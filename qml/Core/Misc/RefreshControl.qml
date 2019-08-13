@@ -18,7 +18,7 @@ Image {
     property real listViewContentY:       0.0
     property real shiftDenominator:       2.0
 
-    signal refresh()
+    signal refreshRequested()
 
     onOpacityChanged: {
         if (opacity >= 1.0) {
@@ -71,7 +71,7 @@ Image {
         onTriggered: {
             refreshAnimation.start();
 
-            refreshControl.refresh();
+            refreshControl.refreshRequested();
         }
     }
 }

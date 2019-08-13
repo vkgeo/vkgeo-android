@@ -9,7 +9,7 @@ import "../../Util.js" as UtilScript
 Item {
     id: mapSwipe
 
-    signal openProfilePage(string userId)
+    signal profilePageRequested(string userId)
 
     function updateMapItemsStates() {
         for (var i = 0; i < map.mapItems.length; i++) {
@@ -290,7 +290,7 @@ Item {
                     if (frnd.trusted || frnd.tracked) {
                         var new_map_item = component.createObject(map, {"userId": frnd.userId, "photoUrl": frnd.photoUrl});
 
-                        new_map_item.openProfilePage.connect(mapSwipe.openProfilePage);
+                        new_map_item.profilePageRequested.connect(mapSwipe.profilePageRequested);
 
                         map.addMapItem(new_map_item);
 
@@ -349,7 +349,7 @@ Item {
             map.myMapItem.userId   = "";
             map.myMapItem.photoUrl = Qt.binding(function() { return VKHelper.photoUrl; });
 
-            map.myMapItem.openProfilePage.connect(openProfilePage);
+            map.myMapItem.profilePageRequested.connect(profilePageRequested);
 
             map.addMapItem(map.myMapItem);
         } else {

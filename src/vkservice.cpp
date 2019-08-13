@@ -10,7 +10,7 @@ VKService::VKService(QObject *parent) : QObject(parent)
 {
     LastUpdateFriendsTime = 0;
 
-    connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::updateFriendsTimerTimeout);
+    connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::handleUpdateFriendsTimerTimeout);
 
     UpdateFriendsTimer.setInterval(UPDATE_FRIENDS_TIMER_INTERVAL);
     UpdateFriendsTimer.start();
@@ -23,23 +23,23 @@ VKService &VKService::GetInstance()
     return instance;
 }
 
-void VKService::authStateChanged(int auth_state)
+void VKService::handleAuthStateChange(int auth_state)
 {
     if (auth_state == VKAuthState::StateNotAuthorized) {
         QtAndroid::androidService().callMethod<void>("showNotLoggedInNotification");
     } else if (auth_state == VKAuthState::StateAuthorized) {
         QtAndroid::androidService().callMethod<void>("hideNotLoggedInNotification");
 
-        QTimer::singleShot(UPDATE_FRIENDS_ON_AUTH_DELAY, this, &VKService::updateFriendsOnAuthSingleShot);
+        QTimer::singleShot(UPDATE_FRIENDS_ON_AUTH_DELAY, this, &VKService::handleUpdateFriendsOnAuthSingleShot);
     }
 }
 
-void VKService::dataSent()
+void VKService::handleDataSending()
 {
-    emit updateTrackedFriendsData(true);
+    emit trackedFriendsDataUpdateRequested(true);
 }
 
-void VKService::friendsUpdated()
+void VKService::handleFriendsUpdate()
 {
     auto vk_helper = qobject_cast<VKHelper *>(QObject::sender());
 
@@ -65,10 +65,10 @@ void VKService::friendsUpdated()
         FriendsData = friends_data;
     }
 
-    emit updateTrackedFriendsData(true);
+    emit trackedFriendsDataUpdateRequested(true);
 }
 
-void VKService::trackedFriendDataUpdated(const QString &friend_user_id, const QVariantMap &friend_data)
+void VKService::handleTrackedFriendDataUpdate(const QString &friend_user_id, const QVariantMap &friend_data)
 {
     auto vk_helper = qobject_cast<VKHelper *>(QObject::sender());
 
@@ -108,18 +108,18 @@ void VKService::trackedFriendDataUpdated(const QString &friend_user_id, const QV
     }
 }
 
-void VKService::updateFriendsOnAuthSingleShot()
+void VKService::handleUpdateFriendsOnAuthSingleShot()
 {
-    emit updateFriends();
+    emit friendsUpdateRequested();
 }
 
-void VKService::updateFriendsTimerTimeout()
+void VKService::handleUpdateFriendsTimerTimeout()
 {
     qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastUpdateFriendsTime;
 
     if (elapsed < 0 || elapsed > UPDATE_FRIENDS_INTERVAL) {
         LastUpdateFriendsTime = QDateTime::currentSecsSinceEpoch();
 
-        emit updateFriends();
+        emit friendsUpdateRequested();
     }
 }

@@ -13,7 +13,7 @@ Item {
 
     property var friendsList: []
 
-    signal locateFriendOnMap(string userId)
+    signal locationOnMapRequested(string userId)
 
     function updateModel() {
         friendsListModel.clear();
@@ -67,7 +67,7 @@ Item {
                         profile_page.status            = frnd.status;
                         profile_page.batteryStatus     = frnd.batteryStatus;
 
-                        profile_page.locateOnMap.connect(friendsSwipe.locateFriendOnMap);
+                        profile_page.locationOnMapRequested.connect(friendsSwipe.locationOnMapRequested);
 
                         break;
                     }
@@ -134,7 +134,7 @@ Item {
                 listViewOriginY:          friendsListView.originY
                 listViewContentY:         friendsListView.contentY
 
-                onRefresh: {
+                onRefreshRequested: {
                     VKHelper.updateFriends();
                 }
             }
@@ -254,7 +254,7 @@ Item {
 
                                     onClicked: {
                                         if (locationAvailable) {
-                                            friendDelegate.listView.locateFriendOnMap(userId);
+                                            friendDelegate.listView.locateOnMap(userId);
                                         }
                                     }
                                 }
@@ -271,8 +271,8 @@ Item {
                     friendsSwipe.openProfilePage(user_id);
                 }
 
-                function locateFriendOnMap(user_id) {
-                    friendsSwipe.locateFriendOnMap(user_id);
+                function locateOnMap(user_id) {
+                    friendsSwipe.locationOnMapRequested(user_id);
                 }
             }
         }

@@ -113,8 +113,8 @@ public class VKGeoActivity extends QtActivity
     private static native void bannerViewHeightUpdated(int height);
 
     private static native void vkAuthChanged(boolean authorized);
-    private static native void vkRequestComplete(String request, String response);
-    private static native void vkRequestError(String request, String error_message);
+    private static native void vkRequestCompleted(String request, String response);
+    private static native void vkRequestFailed(String request, String error_message);
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -619,7 +619,7 @@ public class VKGeoActivity extends QtActivity
                                             }
 
                                             for (int i = 0; i < json_request_list.length(); i++) {
-                                                vkRequestError(json_request_list.optString(i), error_str);
+                                                vkRequestFailed(json_request_list.optString(i), error_str);
                                             }
                                         } else if (response.json.has("response")) {
                                             String            error_str = null;
@@ -641,21 +641,21 @@ public class VKGeoActivity extends QtActivity
 
                                             if (error_str == null) {
                                                 for (int i = 0; i < json_request_list.length(); i++) {
-                                                    vkRequestComplete(json_request_list.optString(i), responses.get(i));
+                                                    vkRequestCompleted(json_request_list.optString(i), responses.get(i));
                                                 }
                                             } else {
                                                 for (int i = 0; i < json_request_list.length(); i++) {
-                                                    vkRequestError(json_request_list.optString(i), error_str);
+                                                    vkRequestFailed(json_request_list.optString(i), error_str);
                                                 }
                                             }
                                         } else {
                                             for (int i = 0; i < json_request_list.length(); i++) {
-                                                vkRequestComplete(json_request_list.optString(i), "");
+                                                vkRequestCompleted(json_request_list.optString(i), "");
                                             }
                                         }
                                     } else {
                                         for (int i = 0; i < json_request_list.length(); i++) {
-                                            vkRequestComplete(json_request_list.optString(i), "");
+                                            vkRequestCompleted(json_request_list.optString(i), "");
                                         }
                                     }
                                 }
@@ -674,7 +674,7 @@ public class VKGeoActivity extends QtActivity
                                     }
 
                                     for (int i = 0; i < json_request_list.length(); i++) {
-                                        vkRequestError(json_request_list.optString(i), error_str);
+                                        vkRequestFailed(json_request_list.optString(i), error_str);
                                     }
                                 }
                             }
