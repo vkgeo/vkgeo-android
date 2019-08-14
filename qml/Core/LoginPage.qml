@@ -43,18 +43,23 @@ Page {
                 Layout.alignment:     Qt.AlignVCenter
             }
 
-            Image {
+            Rectangle {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(140)
-                source:           "qrc:/resources/images/login/button_login.png"
-                fillMode:         Image.PreserveAspectFit
+                color:            "transparent"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                MouseArea {
+                Image {
                     anchors.fill: parent
+                    source:       "qrc:/resources/images/login/button_login.png"
+                    fillMode:     Image.PreserveAspectFit
 
-                    onClicked: {
-                        VKHelper.login();
+                    MouseArea {
+                        anchors.fill: parent
+
+                        onClicked: {
+                            VKHelper.login();
+                        }
                     }
                 }
             }
