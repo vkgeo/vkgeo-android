@@ -12,7 +12,7 @@
 
 #include "vkhelper.h"
 
-const QString VKHelper::AUTH_SCOPE               ("[ \"friends\", \"notes\", \"groups\", \"offline\" ]");
+const QString VKHelper::AUTH_SCOPE               ("[\"friends\", \"notes\", \"groups\", \"offline\"]");
 const QString VKHelper::DEFAULT_PHOTO_URL        ("https://vk.com/images/camera_100.png");
 const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
