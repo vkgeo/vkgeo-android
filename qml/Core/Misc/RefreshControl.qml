@@ -8,8 +8,8 @@ Image {
     height:   UtilScript.pt(32)
     source:   "qrc:/resources/images/misc/refresh.png"
     fillMode: Image.PreserveAspectFit
-    rotation: calculateRotation(height, listViewOriginY, listViewContentY, shiftDenominator, refreshAnimation.running)
-    opacity:  calculateOpacity(height, listViewOriginY, listViewContentY, shiftDenominator)
+    rotation: controlRotation(height, listViewOriginY, listViewContentY, shiftDenominator, refreshAnimation.running)
+    opacity:  controlOpacity(height, listViewOriginY, listViewContentY, shiftDenominator)
     visible:  listViewContentY < listViewOriginY
 
     readonly property int refreshTimeout: 500
@@ -36,7 +36,7 @@ Image {
         }
     }
 
-    function calculateRotation(height, list_view_origin_y, list_view_content_y, shift_denominator, animation_running) {
+    function controlRotation(height, list_view_origin_y, list_view_content_y, shift_denominator, animation_running) {
         if (animation_running) {
             return rotation;
         } else if (height > 0 && list_view_content_y < list_view_origin_y && shift_denominator > 0) {
@@ -46,7 +46,7 @@ Image {
         }
     }
 
-    function calculateOpacity(height, list_view_origin_y, list_view_content_y, shift_denominator) {
+    function controlOpacity(height, list_view_origin_y, list_view_content_y, shift_denominator) {
         if (height > 0 && list_view_content_y < list_view_origin_y && shift_denominator > 0) {
             return Math.min(1.0, 1.0 * ((list_view_origin_y - list_view_content_y) / height) / shift_denominator);
         } else {

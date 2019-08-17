@@ -94,7 +94,7 @@ Item {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                textToShow(VKHelper.maxTrustedFriendsCount)
+                text:                textText(VKHelper.maxTrustedFriendsCount)
                 color:               "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -106,7 +106,7 @@ Item {
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
 
-                function textToShow(max_count) {
+                function textText(max_count) {
                     if (max_count > 0) {
                         return qsTr("Currently you can have up to %1 trusted friends.").arg(max_count);
                     } else {
@@ -163,7 +163,7 @@ Item {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                textToShow(VKHelper.maxTrackedFriendsCount)
+                text:                textText(VKHelper.maxTrackedFriendsCount)
                 color:               "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -175,7 +175,7 @@ Item {
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
 
-                function textToShow(max_count) {
+                function textText(max_count) {
                     if (max_count > 0) {
                         return qsTr("Currently you can have up to %1 tracked friends.").arg(max_count);
                     } else {
