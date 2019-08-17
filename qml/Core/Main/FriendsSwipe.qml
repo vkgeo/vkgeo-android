@@ -237,11 +237,11 @@ Item {
 
                             Image {
                                 anchors.fill: parent
-                                source:       buttonToShow(locationAvailable)
+                                source:       imageSource(locationAvailable)
                                 fillMode:     Image.PreserveAspectFit
                                 visible:      locationAvailable || trusted || tracked
 
-                                function buttonToShow(location_available) {
+                                function imageSource(location_available) {
                                     if (location_available) {
                                         return "qrc:/resources/images/main/button_show_on_map.png";
                                     } else {

@@ -154,13 +154,13 @@ Page {
                     z:        1
                     width:    UtilScript.pt(16)
                     height:   UtilScript.pt(24)
-                    source:   imageToShow(profilePage.batteryStatus, profilePage.batteryLevel)
+                    source:   imageSource(profilePage.batteryStatus, profilePage.batteryLevel)
                     fillMode: Image.PreserveAspectFit
                     visible:  imageVisible(profilePage.batteryStatus)
 
                     readonly property real angle: Math.PI / 4
 
-                    function imageToShow(battery_status, battery_level) {
+                    function imageSource(battery_status, battery_level) {
                         if (battery_level < 25) {
                             if (battery_status === "CHARGING") {
                                 return "qrc:/resources/images/profile/avatar_battery_25_charging_label.png";
