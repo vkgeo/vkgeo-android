@@ -54,7 +54,7 @@ Image {
         }
     }
 
-    PropertyAnimation {
+    NumberAnimation {
         id:       refreshAnimation
         target:   refreshControl
         property: "rotation"
