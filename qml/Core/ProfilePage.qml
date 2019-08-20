@@ -270,7 +270,8 @@ Page {
 
                 onClicked: {
                     Qt.openUrlExternally("https://www.google.com/maps/dir/?api=1&destination=%1"
-                                         .arg(encodeURIComponent(profilePage.latitude + "," + profilePage.longitude)));
+                                         .arg(encodeURIComponent("%1,%2".arg(profilePage.latitude)
+                                                                        .arg(profilePage.longitude))));
                 }
             }
 
