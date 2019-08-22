@@ -260,9 +260,8 @@ public class VKGeoActivity extends QtActivity
         }
     }
 
-    public void initAds(String app_id, String interstitial_unit_id)
+    public void initAds(String interstitial_unit_id)
     {
-        final String  f_app_id               = app_id;
         final String  f_interstitial_unit_id = interstitial_unit_id;
         final Context f_context              = this;
 
@@ -274,7 +273,7 @@ public class VKGeoActivity extends QtActivity
                                                            .toBuilder().setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_G)
                                                                        .build());
 
-                MobileAds.initialize(f_context, f_app_id);
+                MobileAds.initialize(f_context);
 
                 interstitial = new InterstitialAd(f_context);
 
