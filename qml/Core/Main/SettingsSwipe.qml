@@ -219,7 +219,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    mainWindow.showAdMobConsentDialog();
+                    adMobConsentDialog.open();
                 }
             }
 
