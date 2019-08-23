@@ -159,10 +159,6 @@ ApplicationWindow {
         }
     }
 
-    function showAdMobConsentDialog() {
-        adMobConsentDialog.open();
-    }
-
     Store {
         id: store
 
