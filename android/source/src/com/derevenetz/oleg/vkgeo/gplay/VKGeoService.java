@@ -200,10 +200,8 @@ public class VKGeoService extends QtService implements LocationListener
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras)
     {
-        if (locationProvider != null && locationProvider.equals(provider)) {
-            if (status == LocationProvider.OUT_OF_SERVICE) {
-                locationProvider = null;
-            }
+        if (locationProvider != null && locationProvider.equals(provider) && status == LocationProvider.OUT_OF_SERVICE) {
+            locationProvider = null;
         }
     }
 
