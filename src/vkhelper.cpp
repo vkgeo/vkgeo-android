@@ -626,8 +626,8 @@ void VKHelper::Cleanup()
 
 void VKHelper::SendData(bool expedited)
 {
-    if (CurrentDataState == DataUpdated ||
-       (CurrentDataState == DataUpdatedAndSent && SendDataTryNumber < MAX_SEND_DATA_TRIES_COUNT)) {
+    if (CurrentDataState == DataUpdated || (CurrentDataState == DataUpdatedAndSent &&
+                                            SendDataTryNumber < MAX_SEND_DATA_TRIES_COUNT)) {
         qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
 
         if (!ContextHasActiveRequests("sendData") &&
@@ -750,13 +750,12 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                 for (int i = 0; i < json_items.count(); i++) {
                     QJsonObject json_note = json_items.at(i).toObject();
 
-                    if (json_note.contains("id") && json_note.contains("title")) {
-                        if (json_note.value("title").toString() == DATA_NOTE_TITLE) {
-                            QString data_note_id = QString::number(json_note.value("id").toVariant().toLongLong());
+                    if (json_note.contains("id") && json_note.contains("title") &&
+                        json_note.value("title").toString() == DATA_NOTE_TITLE) {
+                        QString data_note_id = QString::number(json_note.value("id").toVariant().toLongLong());
 
-                            if (data_note_id != "") {
-                                notes_to_delete.append(data_note_id);
-                            }
+                        if (data_note_id != "") {
+                            notes_to_delete.append(data_note_id);
                         }
                     }
                 }
@@ -834,27 +833,26 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                 for (int i = 0; i < json_items.count(); i++) {
                     QJsonObject json_note = json_items.at(i).toObject();
 
-                    if (json_note.contains("title") && json_note.contains("text")) {
-                        if (json_note.value("title").toString() == DATA_NOTE_TITLE) {
-                            data_note_found = true;
+                    if (json_note.contains("title") && json_note.contains("text") &&
+                        json_note.value("title").toString() == DATA_NOTE_TITLE) {
+                        data_note_found = true;
 
-                            if (user_id != "") {
-                                QString note_text = json_note.value("text").toString();
-                                QRegExp base64_regexp("\\{\\{\\{([^\\}]+)\\}\\}\\}");
+                        if (user_id != "") {
+                            QString note_text = json_note.value("text").toString();
+                            QRegExp base64_regexp("\\{\\{\\{([^\\}]+)\\}\\}\\}");
 
-                                if (base64_regexp.indexIn(note_text) != -1) {
-                                    QString note_base64 = base64_regexp.cap(1);
+                            if (base64_regexp.indexIn(note_text) != -1) {
+                                QString note_base64 = base64_regexp.cap(1);
 
-                                    emit trackedFriendDataUpdated(user_id, QJsonDocument::fromJson(QByteArray::fromBase64(note_base64.toUtf8())).toVariant().toMap());
-                                } else {
-                                    qWarning() << "HandleNotesGetResponse() : invalid user data";
-                                }
+                                emit trackedFriendDataUpdated(user_id, QJsonDocument::fromJson(QByteArray::fromBase64(note_base64.toUtf8())).toVariant().toMap());
                             } else {
-                                qWarning() << "HandleNotesGetResponse() : invalid request";
+                                qWarning() << "HandleNotesGetResponse() : invalid user data";
                             }
-
-                            break;
+                        } else {
+                            qWarning() << "HandleNotesGetResponse() : invalid request";
                         }
+
+                        break;
                     }
                 }
 
@@ -1260,13 +1258,12 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
                 for (int i = 0; i < json_items.count(); i++) {
                     QJsonObject json_list = json_items.at(i).toObject();
 
-                    if (json_list.contains("id") && json_list.contains("name")) {
-                        if (json_list.value("name").toString() == TRUSTED_FRIENDS_LIST_NAME) {
-                            trusted_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
+                    if (json_list.contains("id") && json_list.contains("name") &&
+                        json_list.value("name").toString() == TRUSTED_FRIENDS_LIST_NAME) {
+                        trusted_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
 
-                            if (trusted_friends_list_id != "") {
-                                break;
-                            }
+                        if (trusted_friends_list_id != "") {
+                            break;
                         }
                     }
                 }
@@ -1323,13 +1320,12 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
                 for (int i = 0; i < json_items.count(); i++) {
                     QJsonObject json_list = json_items.at(i).toObject();
 
-                    if (json_list.contains("id") && json_list.contains("name")) {
-                        if (json_list.value("name").toString() == TRACKED_FRIENDS_LIST_NAME) {
-                            tracked_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
+                    if (json_list.contains("id") && json_list.contains("name") &&
+                        json_list.value("name").toString() == TRACKED_FRIENDS_LIST_NAME) {
+                        tracked_friends_list_id = QString::number(json_list.value("id").toVariant().toLongLong());
 
-                            if (tracked_friends_list_id != "") {
-                                break;
-                            }
+                        if (tracked_friends_list_id != "") {
+                            break;
                         }
                     }
                 }
