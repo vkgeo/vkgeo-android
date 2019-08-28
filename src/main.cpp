@@ -49,10 +49,11 @@ int main(int argc, char *argv[])
 
         QtAndroid::hideSplashScreen();
 
-        if (engine.rootObjects().isEmpty())
+        if (engine.rootObjects().isEmpty()) {
             return -1;
-
-        return QGuiApplication::exec();
+        } else {
+            return QGuiApplication::exec();
+        }
     } else if (argc == 2 && QString(argv[1]) == "-service") {
         QAndroidService app(argc, argv);
 
@@ -74,6 +75,6 @@ int main(int argc, char *argv[])
 
         return QGuiApplication::exec();
     } else {
-        return 0;
+        return -1;
     }
 }
