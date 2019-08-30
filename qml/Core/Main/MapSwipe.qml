@@ -33,18 +33,18 @@ Item {
         id:           map
         anchors.fill: parent
 
-        readonly property int autoActionTriesCount: 10
+        readonly property int autoActionRepetitionsCount: 10
 
-        readonly property real centerBearing:       0.0
-        readonly property real centerTilt:          0.0
-        readonly property real centerZoomLevel:     16.0
+        readonly property real centerBearing:             0.0
+        readonly property real centerTilt:                0.0
+        readonly property real centerZoomLevel:           16.0
 
-        property bool wasTouched:                   false
-        property bool wasCenterOnMyMapItem:         false
-        property bool autoAction:                   false
+        property bool wasTouched:                         false
+        property bool wasCenterOnMyMapItem:               false
+        property bool autoAction:                         false
 
-        property var myMapItem:                     null
-        property var trackedMapItem:                null
+        property var myMapItem:                           null
+        property var trackedMapItem:                      null
 
         plugin: Plugin {
             name: "osm"
@@ -114,7 +114,7 @@ Item {
             if (trackedMapItem !== null) {
                 autoAction = true;
 
-                for (var i = 0; i < autoActionTriesCount; i++) {
+                for (var i = 0; i < autoActionRepetitionsCount; i++) {
                     center    = trackedMapItem.coordinate;
                     bearing   = centerBearing;
                     tilt      = centerTilt;
@@ -129,7 +129,7 @@ Item {
             if (!wasCenterOnMyMapItem && myMapItem !== null) {
                 autoAction = true;
 
-                for (var i = 0; i < autoActionTriesCount; i++) {
+                for (var i = 0; i < autoActionRepetitionsCount; i++) {
                     center    = myMapItem.coordinate;
                     bearing   = centerBearing;
                     tilt      = centerTilt;
@@ -145,7 +145,7 @@ Item {
         function showAllMapItems() {
             autoAction = true;
 
-            for (var i = 0; i < autoActionTriesCount; i++) {
+            for (var i = 0; i < autoActionRepetitionsCount; i++) {
                 fitViewportToVisibleMapItems();
             }
 
