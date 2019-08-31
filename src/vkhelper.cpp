@@ -46,20 +46,14 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
         if (friend_1_tracked == friend_2_tracked) {
             if (friend_1_online == friend_2_online) {
                 return friend_1_name < friend_2_name;
-            } else if (friend_1_online) {
-                return true;
             } else {
-                return false;
+                return friend_1_online;
             }
-        } else if (friend_1_tracked) {
-            return true;
         } else {
-            return false;
+            return friend_1_tracked;
         }
-    } else if (friend_1_trusted) {
-        return true;
     } else {
-        return false;
+        return friend_1_trusted;
     }
 }
 
