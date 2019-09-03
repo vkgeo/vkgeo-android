@@ -13,6 +13,16 @@ Rectangle {
     id:    settingsSwipe
     color: "transparent"
 
+    function handleBackKey() {
+        if (themeSelectionDialog.visible) {
+            themeSelectionDialog.close();
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     Toast {
         id:              friendsListUpdatedToast
         anchors.top:     parent.top
