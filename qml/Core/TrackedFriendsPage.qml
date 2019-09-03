@@ -10,69 +10,33 @@ import "../Util.js" as UtilScript
 Page {
     id: trackedFriendsPage
 
-    header: Rectangle {
-        height: trackedFriendsPage.bannerViewHeight + headerControlsLayout.height
-        color:  "lightsteelblue"
+    header: PageHeader {
+        bannerViewHeight: trackedFriendsPage.bannerViewHeight
+        text:             qsTr("Tracked friends")
 
-        RowLayout {
-            id:                  headerControlsLayout
-            anchors.bottom:      parent.bottom
-            anchors.left:        parent.left
-            anchors.right:       parent.right
-            anchors.leftMargin:  UtilScript.pt(8)
-            anchors.rightMargin: UtilScript.pt(8)
-            height:              UtilScript.pt(48)
-            spacing:             UtilScript.pt(4)
-
-            VKButton {
-                width:            UtilScript.pt(80)
-                height:           UtilScript.pt(32)
-                text:             qsTr("Cancel")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-                onClicked: {
-                    mainStackView.pop();
-                }
-            }
-
-            Text {
-                text:                qsTr("Tracked friends")
-                color:               "white"
-                font.pointSize:      16
-                font.family:         "Helvetica"
-                font.bold:           true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment:   Text.AlignVCenter
-                wrapMode:            Text.Wrap
-                fontSizeMode:        Text.Fit
-                minimumPointSize:    8
-                Layout.fillWidth:    true
-                Layout.fillHeight:   true
-            }
-
-            VKButton {
-                width:            UtilScript.pt(80)
-                height:           UtilScript.pt(32)
-                text:             qsTr("Save")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-                onClicked: {
-                    var tracked_friends_list = [];
-
-                    for (var i = 0; i < trackedFriendsPage.friendsList.length; i++) {
-                        var frnd = trackedFriendsPage.friendsList[i];
-
-                        if (frnd.tracked) {
-                            tracked_friends_list.push(frnd.userId);
-                        }
-                    }
-
-                    VKHelper.updateTrackedFriendsList(tracked_friends_list);
-
-                    mainStackView.pop();
-                }
-            }
+        onBack: {
+            mainStackView.pop();
         }
+
+        onDone: {
+            var tracked_friends_list = [];
+
+            for (var i = 0; i < trackedFriendsPage.friendsList.length; i++) {
+                var frnd = trackedFriendsPage.friendsList[i];
+
+                if (frnd.tracked) {
+                    tracked_friends_list.push(frnd.userId);
+                }
+            }
+
+            VKHelper.updateTrackedFriendsList(tracked_friends_list);
+
+            mainStackView.pop();
+        }
+    }
+
+    background: Rectangle {
+        color: UIHelper.darkTheme ? "black" : "white"
     }
 
     readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
@@ -168,10 +132,10 @@ Page {
                 id:           friendDelegate
                 width:        listView.width
                 height:       UtilScript.pt(80)
-                color:        "white"
+                color:        "transparent"
                 clip:         true
                 border.width: UtilScript.pt(1)
-                border.color: "lightsteelblue"
+                border.color: UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
 
                 readonly property var listView: ListView.view
 
@@ -206,7 +170,7 @@ Page {
 
                     Text {
                         text:                "%1 %2".arg(firstName).arg(lastName)
-                        color:               "black"
+                        color:               UIHelper.darkTheme ? "white" : "black"
                         font.pointSize:      16
                         font.family:         "Helvetica"
                         horizontalAlignment: Text.AlignLeft

@@ -4,7 +4,7 @@ import "../../Util.js" as UtilScript
 
 Rectangle {
     id:     vkButton
-    color:  enabled ? "steelblue" : "darkgray"
+    color:  enabled ? "steelblue" : "gray"
     radius: UtilScript.pt(8)
 
     property string text: ""
@@ -24,13 +24,13 @@ Rectangle {
         wrapMode:            Text.NoWrap
         fontSizeMode:        Text.Fit
         minimumPointSize:    8
-    }
 
-    MouseArea {
-        anchors.fill: parent
+        MouseArea {
+            anchors.fill: parent
 
-        onClicked: {
-            vkButton.clicked();
+            onClicked: {
+                vkButton.clicked();
+            }
         }
     }
 }

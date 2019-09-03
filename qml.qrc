@@ -14,8 +14,11 @@
         <file>qml/Core/Main/SettingsSwipe.qml</file>
         <file>qml/Core/Main/VKMapItem.qml</file>
         <file>qml/Core/Misc/FilterTextField.qml</file>
+        <file>qml/Core/Misc/PageHeader.qml</file>
         <file>qml/Core/Misc/RefreshControl.qml</file>
         <file>qml/Core/Misc/Toast.qml</file>
+        <file>qml/Core/Misc/VKBackButton.qml</file>
         <file>qml/Core/Misc/VKButton.qml</file>
+        <file>qml/Core/Misc/VKDoneButton.qml</file>
     </qresource>
 </RCC>

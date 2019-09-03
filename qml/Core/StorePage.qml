@@ -9,53 +9,18 @@ import "../Util.js" as UtilScript
 Page {
     id: storePage
 
-    header: Rectangle {
-        height: storePage.bannerViewHeight + headerControlsLayout.height
-        color:  "lightsteelblue"
+    header: PageHeader {
+        bannerViewHeight:  storePage.bannerViewHeight
+        text:              qsTr("Store")
+        doneButtonVisible: false
 
-        RowLayout {
-            id:                  headerControlsLayout
-            anchors.bottom:      parent.bottom
-            anchors.left:        parent.left
-            anchors.right:       parent.right
-            anchors.leftMargin:  UtilScript.pt(8)
-            anchors.rightMargin: UtilScript.pt(8)
-            height:              UtilScript.pt(48)
-            spacing:             UtilScript.pt(4)
-
-            Rectangle {
-                width:             UtilScript.pt(80)
-                color:             "transparent"
-                Layout.fillHeight: true
-                Layout.alignment:  Qt.AlignHCenter
-            }
-
-            Text {
-                text:                qsTr("Store")
-                color:               "white"
-                font.pointSize:      16
-                font.family:         "Helvetica"
-                font.bold:           true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment:   Text.AlignVCenter
-                wrapMode:            Text.Wrap
-                fontSizeMode:        Text.Fit
-                minimumPointSize:    8
-                Layout.fillWidth:    true
-                Layout.fillHeight:   true
-            }
-
-            VKButton {
-                width:            UtilScript.pt(80)
-                height:           UtilScript.pt(32)
-                text:             qsTr("Close")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-                onClicked: {
-                    mainStackView.pop();
-                }
-            }
+        onBack: {
+            mainStackView.pop();
         }
+    }
+
+    background: Rectangle {
+        color: UIHelper.darkTheme ? "black" : "white"
     }
 
     readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
@@ -88,7 +53,7 @@ Page {
 
             Rectangle {
                 height:             UtilScript.pt(64)
-                color:              "lightsteelblue"
+                color:              UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
                 radius:             UtilScript.pt(8)
                 visible:            !mainWindow.enableTrackedFriends
                 Layout.leftMargin:  UtilScript.pt(16)
@@ -131,7 +96,7 @@ Page {
 
             Rectangle {
                 height:             UtilScript.pt(64)
-                color:              "lightsteelblue"
+                color:              UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
                 radius:             UtilScript.pt(8)
                 visible:            !mainWindow.increaseTrackingLimits
                 Layout.leftMargin:  UtilScript.pt(16)
@@ -174,7 +139,7 @@ Page {
 
             Rectangle {
                 height:             UtilScript.pt(64)
-                color:              "lightsteelblue"
+                color:              UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
                 radius:             UtilScript.pt(8)
                 Layout.leftMargin:  UtilScript.pt(16)
                 Layout.rightMargin: UtilScript.pt(16)

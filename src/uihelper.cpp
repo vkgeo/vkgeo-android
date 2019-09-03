@@ -5,6 +5,8 @@
 
 UIHelper::UIHelper(QObject *parent) : QObject(parent)
 {
+    DarkTheme      = false;
+    DarkThemeState = UIDarkThemeState::StateSystem;
 }
 
 UIHelper &UIHelper::GetInstance()
@@ -12,6 +14,33 @@ UIHelper &UIHelper::GetInstance()
     static UIHelper instance;
 
     return instance;
+}
+
+bool UIHelper::darkTheme() const
+{
+    return DarkTheme;
+}
+
+int UIHelper::darkThemeState() const
+{
+    return DarkThemeState;
+}
+
+void UIHelper::setDarkThemeState(int state)
+{
+    DarkThemeState = state;
+
+    emit darkThemeStateChanged(DarkThemeState);
+
+    if (DarkThemeState == UIDarkThemeState::StateDisabled) {
+        DarkTheme = false;
+    } else if (DarkThemeState == UIDarkThemeState::StateEnabled) {
+        DarkTheme = true;
+    } else {
+        DarkTheme = false;
+    }
+
+    emit darkThemeChanged(DarkTheme);
 }
 
 int UIHelper::getScreenDPI()

@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.LocalStorage 2.12
 import QtPurchasing 1.0
+import UIHelper 1.0
 import VKHelper 1.0
 
 import "Core/Dialog"
@@ -18,6 +19,8 @@ ApplicationWindow {
     property bool enableTrackedFriends:   false
     property bool increaseTrackingLimits: false
     property bool appRated:               false
+
+    property int darkThemeState:          UIDarkThemeState.StateSystem
 
     property string adMobConsent:         ""
 
@@ -63,6 +66,12 @@ ApplicationWindow {
 
     onAppRatedChanged: {
         setSetting("AppRated", appRated ? "true" : "false");
+    }
+
+    onDarkThemeStateChanged: {
+        setSetting("DarkThemeState", darkThemeState.toString(10));
+
+        updateFeatures();
     }
 
     onAdMobConsentChanged: {
@@ -151,6 +160,8 @@ ApplicationWindow {
         } else {
             VKHelper.maxTrackedFriendsCount = 0;
         }
+
+        UIHelper.darkThemeState = darkThemeState;
     }
 
     function showInterstitial() {
@@ -283,11 +294,12 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        disableAds             = (getSetting("DisableAds",             "false") === "true");
-        enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
-        increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
-        appRated               = (getSetting("AppRated",               "false") === "true");
-        adMobConsent           =  getSetting("AdMobConsent",           "");
+        disableAds             =         (getSetting("DisableAds",             "false") === "true");
+        enableTrackedFriends   =         (getSetting("EnableTrackedFriends",   "false") === "true");
+        increaseTrackingLimits =         (getSetting("IncreaseTrackingLimits", "false") === "true");
+        appRated               =         (getSetting("AppRated",               "false") === "true");
+        darkThemeState         = parseInt(getSetting("DarkThemeState",         UIDarkThemeState.StateSystem.toString(10)), 10);
+        adMobConsent           =          getSetting("AdMobConsent",           "");
 
         updateFeatures();
 
