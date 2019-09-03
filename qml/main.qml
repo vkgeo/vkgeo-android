@@ -15,7 +15,7 @@ ApplicationWindow {
 
     property bool componentCompleted:  false
 
-    property int darkThemeState:       UIDarkThemeState.StateSystem
+    property int darkThemeState:       UIDarkThemeState.StateAuto
 
     property string adMobConsent:      ""
 
@@ -170,7 +170,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        darkThemeState = parseInt(getSetting("DarkThemeState", UIDarkThemeState.StateSystem.toString(10)), 10);
+        darkThemeState = parseInt(getSetting("DarkThemeState", UIDarkThemeState.StateAuto.toString(10)), 10);
         adMobConsent   =          getSetting("AdMobConsent",   "");
 
         updateFeatures();
