@@ -10,53 +10,18 @@ import "../Util.js" as UtilScript
 Page {
     id: profilePage
 
-    header: Rectangle {
-        height: profilePage.bannerViewHeight + headerControlsLayout.height
-        color:  "lightsteelblue"
+    header: PageHeader {
+        bannerViewHeight:  profilePage.bannerViewHeight
+        text:              qsTr("Profile info")
+        doneButtonVisible: false
 
-        RowLayout {
-            id:                  headerControlsLayout
-            anchors.bottom:      parent.bottom
-            anchors.left:        parent.left
-            anchors.right:       parent.right
-            anchors.leftMargin:  UtilScript.pt(8)
-            anchors.rightMargin: UtilScript.pt(8)
-            height:              UtilScript.pt(48)
-            spacing:             UtilScript.pt(4)
-
-            Rectangle {
-                width:             UtilScript.pt(80)
-                color:             "transparent"
-                Layout.fillHeight: true
-                Layout.alignment:  Qt.AlignHCenter
-            }
-
-            Text {
-                text:                qsTr("Profile info")
-                color:               "white"
-                font.pointSize:      16
-                font.family:         "Helvetica"
-                font.bold:           true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment:   Text.AlignVCenter
-                wrapMode:            Text.Wrap
-                fontSizeMode:        Text.Fit
-                minimumPointSize:    8
-                Layout.fillWidth:    true
-                Layout.fillHeight:   true
-            }
-
-            VKButton {
-                width:            UtilScript.pt(80)
-                height:           UtilScript.pt(32)
-                text:             qsTr("Close")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-                onClicked: {
-                    mainStackView.pop();
-                }
-            }
+        onBack: {
+            mainStackView.pop();
         }
+    }
+
+    background: Rectangle {
+        color: UIHelper.darkTheme ? "black" : "white"
     }
 
     readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
@@ -198,7 +163,7 @@ Page {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
                 text:                "%1 %2".arg(profilePage.firstName).arg(profilePage.lastName)
-                color:               "black"
+                color:               UIHelper.darkTheme ? "white" : "black"
                 font.pointSize:      24
                 font.family:         "Helvetica"
                 font.bold:           true
@@ -215,7 +180,7 @@ Page {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
                 text:                profilePage.status
-                color:               "black"
+                color:               UIHelper.darkTheme ? "white" : "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
@@ -233,7 +198,7 @@ Page {
                 rightPadding:        UtilScript.pt(16)
                 text:                qsTr("Last update at: %1").arg((new Date(profilePage.updateTime * 1000))
                                                                          .toLocaleString())
-                color:               "black"
+                color:               UIHelper.darkTheme ? "white" : "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
                 font.italic:         true

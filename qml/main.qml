@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.LocalStorage 2.12
+import UIHelper 1.0
 import VKHelper 1.0
 
 import "Core/Dialog"
@@ -13,6 +14,8 @@ ApplicationWindow {
     readonly property int vkAuthState: VKHelper.authState
 
     property bool componentCompleted:  false
+
+    property int darkThemeState:       UIDarkThemeState.StateSystem
 
     property string adMobConsent:      ""
 
@@ -36,6 +39,12 @@ ApplicationWindow {
                 closeLoginPage();
             }
         }
+    }
+
+    onDarkThemeStateChanged: {
+        setSetting("DarkThemeState", darkThemeState.toString(10));
+
+        updateFeatures();
     }
 
     onAdMobConsentChanged: {
@@ -107,6 +116,8 @@ ApplicationWindow {
 
         VKHelper.maxTrustedFriendsCount = 15;
         VKHelper.maxTrackedFriendsCount = 15;
+
+        UIHelper.darkThemeState = darkThemeState;
     }
 
     function showInterstitial() {
@@ -159,7 +170,8 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        adMobConsent = getSetting("AdMobConsent", "");
+        darkThemeState = parseInt(getSetting("DarkThemeState", UIDarkThemeState.StateSystem.toString(10)), 10);
+        adMobConsent   =          getSetting("AdMobConsent",   "");
 
         updateFeatures();
 

@@ -6,8 +6,9 @@ import QtLocation 5.12
 
 import "../../Util.js" as UtilScript
 
-Item {
-    id: mapSwipe
+Rectangle {
+    id:    mapSwipe
+    color: "transparent"
 
     signal profilePageRequested(string userId)
 

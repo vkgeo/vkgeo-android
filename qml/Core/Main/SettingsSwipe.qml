@@ -2,13 +2,15 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import QtQuick.Dialogs 1.2
+import UIHelper 1.0
 
 import "../Misc"
 
 import "../../Util.js" as UtilScript
 
-Item {
-    id: settingsSwipe
+Rectangle {
+    id:    settingsSwipe
+    color: "transparent"
 
     Toast {
         id:              friendsListUpdatedToast
@@ -78,7 +80,7 @@ Item {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
                 text:                qsTr("You can see the location of trusted friends, if they also treat you as a trusted friend, and they <b>can see your location</b>.")
-                color:               "black"
+                color:               UIHelper.darkTheme ? "white" : "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
@@ -95,7 +97,7 @@ Item {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
                 text:                textText(VKHelper.maxTrustedFriendsCount)
-                color:               "black"
+                color:               UIHelper.darkTheme ? "white" : "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
@@ -147,7 +149,7 @@ Item {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
                 text:                qsTr("You can see the location of tracked friends, if they treat you as a trusted friend, but they <b>cannot see your location</b>.")
-                color:               "black"
+                color:               UIHelper.darkTheme ? "white" : "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
@@ -164,7 +166,7 @@ Item {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
                 text:                textText(VKHelper.maxTrackedFriendsCount)
-                color:               "black"
+                color:               UIHelper.darkTheme ? "white" : "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
@@ -210,6 +212,49 @@ Item {
                 orientation:      Qt.Horizontal
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter
+            }
+
+            Rectangle {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
+                color:            UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
+                radius:           UtilScript.pt(8)
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                RowLayout {
+                    anchors.fill:        parent
+                    anchors.leftMargin:  UtilScript.pt(16)
+                    anchors.rightMargin: UtilScript.pt(16)
+                    spacing:             UtilScript.pt(8)
+
+                    Text {
+                        text:                qsTr("Dark theme")
+                        color:               "white"
+                        font.pointSize:      16
+                        font.family:         "Helvetica"
+                        font.bold:           true
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment:   Text.AlignVCenter
+                        wrapMode:            Text.NoWrap
+                        fontSizeMode:        Text.Fit
+                        minimumPointSize:    8
+                        Layout.fillWidth:    true
+                        Layout.fillHeight:   true
+                    }
+
+                    Switch {
+                        checked:          UIHelper.darkTheme
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                        onToggled: {
+                            if (checked) {
+                                mainWindow.darkThemeState = UIDarkThemeState.StateEnabled;
+                            } else {
+                                mainWindow.darkThemeState = UIDarkThemeState.StateDisabled;
+                            }
+                        }
+                    }
+                }
             }
 
             VKButton {

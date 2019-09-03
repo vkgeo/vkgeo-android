@@ -34,7 +34,8 @@ int main(int argc, char *argv[])
 
         VKHelper::GetInstance().initVK();
 
-        qmlRegisterType<VKAuthState>("VKHelper", 1, 0, "VKAuthState");
+        qmlRegisterType<UIDarkThemeState>("UIHelper", 1, 0, "UIDarkThemeState");
+        qmlRegisterType<VKAuthState>     ("VKHelper", 1, 0, "VKAuthState");
 
         QQmlApplicationEngine engine;
 

@@ -64,6 +64,7 @@ MapQuickItem {
 
         MouseArea {
             anchors.fill: parent
+            z:            2
 
             onClicked: {
                 vkMapItem.profilePageRequested(vkMapItem.userId);
