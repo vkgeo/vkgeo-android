@@ -218,20 +218,23 @@ Rectangle {
 
             Rectangle {
                 width:            UtilScript.pt(280)
-                height:           UtilScript.pt(64)
-                color:            UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
+                height:           themeLayout.height + UtilScript.pt(16)
+                color:            UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
                 radius:           UtilScript.pt(8)
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 RowLayout {
-                    anchors.fill:        parent
-                    anchors.leftMargin:  UtilScript.pt(16)
-                    anchors.rightMargin: UtilScript.pt(16)
-                    spacing:             UtilScript.pt(8)
+                    id:                     themeLayout
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left:           parent.left
+                    anchors.right:          parent.right
+                    anchors.leftMargin:     UtilScript.pt(16)
+                    anchors.rightMargin:    UtilScript.pt(16)
+                    spacing:                UtilScript.pt(8)
 
                     Text {
                         text:                qsTr("Dark theme")
-                        color:               "white"
+                        color:               UIHelper.darkTheme ? "white" : "black"
                         font.pointSize:      16
                         font.family:         "Helvetica"
                         font.bold:           true
