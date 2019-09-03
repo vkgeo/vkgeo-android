@@ -217,30 +217,27 @@ Rectangle {
             }
 
             Rectangle {
-                width:            UtilScript.pt(280)
-                height:           themeLayout.height + UtilScript.pt(16)
-                color:            UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
-                radius:           UtilScript.pt(8)
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                height:             UtilScript.pt(64)
+                color:              UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
+                radius:             UtilScript.pt(8)
+                Layout.leftMargin:  UtilScript.pt(16)
+                Layout.rightMargin: UtilScript.pt(16)
+                Layout.fillWidth:   true
+                Layout.alignment:   Qt.AlignVCenter
 
                 RowLayout {
-                    id:                     themeLayout
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left:           parent.left
-                    anchors.right:          parent.right
-                    anchors.leftMargin:     UtilScript.pt(16)
-                    anchors.rightMargin:    UtilScript.pt(16)
-                    spacing:                UtilScript.pt(8)
+                    anchors.fill:    parent
+                    anchors.margins: UtilScript.pt(16)
+                    spacing:         UtilScript.pt(8)
 
                     Text {
                         text:                qsTr("Dark theme")
                         color:               UIHelper.darkTheme ? "white" : "black"
                         font.pointSize:      16
                         font.family:         "Helvetica"
-                        font.bold:           true
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment:   Text.AlignVCenter
-                        wrapMode:            Text.NoWrap
+                        wrapMode:            Text.Wrap
                         fontSizeMode:        Text.Fit
                         minimumPointSize:    8
                         Layout.fillWidth:    true
@@ -260,6 +257,12 @@ Rectangle {
                         }
                     }
                 }
+            }
+
+            ToolSeparator {
+                orientation:      Qt.Horizontal
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
             }
 
             VKButton {
