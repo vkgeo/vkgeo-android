@@ -172,6 +172,7 @@ Page {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
+                textFormat:          Text.PlainText
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
             }
@@ -188,6 +189,7 @@ Page {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
+                textFormat:          Text.PlainText
                 visible:             profilePage.status !== ""
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
