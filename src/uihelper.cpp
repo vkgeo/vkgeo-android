@@ -5,8 +5,8 @@
 
 UIHelper::UIHelper(QObject *parent) : QObject(parent)
 {
-    DarkTheme      = false;
-    DarkThemeState = UIDarkThemeState::StateAuto;
+    DarkTheme       = false;
+    ConfiguredTheme = UITheme::ThemeAuto;
 }
 
 UIHelper &UIHelper::GetInstance()
@@ -21,20 +21,20 @@ bool UIHelper::darkTheme() const
     return DarkTheme;
 }
 
-int UIHelper::darkThemeState() const
+int UIHelper::configuredTheme() const
 {
-    return DarkThemeState;
+    return ConfiguredTheme;
 }
 
-void UIHelper::setDarkThemeState(int state)
+void UIHelper::setConfiguredTheme(int theme)
 {
-    DarkThemeState = state;
+    ConfiguredTheme = theme;
 
-    emit darkThemeStateChanged(DarkThemeState);
+    emit configuredThemeChanged(ConfiguredTheme);
 
-    if (DarkThemeState == UIDarkThemeState::StateDisabled) {
+    if (ConfiguredTheme == UITheme::ThemeLight) {
         DarkTheme = false;
-    } else if (DarkThemeState == UIDarkThemeState::StateEnabled) {
+    } else if (ConfiguredTheme == UITheme::ThemeDark) {
         DarkTheme = true;
     } else {
         DarkTheme = false;

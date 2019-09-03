@@ -20,8 +20,7 @@ ApplicationWindow {
     property bool increaseTrackingLimits: false
     property bool appRated:               false
 
-    property int darkThemeState:          UIDarkThemeState.StateAuto
-
+    property string configuredTheme:      ""
     property string adMobConsent:         ""
 
     property var loginPage:               null
@@ -68,8 +67,8 @@ ApplicationWindow {
         setSetting("AppRated", appRated ? "true" : "false");
     }
 
-    onDarkThemeStateChanged: {
-        setSetting("DarkThemeState", darkThemeState.toString(10));
+    onConfiguredThemeChanged: {
+        setSetting("ConfiguredTheme", configuredTheme);
 
         updateFeatures();
     }
@@ -161,7 +160,13 @@ ApplicationWindow {
             VKHelper.maxTrackedFriendsCount = 0;
         }
 
-        UIHelper.darkThemeState = darkThemeState;
+        if (configuredTheme === "LIGHT") {
+            UIHelper.configuredTheme = UITheme.ThemeLight;
+        } else if (configuredTheme === "DARK") {
+            UIHelper.configuredTheme = UITheme.ThemeDark;
+        } else {
+            UIHelper.configuredTheme = UITheme.ThemeAuto;
+        }
     }
 
     function showInterstitial() {
@@ -294,12 +299,12 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        disableAds             =         (getSetting("DisableAds",             "false") === "true");
-        enableTrackedFriends   =         (getSetting("EnableTrackedFriends",   "false") === "true");
-        increaseTrackingLimits =         (getSetting("IncreaseTrackingLimits", "false") === "true");
-        appRated               =         (getSetting("AppRated",               "false") === "true");
-        darkThemeState         = parseInt(getSetting("DarkThemeState",         UIDarkThemeState.StateAuto.toString(10)), 10);
-        adMobConsent           =          getSetting("AdMobConsent",           "");
+        disableAds             = (getSetting("DisableAds",             "false") === "true");
+        enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
+        increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
+        appRated               = (getSetting("AppRated",               "false") === "true");
+        configuredTheme        =  getSetting("ConfiguredTheme",        "");
+        adMobConsent           =  getSetting("AdMobConsent",           "");
 
         updateFeatures();
 

@@ -3,17 +3,17 @@
 
 #include <QtCore/QObject>
 
-class UIDarkThemeState : public QObject
+class UITheme : public QObject
 {
     Q_OBJECT
 
 public:
-    enum DarkThemeState {
-        StateAuto,
-        StateDisabled,
-        StateEnabled
+    enum Theme {
+        ThemeAuto,
+        ThemeLight,
+        ThemeDark
     };
-    Q_ENUM(DarkThemeState)
+    Q_ENUM(Theme)
 };
 
 class UIHelper : public QObject
@@ -22,7 +22,7 @@ class UIHelper : public QObject
 
     Q_PROPERTY(bool darkTheme READ darkTheme NOTIFY darkThemeChanged)
 
-    Q_PROPERTY(int darkThemeState READ darkThemeState WRITE setDarkThemeState NOTIFY darkThemeStateChanged)
+    Q_PROPERTY(int configuredTheme READ configuredTheme WRITE setConfiguredTheme NOTIFY configuredThemeChanged)
 
 private:
     explicit UIHelper(QObject *parent = nullptr);
@@ -39,8 +39,8 @@ public:
 
     bool darkTheme() const;
 
-    int darkThemeState() const;
-    void setDarkThemeState(int state);
+    int configuredTheme() const;
+    void setConfiguredTheme(int theme);
 
     Q_INVOKABLE int getScreenDPI();
 
@@ -49,11 +49,11 @@ public:
 
 signals:
     void darkThemeChanged(bool darkTheme);
-    void darkThemeStateChanged(int darkThemeState);
+    void configuredThemeChanged(int configuredTheme);
 
 private:
     bool DarkTheme;
-    int  DarkThemeState;
+    int  ConfiguredTheme;
 };
 
 #endif // UIHELPER_H

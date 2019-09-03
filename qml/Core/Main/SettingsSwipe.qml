@@ -250,9 +250,9 @@ Rectangle {
 
                         onToggled: {
                             if (checked) {
-                                mainWindow.darkThemeState = UIDarkThemeState.StateEnabled;
+                                mainWindow.configuredTheme = "DARK";
                             } else {
-                                mainWindow.darkThemeState = UIDarkThemeState.StateDisabled;
+                                mainWindow.configuredTheme = "LIGHT";
                             }
                         }
                     }
