@@ -80,7 +80,8 @@ Rectangle {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
                 text:                qsTr("You can see the location of trusted friends, if they also treat you as a trusted friend, and they <b>can see your location</b>.")
-                color:               UIHelper.darkTheme ? "white" : "black"
+                color:               UIHelper.darkTheme ? "white"     : "black"
+                linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
                 font.pointSize:      16
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
@@ -149,7 +150,8 @@ Rectangle {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
                 text:                qsTr("You can see the location of tracked friends, if they treat you as a trusted friend, but they <b>cannot see your location</b>.")
-                color:               UIHelper.darkTheme ? "white" : "black"
+                color:               UIHelper.darkTheme ? "white"     : "black"
+                linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
                 font.pointSize:      16
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter

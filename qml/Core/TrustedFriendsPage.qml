@@ -178,6 +178,7 @@ Page {
                         wrapMode:            Text.Wrap
                         fontSizeMode:        Text.Fit
                         minimumPointSize:    8
+                        textFormat:          Text.PlainText
                         Layout.fillWidth:    true
                         Layout.fillHeight:   true
                     }
