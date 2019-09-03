@@ -15,8 +15,7 @@ ApplicationWindow {
 
     property bool componentCompleted:  false
 
-    property int darkThemeState:       UIDarkThemeState.StateAuto
-
+    property string configuredTheme:   ""
     property string adMobConsent:      ""
 
     property var loginPage:            null
@@ -41,8 +40,8 @@ ApplicationWindow {
         }
     }
 
-    onDarkThemeStateChanged: {
-        setSetting("DarkThemeState", darkThemeState.toString(10));
+    onConfiguredThemeChanged: {
+        setSetting("ConfiguredTheme", configuredTheme);
 
         updateFeatures();
     }
@@ -117,7 +116,13 @@ ApplicationWindow {
         VKHelper.maxTrustedFriendsCount = 15;
         VKHelper.maxTrackedFriendsCount = 15;
 
-        UIHelper.darkThemeState = darkThemeState;
+        if (configuredTheme === "LIGHT") {
+            UIHelper.configuredTheme = UITheme.ThemeLight;
+        } else if (configuredTheme === "DARK") {
+            UIHelper.configuredTheme = UITheme.ThemeDark;
+        } else {
+            UIHelper.configuredTheme = UITheme.ThemeAuto;
+        }
     }
 
     function showInterstitial() {
@@ -170,8 +175,8 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        darkThemeState = parseInt(getSetting("DarkThemeState", UIDarkThemeState.StateAuto.toString(10)), 10);
-        adMobConsent   =          getSetting("AdMobConsent",   "");
+        configuredTheme = getSetting("ConfiguredTheme", "");
+        adMobConsent    = getSetting("AdMobConsent",    "");
 
         updateFeatures();
 
