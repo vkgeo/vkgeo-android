@@ -9,6 +9,7 @@
         <file>qml/Core/TrackedFriendsPage.qml</file>
         <file>qml/Core/TrustedFriendsPage.qml</file>
         <file>qml/Core/Dialog/AdMobConsentDialog.qml</file>
+        <file>qml/Core/Dialog/ThemeSelectionDialog.qml</file>
         <file>qml/Core/Main/FriendsSwipe.qml</file>
         <file>qml/Core/Main/MapSwipe.qml</file>
         <file>qml/Core/Main/SettingsSwipe.qml</file>

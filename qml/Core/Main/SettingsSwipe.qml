@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.12
 import QtQuick.Dialogs 1.2
 import UIHelper 1.0
 
+import "../Dialog"
 import "../Misc"
 
 import "../../Util.js" as UtilScript
@@ -216,53 +217,29 @@ Rectangle {
                 Layout.alignment: Qt.AlignVCenter
             }
 
-            Rectangle {
-                height:             UtilScript.pt(64)
-                color:              UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
-                radius:             UtilScript.pt(8)
-                Layout.leftMargin:  UtilScript.pt(16)
-                Layout.rightMargin: UtilScript.pt(16)
-                Layout.fillWidth:   true
-                Layout.alignment:   Qt.AlignVCenter
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
+                text:             buttonText(mainWindow.configuredTheme)
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                RowLayout {
-                    anchors.fill:    parent
-                    anchors.margins: UtilScript.pt(16)
-                    spacing:         UtilScript.pt(8)
-
-                    Text {
-                        text:                qsTr("Dark theme")
-                        color:               UIHelper.darkTheme ? "white" : "black"
-                        font.pointSize:      16
-                        font.family:         "Helvetica"
-                        horizontalAlignment: Text.AlignLeft
-                        verticalAlignment:   Text.AlignVCenter
-                        wrapMode:            Text.Wrap
-                        fontSizeMode:        Text.Fit
-                        minimumPointSize:    8
-                        Layout.fillWidth:    true
-                        Layout.fillHeight:   true
-                    }
-
-                    Switch {
-                        checked:          UIHelper.darkTheme
-                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-                        onToggled: {
-                            if (checked) {
-                                mainWindow.configuredTheme = "DARK";
-                            } else {
-                                mainWindow.configuredTheme = "LIGHT";
-                            }
-                        }
-                    }
+                onClicked: {
+                    themeSelectionDialog.open();
                 }
-            }
 
-            ToolSeparator {
-                orientation:      Qt.Horizontal
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
+                function buttonText(configured_theme) {
+                    var theme_name = "";
+
+                    if (configured_theme === "LIGHT") {
+                        theme_name = qsTr("light");
+                    } else if (configured_theme === "DARK") {
+                        theme_name = qsTr("dark");
+                    } else {
+                        theme_name = qsTr("auto");
+                    }
+
+                    return qsTr("Interface theme: %1").arg(theme_name);
+                }
             }
 
             VKButton {
@@ -383,6 +360,22 @@ Rectangle {
                     VKHelper.logout();
                 }
             }
+        }
+    }
+
+    ThemeSelectionDialog {
+        id: themeSelectionDialog
+
+        onAutoThemeSelected: {
+            mainWindow.configuredTheme = "";
+        }
+
+        onLightThemeSelected: {
+            mainWindow.configuredTheme = "LIGHT";
+        }
+
+        onDarkThemeSelected: {
+            mainWindow.configuredTheme = "DARK";
         }
     }
 
