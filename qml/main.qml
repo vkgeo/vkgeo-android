@@ -20,7 +20,7 @@ ApplicationWindow {
     property bool increaseTrackingLimits: false
     property bool appRated:               false
 
-    property int darkThemeState:          UIDarkThemeState.StateSystem
+    property int darkThemeState:          UIDarkThemeState.StateAuto
 
     property string adMobConsent:         ""
 
@@ -298,7 +298,7 @@ ApplicationWindow {
         enableTrackedFriends   =         (getSetting("EnableTrackedFriends",   "false") === "true");
         increaseTrackingLimits =         (getSetting("IncreaseTrackingLimits", "false") === "true");
         appRated               =         (getSetting("AppRated",               "false") === "true");
-        darkThemeState         = parseInt(getSetting("DarkThemeState",         UIDarkThemeState.StateSystem.toString(10)), 10);
+        darkThemeState         = parseInt(getSetting("DarkThemeState",         UIDarkThemeState.StateAuto.toString(10)), 10);
         adMobConsent           =          getSetting("AdMobConsent",           "");
 
         updateFeatures();

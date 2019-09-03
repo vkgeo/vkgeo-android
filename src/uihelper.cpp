@@ -6,7 +6,7 @@
 UIHelper::UIHelper(QObject *parent) : QObject(parent)
 {
     DarkTheme      = false;
-    DarkThemeState = UIDarkThemeState::StateSystem;
+    DarkThemeState = UIDarkThemeState::StateAuto;
 }
 
 UIHelper &UIHelper::GetInstance()

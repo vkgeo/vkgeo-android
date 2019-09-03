@@ -9,7 +9,7 @@ class UIDarkThemeState : public QObject
 
 public:
     enum DarkThemeState {
-        StateSystem,
+        StateAuto,
         StateDisabled,
         StateEnabled
     };
