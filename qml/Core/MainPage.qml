@@ -12,7 +12,7 @@ Page {
 
     header: Rectangle {
         height: mainPage.bannerViewHeight
-        color:  UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
+        color:  UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
     }
 
     background: Rectangle {
@@ -23,7 +23,7 @@ Page {
         id: tabBar
 
         background: Rectangle {
-            color: UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
+            color: UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
         }
 
         TabButton {
@@ -32,7 +32,7 @@ Page {
 
             background: Rectangle {
                 color: tabBar.currentIndex === 0 ? "steelblue" : (UIHelper.darkTheme ? "midnightblue" :
-                                                                                       "deepskyblue")
+                                                                                       "lightsteelblue")
             }
 
             contentItem: Image {
@@ -47,7 +47,7 @@ Page {
 
             background: Rectangle {
                 color: tabBar.currentIndex === 1 ? "steelblue" : (UIHelper.darkTheme ? "midnightblue" :
-                                                                                       "deepskyblue")
+                                                                                       "lightsteelblue")
             }
 
             contentItem: Image {
@@ -62,7 +62,7 @@ Page {
 
             background: Rectangle {
                 color: tabBar.currentIndex === 2 ? "steelblue" : (UIHelper.darkTheme ? "midnightblue" :
-                                                                                       "deepskyblue")
+                                                                                       "lightsteelblue")
             }
 
             contentItem: Image {

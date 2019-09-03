@@ -135,7 +135,7 @@ Page {
                 color:        "transparent"
                 clip:         true
                 border.width: UtilScript.pt(1)
-                border.color: UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
+                border.color: UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
 
                 readonly property var listView: ListView.view
 
