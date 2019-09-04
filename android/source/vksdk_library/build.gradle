@@ -3,6 +3,10 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion androidCompileSdkVersion.toInteger()
     buildToolsVersion androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion 9
+    }
 }
 
 configurations {
@@ -10,6 +14,6 @@ configurations {
 }
 
 dependencies {
-    javadocDeps 'androidx.annotation:annotation:1.0.0'
+    javadocDeps 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
