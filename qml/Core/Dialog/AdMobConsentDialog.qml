@@ -29,13 +29,11 @@ Popup {
 
         ColumnLayout {
             anchors.fill:         parent
-            anchors.topMargin:    UtilScript.pt(16)
-            anchors.bottomMargin: UtilScript.pt(16)
-            spacing:              UtilScript.pt(16)
+            anchors.topMargin:    UtilScript.pt(8)
+            anchors.bottomMargin: UtilScript.pt(8)
+            spacing:              UtilScript.pt(8)
 
             Text {
-                leftPadding:         UtilScript.pt(16)
-                rightPadding:        UtilScript.pt(16)
                 text:                qsTr("We keep this app free by showing ads. Ad network will <a href=\"https://policies.google.com/technologies/ads\">collect data and use a unique identifier on your device</a> to show you ads. <b>Do you allow to use your data to tailor ads for you?</b>")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
