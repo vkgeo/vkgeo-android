@@ -17,6 +17,13 @@ Popup {
     signal darkThemeSelected()
     signal cancelled()
 
+    background: Rectangle {
+        color:        UIHelper.darkTheme ? "black" : "white"
+        radius:       UtilScript.pt(8)
+        border.width: UtilScript.pt(1)
+        border.color: "steelblue"
+    }
+
     contentItem: Rectangle {
         implicitWidth:  UtilScript.pt(300)
         implicitHeight: UtilScript.pt(300)
