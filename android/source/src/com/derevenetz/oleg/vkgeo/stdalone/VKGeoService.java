@@ -37,13 +37,13 @@ import org.json.JSONObject;
 
 import org.qtproject.qt5.android.bindings.QtService;
 
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKRequest.VKRequestListener;
 import com.vk.sdk.api.VKResponse;
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKSdk;
 
 public class VKGeoService extends QtService implements LocationListener
 {

@@ -27,10 +27,11 @@ int main(int argc, char *argv[])
 
         VKHelper::AndroidContext = QtAndroid::androidActivity();
 
-        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::bannerViewHeightChanged, &AdMobHelper::GetInstance(), &AdMobHelper::setBannerViewHeight);
-        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::authStateChanged,        &VKHelper::GetInstance(),    &VKHelper::setAuthState);
-        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestCompleted,      &VKHelper::GetInstance(),    &VKHelper::handleResponse);
-        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestFailed,         &VKHelper::GetInstance(),    &VKHelper::handleError);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::deviceConfigurationChanged, &UIHelper::GetInstance(),    &UIHelper::handleDeviceConfigurationChange);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::bannerViewHeightChanged,    &AdMobHelper::GetInstance(), &AdMobHelper::setBannerViewHeight);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::authStateChanged,           &VKHelper::GetInstance(),    &VKHelper::setAuthState);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestCompleted,         &VKHelper::GetInstance(),    &VKHelper::handleResponse);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestFailed,            &VKHelper::GetInstance(),    &VKHelper::handleError);
 
         VKHelper::GetInstance().initVK();
 

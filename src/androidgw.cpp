@@ -16,6 +16,11 @@ AndroidGW &AndroidGW::GetInstance()
     return instance;
 }
 
+extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, deviceConfigurationChanged)(JNIEnv *, jclass)
+{
+    emit AndroidGW::GetInstance().deviceConfigurationChanged();
+}
+
 extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, bannerViewHeightUpdated)(JNIEnv *, jclass, jint height)
 {
     emit AndroidGW::GetInstance().bannerViewHeightChanged(height);
