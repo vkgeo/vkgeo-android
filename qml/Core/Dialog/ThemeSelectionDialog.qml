@@ -21,7 +21,7 @@ Popup {
     background: Rectangle {
         color:        UIHelper.darkTheme ? "black" : "white"
         radius:       UtilScript.pt(8)
-        border.width: UtilScript.pt(1)
+        border.width: UtilScript.pt(2)
         border.color: "steelblue"
     }
 
@@ -31,10 +31,8 @@ Popup {
         color:          "transparent"
 
         ColumnLayout {
-            anchors.fill:         parent
-            anchors.topMargin:    UtilScript.pt(8)
-            anchors.bottomMargin: UtilScript.pt(8)
-            spacing:              UtilScript.pt(8)
+            anchors.fill: parent
+            spacing:      UtilScript.pt(8)
 
             VKButton {
                 width:            UtilScript.pt(280)
