@@ -223,9 +223,7 @@ public class VKGeoActivity extends QtActivity
     {
         Configuration config = getResources().getConfiguration();
 
-        int night_mode = config.uiMode & Configuration.UI_MODE_NIGHT_MASK;
-
-        return (night_mode == Configuration.UI_MODE_NIGHT_YES);
+        return ((config.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
     }
 
     public String getBatteryStatus()
