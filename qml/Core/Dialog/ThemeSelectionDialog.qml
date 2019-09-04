@@ -9,6 +9,7 @@ import "../../Util.js" as UtilScript
 Popup {
     id:               themeSelectionDialog
     anchors.centerIn: Overlay.overlay
+    padding:          UtilScript.pt(8)
     modal:            true
     closePolicy:      Popup.NoAutoClose
 
