@@ -25,7 +25,7 @@ Popup {
     contentItem: Rectangle {
         implicitWidth:  UtilScript.pt(300)
         implicitHeight: UtilScript.pt(300)
-        color:          UIHelper.darkTheme ? "black" : "white"
+        color:          "transparent"
 
         ColumnLayout {
             anchors.fill:         parent
