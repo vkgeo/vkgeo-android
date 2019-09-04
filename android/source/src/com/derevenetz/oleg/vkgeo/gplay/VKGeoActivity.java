@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
@@ -41,15 +42,15 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKAccessTokenTracker;
+import com.vk.sdk.VKCallback;
+import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKRequest.VKRequestListener;
 import com.vk.sdk.api.VKResponse;
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKAccessTokenTracker;
-import com.vk.sdk.VKCallback;
-import com.vk.sdk.VKSdk;
 
 public class VKGeoActivity extends QtActivity
 {
@@ -110,6 +111,8 @@ public class VKGeoActivity extends QtActivity
             }
         }
     };
+
+    private static native void deviceConfigurationChanged();
 
     private static native void bannerViewHeightUpdated(int height);
 
@@ -201,11 +204,28 @@ public class VKGeoActivity extends QtActivity
         super.onDestroy();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+
+        deviceConfigurationChanged();
+    }
+
     public int getScreenDPI()
     {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
 
         return metrics.densityDpi;
+    }
+
+    public boolean getNightModeStatus()
+    {
+        Configuration config = getResources().getConfiguration();
+
+        int night_mode = config.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+        return (night_mode == Configuration.UI_MODE_NIGHT_YES);
     }
 
     public String getBatteryStatus()

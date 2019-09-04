@@ -5,7 +5,7 @@
 
 UIHelper::UIHelper(QObject *parent) : QObject(parent)
 {
-    DarkTheme       = false;
+    DarkTheme       = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");
     ConfiguredTheme = UITheme::ThemeAuto;
 }
 
@@ -37,7 +37,7 @@ void UIHelper::setConfiguredTheme(int theme)
     } else if (ConfiguredTheme == UITheme::ThemeDark) {
         DarkTheme = true;
     } else {
-        DarkTheme = false;
+        DarkTheme = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");
     }
 
     emit darkThemeChanged(DarkTheme);
@@ -58,4 +58,14 @@ void UIHelper::sendInvitation(const QString &text)
     QAndroidJniObject j_text = QAndroidJniObject::fromString(text);
 
     QtAndroid::androidActivity().callMethod<void>("sendInvitation", "(Ljava/lang/String;)V", j_text.object<jstring>());
+}
+
+void UIHelper::handleDeviceConfigurationChange()
+{
+    if (ConfiguredTheme != UITheme::ThemeLight &&
+        ConfiguredTheme != UITheme::ThemeDark) {
+        DarkTheme = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");
+
+        emit darkThemeChanged(DarkTheme);
+    }
 }
