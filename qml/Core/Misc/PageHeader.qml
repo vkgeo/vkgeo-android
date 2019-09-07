@@ -21,6 +21,7 @@ ColumnLayout {
     Rectangle {
         height:           pageHeader.bannerViewHeight
         color:            UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
+        visible:          pageHeader.bannerViewHeight > 0
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignVCenter
     }
