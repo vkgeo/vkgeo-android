@@ -28,19 +28,27 @@ int UIHelper::configuredTheme() const
 
 void UIHelper::setConfiguredTheme(int theme)
 {
-    ConfiguredTheme = theme;
+    if (ConfiguredTheme != theme) {
+        ConfiguredTheme = theme;
 
-    emit configuredThemeChanged(ConfiguredTheme);
+        emit configuredThemeChanged(ConfiguredTheme);
 
-    if (ConfiguredTheme == UITheme::ThemeLight) {
-        DarkTheme = false;
-    } else if (ConfiguredTheme == UITheme::ThemeDark) {
-        DarkTheme = true;
-    } else {
-        DarkTheme = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");
+        bool dark_theme;
+
+        if (ConfiguredTheme == UITheme::ThemeLight) {
+            dark_theme = false;
+        } else if (ConfiguredTheme == UITheme::ThemeDark) {
+            dark_theme = true;
+        } else {
+            dark_theme = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");
+        }
+
+        if (DarkTheme != dark_theme) {
+            DarkTheme = dark_theme;
+
+            emit darkThemeChanged(DarkTheme);
+        }
     }
-
-    emit darkThemeChanged(DarkTheme);
 }
 
 int UIHelper::getScreenDPI()
@@ -64,8 +72,12 @@ void UIHelper::handleDeviceConfigurationChange()
 {
     if (ConfiguredTheme != UITheme::ThemeLight &&
         ConfiguredTheme != UITheme::ThemeDark) {
-        DarkTheme = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");
+        bool dark_theme = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");
 
-        emit darkThemeChanged(DarkTheme);
+        if (DarkTheme != dark_theme) {
+            DarkTheme = dark_theme;
+
+            emit darkThemeChanged(DarkTheme);
+        }
     }
 }
