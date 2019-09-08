@@ -167,9 +167,11 @@ int VKHelper::maxTrustedFriendsCount() const
 
 void VKHelper::setMaxTrustedFriendsCount(int count)
 {
-    MaxTrustedFriendsCount = count;
+    if (MaxTrustedFriendsCount != count) {
+        MaxTrustedFriendsCount = count;
 
-    emit maxTrustedFriendsCountChanged(MaxTrustedFriendsCount);
+        emit maxTrustedFriendsCountChanged(MaxTrustedFriendsCount);
+    }
 }
 
 int VKHelper::maxTrackedFriendsCount() const
@@ -179,9 +181,11 @@ int VKHelper::maxTrackedFriendsCount() const
 
 void VKHelper::setMaxTrackedFriendsCount(int count)
 {
-    MaxTrackedFriendsCount = count;
+    if (MaxTrackedFriendsCount != count) {
+        MaxTrackedFriendsCount = count;
 
-    emit maxTrackedFriendsCountChanged(MaxTrackedFriendsCount);
+        emit maxTrackedFriendsCountChanged(MaxTrackedFriendsCount);
+    }
 }
 
 void VKHelper::initVK()
@@ -413,22 +417,24 @@ void VKHelper::joinGroup(const QString &group_id)
 
 void VKHelper::setAuthState(int state)
 {
-    AuthState = state;
+    if (AuthState != state) {
+        AuthState = state;
 
-    emit authStateChanged(AuthState);
+        emit authStateChanged(AuthState);
 
-    if (AuthState == VKAuthState::StateAuthorized) {
-        QVariantMap request, parameters;
+        if (AuthState == VKAuthState::StateAuthorized) {
+            QVariantMap request, parameters;
 
-        parameters["fields"] = "photo_100,photo_200";
+            parameters["fields"] = "photo_100,photo_200";
 
-        request["method"]     = "users.get";
-        request["context"]    = "updateUser";
-        request["parameters"] = parameters;
+            request["method"]     = "users.get";
+            request["context"]    = "updateUser";
+            request["parameters"] = parameters;
 
-        EnqueueRequest(request);
-    } else if (AuthState == VKAuthState::StateNotAuthorized) {
-        Cleanup();
+            EnqueueRequest(request);
+        } else if (AuthState == VKAuthState::StateNotAuthorized) {
+            Cleanup();
+        }
     }
 }
 
@@ -587,19 +593,38 @@ void VKHelper::Cleanup()
     LastSendDataTime                 = 0;
     LastUpdateTrackedFriendsDataTime = 0;
     NextRequestQueueTimerTimeout     = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
-    UserId                           = "";
-    FirstName                        = "";
-    LastName                         = "";
-    PhotoUrl                         = DEFAULT_PHOTO_URL;
-    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
     TrustedFriendsListId             = "";
     TrackedFriendsListId             = "";
 
-    emit userIdChanged(UserId);
-    emit firstNameChanged(FirstName);
-    emit lastNameChanged(LastName);
-    emit photoUrlChanged(PhotoUrl);
-    emit bigPhotoUrlChanged(BigPhotoUrl);
+    if (UserId != "") {
+        UserId = "";
+
+        emit userIdChanged(UserId);
+    }
+
+    if (FirstName != "") {
+        FirstName = "";
+
+        emit firstNameChanged(FirstName);
+    }
+
+    if (LastName != "") {
+        LastName = "";
+
+        emit lastNameChanged(LastName);
+    }
+
+    if (PhotoUrl != DEFAULT_PHOTO_URL) {
+        PhotoUrl = DEFAULT_PHOTO_URL;
+
+        emit photoUrlChanged(PhotoUrl);
+    }
+
+    if (BigPhotoUrl != DEFAULT_PHOTO_URL) {
+        BigPhotoUrl = DEFAULT_PHOTO_URL;
+
+        emit bigPhotoUrlChanged(BigPhotoUrl);
+    }
 
     while (!RequestQueue.isEmpty()) {
         QVariantMap request = RequestQueue.dequeue();
@@ -611,10 +636,15 @@ void VKHelper::Cleanup()
 
     AndroidContext.callMethod<void>("cancelAllVKRequests");
 
+    int prev_friends_count = FriendsData.count();
+
     FriendsData.clear();
     FriendsDataTmp.clear();
 
-    emit friendsCountChanged(FriendsData.count());
+    if (FriendsData.count() != prev_friends_count) {
+        emit friendsCountChanged(FriendsData.count());
+    }
+
     emit friendsUpdated();
 }
 
@@ -1094,9 +1124,14 @@ void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantM
                 }
 
                 if (!ContextHasActiveRequests(resp_request["context"].toString())) {
+                    int prev_friends_count = FriendsData.count();
+
                     FriendsData = FriendsDataTmp;
 
-                    emit friendsCountChanged(FriendsData.count());
+                    if (FriendsData.count() != prev_friends_count) {
+                        emit friendsCountChanged(FriendsData.count());
+                    }
+
                     emit friendsUpdated();
                 }
             } else {
@@ -1227,9 +1262,14 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
                 }
 
                 if (!ContextHasActiveRequests(resp_request["context"].toString())) {
+                    int prev_friends_count = FriendsData.count();
+
                     FriendsData = FriendsDataTmp;
 
-                    emit friendsCountChanged(FriendsData.count());
+                    if (FriendsData.count() != prev_friends_count) {
+                        emit friendsCountChanged(FriendsData.count());
+                    }
+
                     emit friendsUpdated();
                 }
             } else {
@@ -1480,44 +1520,74 @@ void VKHelper::HandleUsersGetResponse(const QString &response, const QVariantMap
                 QJsonObject json_user = json_response.at(0).toObject();
 
                 if (json_user.contains("id")) {
-                    UserId = QString::number(json_user.value("id").toVariant().toLongLong());
-                } else {
-                    UserId = "";
-                }
+                    QString user_id = QString::number(json_user.value("id").toVariant().toLongLong());
 
-                emit userIdChanged(UserId);
+                    if (UserId != user_id) {
+                        UserId = user_id;
+
+                        emit userIdChanged(UserId);
+                    }
+                } else if (UserId != "") {
+                    UserId = "";
+
+                    emit userIdChanged(UserId);
+                }
 
                 if (json_user.contains("first_name")) {
-                    FirstName = json_user.value("first_name").toString();
-                } else {
-                    FirstName = "";
-                }
+                    QString first_name = json_user.value("first_name").toString();
 
-                emit firstNameChanged(FirstName);
+                    if (FirstName != first_name) {
+                        FirstName = first_name;
+
+                        emit firstNameChanged(FirstName);
+                    }
+                } else if (FirstName != "") {
+                    FirstName = "";
+
+                    emit firstNameChanged(FirstName);
+                }
 
                 if (json_user.contains("last_name")) {
-                    LastName = json_user.value("last_name").toString();
-                } else {
-                    LastName = "";
-                }
+                    QString last_name = json_user.value("last_name").toString();
 
-                emit lastNameChanged(LastName);
+                    if (LastName != last_name) {
+                        LastName = last_name;
+
+                        emit lastNameChanged(LastName);
+                    }
+                } else if (LastName != "") {
+                    LastName = "";
+
+                    emit lastNameChanged(LastName);
+                }
 
                 if (json_user.contains("photo_100")) {
-                    PhotoUrl = json_user.value("photo_100").toString();
-                } else {
-                    PhotoUrl = DEFAULT_PHOTO_URL;
-                }
+                    QString photo_url = json_user.value("photo_100").toString();
 
-                emit photoUrlChanged(PhotoUrl);
+                    if (PhotoUrl != photo_url) {
+                        PhotoUrl = photo_url;
+
+                        emit photoUrlChanged(PhotoUrl);
+                    }
+                } else if (PhotoUrl != DEFAULT_PHOTO_URL) {
+                    PhotoUrl = DEFAULT_PHOTO_URL;
+
+                    emit photoUrlChanged(PhotoUrl);
+                }
 
                 if (json_user.contains("photo_200")) {
-                    BigPhotoUrl = json_user.value("photo_200").toString();
-                } else {
-                    BigPhotoUrl = DEFAULT_PHOTO_URL;
-                }
+                    QString big_photo_url = json_user.value("photo_200").toString();
 
-                emit bigPhotoUrlChanged(BigPhotoUrl);
+                    if (BigPhotoUrl != big_photo_url) {
+                        BigPhotoUrl = big_photo_url;
+
+                        emit bigPhotoUrlChanged(BigPhotoUrl);
+                    }
+                } else if (BigPhotoUrl != DEFAULT_PHOTO_URL) {
+                    BigPhotoUrl = DEFAULT_PHOTO_URL;
+
+                    emit bigPhotoUrlChanged(BigPhotoUrl);
+                }
             } else {
                 qWarning() << "HandleUsersGetResponse() : invalid response";
             }
