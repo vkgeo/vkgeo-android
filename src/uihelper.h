@@ -48,7 +48,7 @@ public:
     Q_INVOKABLE void sendInvitation(const QString &text);
 
 public slots:
-    void handleDeviceConfigurationChange();
+    void handleDeviceConfigurationUpdate();
 
 signals:
     void darkThemeChanged(bool darkTheme);

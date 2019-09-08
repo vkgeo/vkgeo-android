@@ -98,7 +98,7 @@ public class VKGeoActivity extends QtActivity
                     }
                 }
 
-                vkAuthChanged(true);
+                vkAuthUpdated(true);
             } else {
                 if (serviceMessenger != null) {
                     try {
@@ -108,16 +108,16 @@ public class VKGeoActivity extends QtActivity
                     }
                 }
 
-                vkAuthChanged(false);
+                vkAuthUpdated(false);
             }
         }
     };
 
-    private static native void deviceConfigurationChanged();
+    private static native void deviceConfigurationUpdated();
 
     private static native void bannerViewHeightUpdated(int height);
 
-    private static native void vkAuthChanged(boolean authorized);
+    private static native void vkAuthUpdated(boolean authorized);
     private static native void vkRequestCompleted(String request, String response);
     private static native void vkRequestFailed(String request, String error_message);
 
@@ -210,7 +210,7 @@ public class VKGeoActivity extends QtActivity
     {
         super.onConfigurationChanged(newConfig);
 
-        deviceConfigurationChanged();
+        deviceConfigurationUpdated();
     }
 
     public int getScreenDPI()
@@ -515,7 +515,7 @@ public class VKGeoActivity extends QtActivity
             {
                 vkAccessTokenTracker.startTracking();
 
-                vkAuthChanged(VKSdk.isLoggedIn());
+                vkAuthUpdated(VKSdk.isLoggedIn());
             }
         });
     }
