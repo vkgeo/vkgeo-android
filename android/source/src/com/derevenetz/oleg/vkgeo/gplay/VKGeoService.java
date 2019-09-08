@@ -59,7 +59,7 @@ public class VKGeoService extends QtService implements LocationListener
         public void handleMessage(Message msg)
         {
             if (msg.what == MESSAGE_NOT_AUTHORIZED) {
-                vkAuthChanged(false);
+                vkAuthUpdated(false);
             } else if (msg.what == MESSAGE_AUTHORIZED) {
                 Bundle bdl = msg.getData();
 
@@ -67,7 +67,7 @@ public class VKGeoService extends QtService implements LocationListener
                     try {
                         VKAccessToken.replaceToken(serviceWeakRef.get().getApplicationContext(), VKAccessToken.tokenFromUrlString(bdl.getString("VKAccessToken")));
 
-                        vkAuthChanged(true);
+                        vkAuthUpdated(true);
                     } catch (Exception ex) {
                         Log.w("VKGeoService", "handleMessage() : " + ex.toString());
                     }
@@ -102,7 +102,7 @@ public class VKGeoService extends QtService implements LocationListener
     private static native void locationUpdated(double latitude, double longitude);
     private static native void batteryStatusUpdated(String status, int level);
 
-    private static native void vkAuthChanged(boolean authorized);
+    private static native void vkAuthUpdated(boolean authorized);
     private static native void vkRequestCompleted(String request, String response);
     private static native void vkRequestFailed(String request, String error_message);
 
@@ -286,7 +286,7 @@ public class VKGeoService extends QtService implements LocationListener
             @Override
             public void run()
             {
-                vkAuthChanged(VKSdk.isLoggedIn());
+                vkAuthUpdated(VKSdk.isLoggedIn());
             }
         });
     }

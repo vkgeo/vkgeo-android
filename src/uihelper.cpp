@@ -68,7 +68,7 @@ void UIHelper::sendInvitation(const QString &text)
     QtAndroid::androidActivity().callMethod<void>("sendInvitation", "(Ljava/lang/String;)V", j_text.object<jstring>());
 }
 
-void UIHelper::handleDeviceConfigurationChange()
+void UIHelper::handleDeviceConfigurationUpdate()
 {
     if (ConfiguredTheme != UITheme::ThemeLight &&
         ConfiguredTheme != UITheme::ThemeDark) {

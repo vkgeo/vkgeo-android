@@ -16,22 +16,22 @@ AndroidGW &AndroidGW::GetInstance()
     return instance;
 }
 
-extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, deviceConfigurationChanged)(JNIEnv *, jclass)
+extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, deviceConfigurationUpdated)(JNIEnv *, jclass)
 {
-    emit AndroidGW::GetInstance().deviceConfigurationChanged();
+    emit AndroidGW::GetInstance().deviceConfigurationUpdated();
 }
 
 extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, bannerViewHeightUpdated)(JNIEnv *, jclass, jint height)
 {
-    emit AndroidGW::GetInstance().bannerViewHeightChanged(height);
+    emit AndroidGW::GetInstance().bannerViewHeightUpdated(height);
 }
 
-extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, vkAuthChanged)(JNIEnv *, jclass, jboolean authorized)
+extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, vkAuthUpdated)(JNIEnv *, jclass, jboolean authorized)
 {
     if (authorized) {
-        emit AndroidGW::GetInstance().authStateChanged(VKAuthState::StateAuthorized);
+        emit AndroidGW::GetInstance().authStateUpdated(VKAuthState::StateAuthorized);
     } else {
-        emit AndroidGW::GetInstance().authStateChanged(VKAuthState::StateNotAuthorized);
+        emit AndroidGW::GetInstance().authStateUpdated(VKAuthState::StateNotAuthorized);
     }
 }
 
@@ -76,12 +76,12 @@ extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoService, batteryS
     emit AndroidGW::GetInstance().batteryStatusUpdated(status, level);
 }
 
-extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoService, vkAuthChanged)(JNIEnv *, jclass, jboolean authorized)
+extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoService, vkAuthUpdated)(JNIEnv *, jclass, jboolean authorized)
 {
     if (authorized) {
-        emit AndroidGW::GetInstance().authStateChanged(VKAuthState::StateAuthorized);
+        emit AndroidGW::GetInstance().authStateUpdated(VKAuthState::StateAuthorized);
     } else {
-        emit AndroidGW::GetInstance().authStateChanged(VKAuthState::StateNotAuthorized);
+        emit AndroidGW::GetInstance().authStateUpdated(VKAuthState::StateNotAuthorized);
     }
 }
 
