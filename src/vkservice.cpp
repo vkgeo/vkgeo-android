@@ -49,10 +49,10 @@ void VKService::handleFriendsUpdate()
         for (const QString &key : friends_data.keys()) {
             QVariantMap frnd = friends_data[key].toMap();
 
-            if (FriendsData.contains(key) && FriendsData[key].toMap().contains("nearby")) {
-                frnd["nearby"] = FriendsData[key].toMap()["nearby"].toBool();
+            if (FriendsData.contains(key) && FriendsData[key].toMap().contains(QStringLiteral("nearby"))) {
+                frnd[QStringLiteral("nearby")] = FriendsData[key].toMap()[QStringLiteral("nearby")].toBool();
             } else {
-                frnd["nearby"] = false;
+                frnd[QStringLiteral("nearby")] = false;
             }
 
             friends_data[key] = frnd;
@@ -68,10 +68,10 @@ void VKService::handleTrackedFriendDataUpdate(const QString &friend_user_id, con
 {
     auto vk_helper = qobject_cast<VKHelper *>(QObject::sender());
 
-    if (vk_helper != nullptr && friend_data.contains("latitude") &&
-                                friend_data.contains("longitude")) {
-        qreal latitude  = friend_data["latitude"].toDouble();
-        qreal longitude = friend_data["longitude"].toDouble();
+    if (vk_helper != nullptr && friend_data.contains(QStringLiteral("latitude")) &&
+                                friend_data.contains(QStringLiteral("longitude"))) {
+        qreal latitude  = friend_data[QStringLiteral("latitude")].toDouble();
+        qreal longitude = friend_data[QStringLiteral("longitude")].toDouble();
 
         if (FriendsData.contains(friend_user_id)) {
             QVariantMap frnd = FriendsData[friend_user_id].toMap();
@@ -81,20 +81,20 @@ void VKService::handleTrackedFriendDataUpdate(const QString &friend_user_id, con
                 QGeoCoordinate friend_coordinate(latitude, longitude);
 
                 if (my_coordinate.distanceTo(friend_coordinate) < NEARBY_DISTANCE) {
-                    if (!frnd.contains("nearby") || !frnd["nearby"].toBool()) {
-                        frnd["nearby"] = true;
+                    if (!frnd.contains(QStringLiteral("nearby")) || !frnd[QStringLiteral("nearby")].toBool()) {
+                        frnd[QStringLiteral("nearby")] = true;
 
-                        if (frnd.contains("firstName") && frnd.contains("lastName")) {
+                        if (frnd.contains(QStringLiteral("firstName")) && frnd.contains(QStringLiteral("lastName"))) {
                             QAndroidJniObject j_user_id   = QAndroidJniObject::fromString(friend_user_id);
-                            QAndroidJniObject j_user_name = QAndroidJniObject::fromString(QString("%1 %2").arg(frnd["firstName"].toString())
-                                                                                                            .arg(frnd["lastName"].toString()));
+                            QAndroidJniObject j_user_name = QAndroidJniObject::fromString(QStringLiteral("%1 %2").arg(frnd[QStringLiteral("firstName")].toString())
+                                                                                                                 .arg(frnd[QStringLiteral("lastName")].toString()));
 
                             QtAndroid::androidService().callMethod<void>("showFriendsNearbyNotification", "(Ljava/lang/String;Ljava/lang/String;)V", j_user_id.object<jstring>(),
                                                                                                                                                      j_user_name.object<jstring>());
                         }
                     }
                 } else {
-                    frnd["nearby"] = false;
+                    frnd[QStringLiteral("nearby")] = false;
                 }
             }
 

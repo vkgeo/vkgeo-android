@@ -3,8 +3,8 @@
 
 #include "admobhelper.h"
 
-const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  ("ca-app-pub-2455088855015693/8090796831");
-const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID("ca-app-pub-2455088855015693/6181026787");
+const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  (QStringLiteral("ca-app-pub-2455088855015693/8090796831"));
+const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID(QStringLiteral("ca-app-pub-2455088855015693/6181026787"));
 
 AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
 {
