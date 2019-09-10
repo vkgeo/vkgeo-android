@@ -39,8 +39,8 @@ extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, vkReque
 {
     const char *request_str  = jni_env->GetStringUTFChars(j_request,  nullptr);
     const char *response_str = jni_env->GetStringUTFChars(j_response, nullptr);
-    QString     request      = request_str;
-    QString     response     = response_str;
+    QString     request      = QString::fromUtf8(request_str);
+    QString     response     = QString::fromUtf8(response_str);
 
     jni_env->ReleaseStringUTFChars(j_request,  request_str);
     jni_env->ReleaseStringUTFChars(j_response, response_str);
@@ -52,8 +52,8 @@ extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, vkReque
 {
     const char *request_str       = jni_env->GetStringUTFChars(j_request,       nullptr);
     const char *error_message_str = jni_env->GetStringUTFChars(j_error_message, nullptr);
-    QString     request           = request_str;
-    QString     error_message     = error_message_str;
+    QString     request           = QString::fromUtf8(request_str);
+    QString     error_message     = QString::fromUtf8(error_message_str);
 
     jni_env->ReleaseStringUTFChars(j_request,       request_str);
     jni_env->ReleaseStringUTFChars(j_error_message, error_message_str);
@@ -69,7 +69,7 @@ extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoService, location
 extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoService, batteryStatusUpdated)(JNIEnv *jni_env, jclass, jstring j_status, jint level)
 {
     const char *status_str = jni_env->GetStringUTFChars(j_status, nullptr);
-    QString     status     = status_str;
+    QString     status     = QString::fromUtf8(status_str);
 
     jni_env->ReleaseStringUTFChars(j_status, status_str);
 
@@ -89,8 +89,8 @@ extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoService, vkReques
 {
     const char *request_str  = jni_env->GetStringUTFChars(j_request,  nullptr);
     const char *response_str = jni_env->GetStringUTFChars(j_response, nullptr);
-    QString     request      = request_str;
-    QString     response     = response_str;
+    QString     request      = QString::fromUtf8(request_str);
+    QString     response     = QString::fromUtf8(response_str);
 
     jni_env->ReleaseStringUTFChars(j_request,  request_str);
     jni_env->ReleaseStringUTFChars(j_response, response_str);
@@ -102,8 +102,8 @@ extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoService, vkReques
 {
     const char *request_str       = jni_env->GetStringUTFChars(j_request,       nullptr);
     const char *error_message_str = jni_env->GetStringUTFChars(j_error_message, nullptr);
-    QString     request           = request_str;
-    QString     error_message     = error_message_str;
+    QString     request           = QString::fromUtf8(request_str);
+    QString     error_message     = QString::fromUtf8(error_message_str);
 
     jni_env->ReleaseStringUTFChars(j_request,       request_str);
     jni_env->ReleaseStringUTFChars(j_error_message, error_message_str);
