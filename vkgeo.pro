@@ -100,13 +100,13 @@ android {
 
     contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
         ANDROID_EXTRA_LIBS = \
-            $$PWD/android/source/libssl/armeabi-v7a/libcrypto.so \
-            $$PWD/android/source/libssl/armeabi-v7a/libssl.so
+            $$PWD/android/source/libssl/armeabi-v7a/libcrypto_1_1.so \
+            $$PWD/android/source/libssl/armeabi-v7a/libssl_1_1.so
     }
 
     contains(ANDROID_TARGET_ARCH,arm64-v8a) {
         ANDROID_EXTRA_LIBS = \
-            $$PWD/android/source/libssl/arm64-v8a/libcrypto.so \
-            $$PWD/android/source/libssl/arm64-v8a/libssl.so
+            $$PWD/android/source/libssl/arm64-v8a/libcrypto_1_1.so \
+            $$PWD/android/source/libssl/arm64-v8a/libssl_1_1.so
     }
 }
