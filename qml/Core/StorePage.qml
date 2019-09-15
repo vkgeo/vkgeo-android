@@ -14,7 +14,7 @@ Page {
         text:              qsTr("Store")
         doneButtonVisible: false
 
-        onBack: {
+        onBackClicked: {
             mainStackView.pop();
         }
     }

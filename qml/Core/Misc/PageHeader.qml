@@ -15,8 +15,8 @@ ColumnLayout {
 
     property string text:            ""
 
-    signal back()
-    signal done()
+    signal backClicked()
+    signal doneClicked()
 
     Rectangle {
         height:           pageHeader.bannerViewHeight
@@ -45,7 +45,7 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    pageHeader.back();
+                    pageHeader.backClicked();
                 }
             }
 
@@ -79,7 +79,7 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    pageHeader.done();
+                    pageHeader.doneClicked();
                 }
             }
 
