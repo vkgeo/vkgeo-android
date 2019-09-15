@@ -15,7 +15,7 @@ Page {
         text:              qsTr("Profile info")
         doneButtonVisible: false
 
-        onBack: {
+        onBackClicked: {
             mainStackView.pop();
         }
     }

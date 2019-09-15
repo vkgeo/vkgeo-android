@@ -14,11 +14,11 @@ Page {
         bannerViewHeight: trustedFriendsPage.bannerViewHeight
         text:             qsTr("Trusted friends")
 
-        onBack: {
+        onBackClicked: {
             mainStackView.pop();
         }
 
-        onDone: {
+        onDoneClicked: {
             var trusted_friends_list = [];
 
             for (var i = 0; i < trustedFriendsPage.friendsList.length; i++) {

@@ -14,11 +14,11 @@ Page {
         bannerViewHeight: trackedFriendsPage.bannerViewHeight
         text:             qsTr("Tracked friends")
 
-        onBack: {
+        onBackClicked: {
             mainStackView.pop();
         }
 
-        onDone: {
+        onDoneClicked: {
             var tracked_friends_list = [];
 
             for (var i = 0; i < trackedFriendsPage.friendsList.length; i++) {
