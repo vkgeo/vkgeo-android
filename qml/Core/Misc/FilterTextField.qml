@@ -9,8 +9,8 @@ Pane {
 
     background: Rectangle {
         color:        UIHelper.darkTheme ? "lightgray" : "white"
-        radius:       UtilScript.pt(8)
-        border.width: UtilScript.pt(1)
+        radius:       UtilScript.pt(UIHelper.screenDpi, 8)
+        border.width: UtilScript.pt(UIHelper.screenDpi, 1)
         border.color: "steelblue"
     }
 
@@ -20,7 +20,7 @@ Pane {
 
     RowLayout {
         anchors.fill: parent
-        spacing:      UtilScript.pt(2)
+        spacing:      UtilScript.pt(UIHelper.screenDpi, 2)
 
         TextField {
             id:               textField
@@ -41,8 +41,8 @@ Pane {
         }
 
         Rectangle {
-            width:            textField.implicitHeight
-            height:           textField.implicitHeight
+            implicitWidth:    textField.implicitHeight
+            implicitHeight:   textField.implicitHeight
             color:            "transparent"
             visible:          textField.displayText !== ""
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

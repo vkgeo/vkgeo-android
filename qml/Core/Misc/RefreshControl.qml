@@ -4,8 +4,8 @@ import "../../Util.js" as UtilScript
 
 Image {
     id:       refreshControl
-    width:    UtilScript.pt(32)
-    height:   UtilScript.pt(32)
+    width:    UtilScript.pt(UIHelper.screenDpi, 32)
+    height:   UtilScript.pt(UIHelper.screenDpi, 32)
     source:   "qrc:/resources/images/misc/refresh.png"
     fillMode: Image.PreserveAspectFit
     rotation: controlRotation(height, listViewOriginY, listViewContentY, shiftDenominator, refreshAnimation.running)
