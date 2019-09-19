@@ -401,7 +401,7 @@ public class VKGeoActivity extends QtActivity
 
                     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                                                                                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                                                   Gravity.CENTER_HORIZONTAL);
+                                                                                   Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
                     bannerView = new AdView(f_context);
 
