@@ -19,7 +19,7 @@ ColumnLayout {
     signal doneClicked()
 
     Rectangle {
-        height:           pageHeader.bannerViewHeight
+        implicitHeight:   pageHeader.bannerViewHeight
         color:            UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
         visible:          pageHeader.bannerViewHeight > 0
         Layout.fillWidth: true
@@ -27,20 +27,20 @@ ColumnLayout {
     }
 
     Rectangle {
-        height:           UtilScript.pt(48)
+        implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 48)
         color:            "steelblue"
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignVCenter
 
         RowLayout {
             anchors.fill:        parent
-            anchors.leftMargin:  UtilScript.pt(8)
-            anchors.rightMargin: UtilScript.pt(8)
-            spacing:             UtilScript.pt(4)
+            anchors.leftMargin:  UtilScript.pt(UIHelper.screenDpi, 8)
+            anchors.rightMargin: UtilScript.pt(UIHelper.screenDpi, 8)
+            spacing:             UtilScript.pt(UIHelper.screenDpi, 4)
 
             VKBackButton {
-                width:            UtilScript.pt(32)
-                height:           UtilScript.pt(32)
+                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 32)
+                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 32)
                 visible:          pageHeader.backButtonVisible
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -50,7 +50,7 @@ ColumnLayout {
             }
 
             Rectangle {
-                width:             UtilScript.pt(32)
+                implicitWidth:     UtilScript.pt(UIHelper.screenDpi, 32)
                 color:             "transparent"
                 visible:           !pageHeader.backButtonVisible
                 Layout.fillHeight: true
@@ -73,8 +73,8 @@ ColumnLayout {
             }
 
             VKDoneButton {
-                width:            UtilScript.pt(32)
-                height:           UtilScript.pt(32)
+                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 32)
+                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 32)
                 visible:          pageHeader.doneButtonVisible
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -84,7 +84,7 @@ ColumnLayout {
             }
 
             Rectangle {
-                width:             UtilScript.pt(32)
+                implicitWidth:     UtilScript.pt(UIHelper.screenDpi, 32)
                 color:             "transparent"
                 visible:           !pageHeader.doneButtonVisible
                 Layout.fillHeight: true

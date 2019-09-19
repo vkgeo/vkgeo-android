@@ -104,8 +104,8 @@ Page {
 
     ColumnLayout {
         anchors.fill:      parent
-        anchors.topMargin: UtilScript.pt(4)
-        spacing:           UtilScript.pt(4)
+        anchors.topMargin: UtilScript.pt(UIHelper.screenDpi, 4)
+        spacing:           UtilScript.pt(UIHelper.screenDpi, 4)
 
         FilterTextField {
             id:               filterTextField
@@ -131,24 +131,24 @@ Page {
             delegate: Rectangle {
                 id:           friendDelegate
                 width:        listView.width
-                height:       UtilScript.pt(80)
+                height:       UtilScript.pt(UIHelper.screenDpi, 80)
                 color:        "transparent"
                 clip:         true
-                border.width: UtilScript.pt(1)
+                border.width: UtilScript.pt(UIHelper.screenDpi, 1)
                 border.color: UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
 
                 readonly property var listView: ListView.view
 
                 RowLayout {
                     anchors.fill:        parent
-                    anchors.leftMargin:  UtilScript.pt(16)
-                    anchors.rightMargin: UtilScript.pt(16)
-                    spacing:             UtilScript.pt(8)
+                    anchors.leftMargin:  UtilScript.pt(UIHelper.screenDpi, 16)
+                    anchors.rightMargin: UtilScript.pt(UIHelper.screenDpi, 16)
+                    spacing:             UtilScript.pt(UIHelper.screenDpi, 8)
 
                     OpacityMask {
                         id:               opacityMask
-                        width:            UtilScript.pt(64)
-                        height:           UtilScript.pt(64)
+                        implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 64)
+                        implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                         source: Image {

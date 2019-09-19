@@ -9,7 +9,7 @@ import "../../Util.js" as UtilScript
 Popup {
     id:               adMobConsentDialog
     anchors.centerIn: Overlay.overlay
-    padding:          UtilScript.pt(8)
+    padding:          UtilScript.pt(UIHelper.screenDpi, 8)
     modal:            true
     closePolicy:      Popup.NoAutoClose
 
@@ -18,19 +18,19 @@ Popup {
 
     background: Rectangle {
         color:        UIHelper.darkTheme ? "black" : "white"
-        radius:       UtilScript.pt(8)
-        border.width: UtilScript.pt(2)
+        radius:       UtilScript.pt(UIHelper.screenDpi, 8)
+        border.width: UtilScript.pt(UIHelper.screenDpi, 2)
         border.color: "steelblue"
     }
 
     contentItem: Rectangle {
-        implicitWidth:  UtilScript.pt(300)
-        implicitHeight: UtilScript.pt(300)
+        implicitWidth:  UtilScript.pt(UIHelper.screenDpi, 300)
+        implicitHeight: UtilScript.pt(UIHelper.screenDpi, 300)
         color:          "transparent"
 
         ColumnLayout {
             anchors.fill: parent
-            spacing:      UtilScript.pt(8)
+            spacing:      UtilScript.pt(UIHelper.screenDpi, 8)
 
             Text {
                 text:                qsTr("We keep this app free by showing ads. Ad network will <a href=\"https://policies.google.com/technologies/ads\">collect data and use a unique identifier on your device</a> to show you ads. <b>Do you allow to use your data to tailor ads for you?</b>")
@@ -53,8 +53,8 @@ Popup {
             }
 
             VKButton {
-                width:            UtilScript.pt(280)
-                height:           UtilScript.pt(64)
+                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
                 text:             qsTr("Yes, show me relevant ads")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -65,8 +65,8 @@ Popup {
             }
 
             VKButton {
-                width:            UtilScript.pt(280)
-                height:           UtilScript.pt(64)
+                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
                 text:             qsTr("No, show me ads that are less relevant")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 

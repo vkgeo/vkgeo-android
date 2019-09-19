@@ -24,8 +24,8 @@ MapQuickItem {
     signal profilePageRequested(string userId)
 
     sourceItem: Rectangle {
-        width:  UtilScript.pt(48)
-        height: UtilScript.pt(48)
+        width:  UtilScript.pt(UIHelper.screenDpi, 48)
+        height: UtilScript.pt(UIHelper.screenDpi, 48)
         color:  "transparent"
 
         OpacityMask {
@@ -53,8 +53,8 @@ MapQuickItem {
             x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
             y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
             z:        1
-            width:    UtilScript.pt(16)
-            height:   UtilScript.pt(16)
+            width:    UtilScript.pt(UIHelper.screenDpi, 16)
+            height:   UtilScript.pt(UIHelper.screenDpi, 16)
             source:   "qrc:/resources/images/main/avatar_obsolete_data_label.png"
             fillMode: Image.PreserveAspectFit
             visible:  vkMapItem.dataObsolete

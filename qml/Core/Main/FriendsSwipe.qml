@@ -80,18 +80,18 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill:      parent
-        anchors.topMargin: UtilScript.pt(4)
-        spacing:           UtilScript.pt(4)
+        anchors.topMargin: UtilScript.pt(UIHelper.screenDpi, 4)
+        spacing:           UtilScript.pt(UIHelper.screenDpi, 4)
 
         RowLayout {
-            spacing:           UtilScript.pt(4)
-            Layout.leftMargin: UtilScript.pt(8)
+            spacing:           UtilScript.pt(UIHelper.screenDpi, 4)
+            Layout.leftMargin: UtilScript.pt(UIHelper.screenDpi, 8)
             Layout.fillWidth:  true
             Layout.alignment:  Qt.AlignVCenter
 
             Rectangle {
-                width:            filterTextField.implicitHeight
-                height:           filterTextField.implicitHeight
+                implicitWidth:    filterTextField.implicitHeight
+                implicitHeight:   filterTextField.implicitHeight
                 color:            "transparent"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -152,23 +152,23 @@ Rectangle {
                 delegate: Rectangle {
                     id:           friendDelegate
                     width:        listView.width
-                    height:       UtilScript.pt(80)
+                    height:       UtilScript.pt(UIHelper.screenDpi, 80)
                     color:        "transparent"
                     clip:         true
-                    border.width: UtilScript.pt(1)
+                    border.width: UtilScript.pt(UIHelper.screenDpi, 1)
                     border.color: UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
 
                     readonly property var listView: ListView.view
 
                     RowLayout {
                         anchors.fill:        parent
-                        anchors.leftMargin:  UtilScript.pt(16)
-                        anchors.rightMargin: UtilScript.pt(16)
-                        spacing:             UtilScript.pt(8)
+                        anchors.leftMargin:  UtilScript.pt(UIHelper.screenDpi, 16)
+                        anchors.rightMargin: UtilScript.pt(UIHelper.screenDpi, 16)
+                        spacing:             UtilScript.pt(UIHelper.screenDpi, 8)
 
                         Rectangle {
-                            width:            UtilScript.pt(64)
-                            height:           UtilScript.pt(64)
+                            implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 64)
+                            implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
                             color:            "transparent"
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -197,8 +197,8 @@ Rectangle {
                                 x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
                                 y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
                                 z:        1
-                                width:    UtilScript.pt(16)
-                                height:   UtilScript.pt(16)
+                                width:    UtilScript.pt(UIHelper.screenDpi, 16)
+                                height:   UtilScript.pt(UIHelper.screenDpi, 16)
                                 source:   "qrc:/resources/images/main/avatar_online_label.png"
                                 fillMode: Image.PreserveAspectFit
                                 visible:  online
@@ -232,8 +232,8 @@ Rectangle {
                         }
 
                         Rectangle {
-                            width:            UtilScript.pt(48)
-                            height:           UtilScript.pt(48)
+                            implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 48)
+                            implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 48)
                             color:            "transparent"
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
