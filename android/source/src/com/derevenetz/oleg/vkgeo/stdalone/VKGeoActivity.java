@@ -213,7 +213,7 @@ public class VKGeoActivity extends QtActivity
         deviceConfigurationUpdated();
     }
 
-    public int getScreenDPI()
+    public int getScreenDpi()
     {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
 

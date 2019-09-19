@@ -6,6 +6,7 @@
 UIHelper::UIHelper(QObject *parent) : QObject(parent)
 {
     DarkTheme       = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");
+    ScreenDpi       = QtAndroid::androidActivity().callMethod<jint>("getScreenDpi");
     ConfiguredTheme = UITheme::ThemeAuto;
 }
 
@@ -19,6 +20,11 @@ UIHelper &UIHelper::GetInstance()
 bool UIHelper::darkTheme() const
 {
     return DarkTheme;
+}
+
+int UIHelper::screenDpi() const
+{
+    return ScreenDpi;
 }
 
 int UIHelper::configuredTheme() const
@@ -51,11 +57,6 @@ void UIHelper::setConfiguredTheme(int theme)
     }
 }
 
-int UIHelper::getScreenDPI()
-{
-    return QtAndroid::androidActivity().callMethod<jint>("getScreenDPI");
-}
-
 void UIHelper::showAppSettings()
 {
     QtAndroid::androidActivity().callMethod<void>("showAppSettings");
@@ -70,6 +71,14 @@ void UIHelper::sendInvitation(const QString &text)
 
 void UIHelper::handleDeviceConfigurationUpdate()
 {
+    int screen_dpi = QtAndroid::androidActivity().callMethod<jint>("getScreenDpi");
+
+    if (ScreenDpi != screen_dpi) {
+        ScreenDpi = screen_dpi;
+
+        emit screenDpiChanged(ScreenDpi);
+    }
+
     if (ConfiguredTheme != UITheme::ThemeLight &&
         ConfiguredTheme != UITheme::ThemeDark) {
         bool dark_theme = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");

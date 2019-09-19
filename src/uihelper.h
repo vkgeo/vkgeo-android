@@ -21,6 +21,7 @@ class UIHelper : public QObject
     Q_OBJECT
 
     Q_PROPERTY(bool darkTheme READ darkTheme NOTIFY darkThemeChanged)
+    Q_PROPERTY(int  screenDpi READ screenDpi NOTIFY screenDpiChanged)
 
     Q_PROPERTY(int configuredTheme READ configuredTheme WRITE setConfiguredTheme NOTIFY configuredThemeChanged)
 
@@ -38,11 +39,10 @@ public:
     static UIHelper &GetInstance();
 
     bool darkTheme() const;
+    int screenDpi() const;
 
     int configuredTheme() const;
     void setConfiguredTheme(int theme);
-
-    Q_INVOKABLE int getScreenDPI();
 
     Q_INVOKABLE void showAppSettings();
     Q_INVOKABLE void sendInvitation(const QString &text);
@@ -52,11 +52,12 @@ public slots:
 
 signals:
     void darkThemeChanged(bool darkTheme);
+    void screenDpiChanged(int screenDpi);
     void configuredThemeChanged(int configuredTheme);
 
 private:
     bool DarkTheme;
-    int  ConfiguredTheme;
+    int  ScreenDpi, ConfiguredTheme;
 };
 
 #endif // UIHELPER_H
