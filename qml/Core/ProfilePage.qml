@@ -164,14 +164,14 @@ Page {
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
                 text:                "%1 %2".arg(profilePage.firstName).arg(profilePage.lastName)
                 color:               UIHelper.darkTheme ? "white" : "black"
-                font.pointSize:      24
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 24)
                 font.family:         "Helvetica"
                 font.bold:           true
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 textFormat:          Text.PlainText
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
@@ -182,13 +182,13 @@ Page {
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
                 text:                profilePage.status
                 color:               UIHelper.darkTheme ? "white" : "black"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 textFormat:          Text.PlainText
                 visible:             profilePage.status !== ""
                 Layout.fillWidth:    true
@@ -201,14 +201,14 @@ Page {
                 text:                qsTr("Last update at: %1").arg((new Date(profilePage.updateTime * 1000))
                                                                          .toLocaleString())
                 color:               UIHelper.darkTheme ? "white" : "black"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 font.italic:         true
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 visible:             profilePage.dataAvailable
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter

@@ -219,13 +219,13 @@ Rectangle {
                         Text {
                             text:                "%1 %2".arg(firstName).arg(lastName)
                             color:               UIHelper.darkTheme ? "white" : "black"
-                            font.pointSize:      16
+                            font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                             font.family:         "Helvetica"
                             horizontalAlignment: Text.AlignLeft
                             verticalAlignment:   Text.AlignVCenter
                             wrapMode:            Text.Wrap
                             fontSizeMode:        Text.Fit
-                            minimumPointSize:    8
+                            minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                             textFormat:          Text.PlainText
                             Layout.fillWidth:    true
                             Layout.fillHeight:   true

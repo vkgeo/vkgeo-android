@@ -31,13 +31,13 @@ Page {
             rightPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
             text:                 qsTr("Sign in with your VK account")
             color:                UIHelper.darkTheme ? "white" : "black"
-            font.pointSize:       32
+            font.pixelSize:       UtilScript.dp(UIHelper.screenDpi, 32)
             font.family:          "Helvetica"
             font.bold:            true
             horizontalAlignment:  Text.AlignHCenter
             wrapMode:             Text.Wrap
             fontSizeMode:         Text.Fit
-            minimumPointSize:     8
+            minimumPixelSize:     UtilScript.dp(UIHelper.screenDpi, 8)
             Layout.maximumHeight: parent.height / 2
             Layout.fillWidth:     true
             Layout.alignment:     Qt.AlignVCenter
