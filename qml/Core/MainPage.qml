@@ -28,7 +28,7 @@ Page {
 
         TabButton {
             id:             mapTabButton
-            implicitHeight: UtilScript.pt(UIHelper.screenDpi, 48)
+            implicitHeight: UtilScript.dp(UIHelper.screenDpi, 48)
 
             background: Rectangle {
                 color: tabBar.currentIndex === 0 ? "steelblue" : (UIHelper.darkTheme ? "midnightblue" :
@@ -43,7 +43,7 @@ Page {
 
         TabButton {
             id:             peopleTabButton
-            implicitHeight: UtilScript.pt(UIHelper.screenDpi, 48)
+            implicitHeight: UtilScript.dp(UIHelper.screenDpi, 48)
 
             background: Rectangle {
                 color: tabBar.currentIndex === 1 ? "steelblue" : (UIHelper.darkTheme ? "midnightblue" :
@@ -58,7 +58,7 @@ Page {
 
         TabButton {
             id:             settingsTabButton
-            implicitHeight: UtilScript.pt(UIHelper.screenDpi, 48)
+            implicitHeight: UtilScript.dp(UIHelper.screenDpi, 48)
 
             background: Rectangle {
                 color: tabBar.currentIndex === 2 ? "steelblue" : (UIHelper.darkTheme ? "midnightblue" :

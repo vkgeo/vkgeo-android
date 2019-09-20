@@ -9,8 +9,8 @@ Pane {
 
     background: Rectangle {
         color:        UIHelper.darkTheme ? "lightgray" : "white"
-        radius:       UtilScript.pt(UIHelper.screenDpi, 8)
-        border.width: UtilScript.pt(UIHelper.screenDpi, 1)
+        radius:       UtilScript.dp(UIHelper.screenDpi, 8)
+        border.width: UtilScript.dp(UIHelper.screenDpi, 1)
         border.color: "steelblue"
     }
 
@@ -20,7 +20,7 @@ Pane {
 
     RowLayout {
         anchors.fill: parent
-        spacing:      UtilScript.pt(UIHelper.screenDpi, 2)
+        spacing:      UtilScript.dp(UIHelper.screenDpi, 2)
 
         TextField {
             id:               textField

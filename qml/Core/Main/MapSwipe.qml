@@ -157,11 +157,11 @@ Rectangle {
     Image {
         anchors.left:         parent.left
         anchors.bottom:       parent.bottom
-        anchors.leftMargin:   UtilScript.pt(UIHelper.screenDpi, 8)
-        anchors.bottomMargin: UtilScript.pt(UIHelper.screenDpi, 32)
+        anchors.leftMargin:   UtilScript.dp(UIHelper.screenDpi, 8)
+        anchors.bottomMargin: UtilScript.dp(UIHelper.screenDpi, 32)
         z:                    1
-        width:                UtilScript.pt(UIHelper.screenDpi, 48)
-        height:               UtilScript.pt(UIHelper.screenDpi, 48)
+        width:                UtilScript.dp(UIHelper.screenDpi, 48)
+        height:               UtilScript.dp(UIHelper.screenDpi, 48)
         source:               "qrc:/resources/images/main/button_show_all.png"
         fillMode:             Image.PreserveAspectFit
 
@@ -178,10 +178,10 @@ Rectangle {
     Image {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom:           parent.bottom
-        anchors.bottomMargin:     UtilScript.pt(UIHelper.screenDpi, 32)
+        anchors.bottomMargin:     UtilScript.dp(UIHelper.screenDpi, 32)
         z:                        1
-        width:                    UtilScript.pt(UIHelper.screenDpi, 48)
-        height:                   UtilScript.pt(UIHelper.screenDpi, 48)
+        width:                    UtilScript.dp(UIHelper.screenDpi, 48)
+        height:                   UtilScript.dp(UIHelper.screenDpi, 48)
         source:                   enabled ? "qrc:/resources/images/main/button_update.png" :
                                             "qrc:/resources/images/main/button_update_disabled.png"
         fillMode:                 Image.PreserveAspectFit
@@ -199,11 +199,11 @@ Rectangle {
     Image {
         anchors.right:        parent.right
         anchors.bottom:       parent.bottom
-        anchors.rightMargin:  UtilScript.pt(UIHelper.screenDpi, 8)
-        anchors.bottomMargin: UtilScript.pt(UIHelper.screenDpi, 32)
+        anchors.rightMargin:  UtilScript.dp(UIHelper.screenDpi, 8)
+        anchors.bottomMargin: UtilScript.dp(UIHelper.screenDpi, 32)
         z:                    1
-        width:                UtilScript.pt(UIHelper.screenDpi, 48)
-        height:               UtilScript.pt(UIHelper.screenDpi, 48)
+        width:                UtilScript.dp(UIHelper.screenDpi, 48)
+        height:               UtilScript.dp(UIHelper.screenDpi, 48)
         source:               enabled ? "qrc:/resources/images/main/button_track.png" :
                                         "qrc:/resources/images/main/button_track_disabled.png"
         fillMode:             Image.PreserveAspectFit

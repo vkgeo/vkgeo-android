@@ -104,8 +104,8 @@ Page {
 
     ColumnLayout {
         anchors.fill:      parent
-        anchors.topMargin: UtilScript.pt(UIHelper.screenDpi, 4)
-        spacing:           UtilScript.pt(UIHelper.screenDpi, 4)
+        anchors.topMargin: UtilScript.dp(UIHelper.screenDpi, 4)
+        spacing:           UtilScript.dp(UIHelper.screenDpi, 4)
 
         FilterTextField {
             id:               filterTextField
@@ -131,24 +131,24 @@ Page {
             delegate: Rectangle {
                 id:           friendDelegate
                 width:        listView.width
-                height:       UtilScript.pt(UIHelper.screenDpi, 80)
+                height:       UtilScript.dp(UIHelper.screenDpi, 80)
                 color:        "transparent"
                 clip:         true
-                border.width: UtilScript.pt(UIHelper.screenDpi, 1)
+                border.width: UtilScript.dp(UIHelper.screenDpi, 1)
                 border.color: UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
 
                 readonly property var listView: ListView.view
 
                 RowLayout {
                     anchors.fill:        parent
-                    anchors.leftMargin:  UtilScript.pt(UIHelper.screenDpi, 16)
-                    anchors.rightMargin: UtilScript.pt(UIHelper.screenDpi, 16)
-                    spacing:             UtilScript.pt(UIHelper.screenDpi, 8)
+                    anchors.leftMargin:  UtilScript.dp(UIHelper.screenDpi, 16)
+                    anchors.rightMargin: UtilScript.dp(UIHelper.screenDpi, 16)
+                    spacing:             UtilScript.dp(UIHelper.screenDpi, 8)
 
                     OpacityMask {
                         id:               opacityMask
-                        implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 64)
-                        implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                        implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 64)
+                        implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                         source: Image {

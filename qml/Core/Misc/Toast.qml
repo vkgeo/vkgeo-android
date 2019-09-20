@@ -5,7 +5,7 @@ import "../../Util.js" as UtilScript
 Rectangle {
     id:      toast
     color:   backgroundColor
-    radius:  UtilScript.pt(UIHelper.screenDpi, 8)
+    radius:  UtilScript.dp(UIHelper.screenDpi, 8)
     visible: false
 
     property string text:           ""
@@ -21,7 +21,7 @@ Rectangle {
 
     Text {
         anchors.fill:        parent
-        anchors.margins:     UtilScript.pt(UIHelper.screenDpi, 2)
+        anchors.margins:     UtilScript.dp(UIHelper.screenDpi, 2)
         text:                toast.text
         color:               toast.textColor
         font.pointSize:      16

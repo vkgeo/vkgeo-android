@@ -16,9 +16,9 @@ Page {
 
     ColumnLayout {
         anchors.fill:         parent
-        anchors.topMargin:    UtilScript.pt(UIHelper.screenDpi, 16)
-        anchors.bottomMargin: UtilScript.pt(UIHelper.screenDpi, 16)
-        spacing:              UtilScript.pt(UIHelper.screenDpi, 32)
+        anchors.topMargin:    UtilScript.dp(UIHelper.screenDpi, 16)
+        anchors.bottomMargin: UtilScript.dp(UIHelper.screenDpi, 16)
+        spacing:              UtilScript.dp(UIHelper.screenDpi, 32)
 
         Rectangle {
             color:             "transparent"
@@ -27,8 +27,8 @@ Page {
         }
 
         Text {
-            leftPadding:          UtilScript.pt(UIHelper.screenDpi, 16)
-            rightPadding:         UtilScript.pt(UIHelper.screenDpi, 16)
+            leftPadding:          UtilScript.dp(UIHelper.screenDpi, 16)
+            rightPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
             text:                 qsTr("Sign in with your VK account")
             color:                UIHelper.darkTheme ? "white" : "black"
             font.pointSize:       32
@@ -44,8 +44,8 @@ Page {
         }
 
         Rectangle {
-            implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-            implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 140)
+            implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+            implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 140)
             color:            "transparent"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -71,8 +71,8 @@ Page {
         }
 
         VKButton {
-            implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-            implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+            implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+            implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
             text:             qsTr("Privacy policy")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 

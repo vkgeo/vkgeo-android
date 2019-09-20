@@ -9,7 +9,7 @@ import "../../Util.js" as UtilScript
 Popup {
     id:               themeSelectionDialog
     anchors.centerIn: Overlay.overlay
-    padding:          UtilScript.pt(UIHelper.screenDpi, 8)
+    padding:          UtilScript.dp(UIHelper.screenDpi, 8)
     modal:            true
     closePolicy:      Popup.NoAutoClose
 
@@ -20,23 +20,23 @@ Popup {
 
     background: Rectangle {
         color:        UIHelper.darkTheme ? "black" : "white"
-        radius:       UtilScript.pt(UIHelper.screenDpi, 8)
-        border.width: UtilScript.pt(UIHelper.screenDpi, 2)
+        radius:       UtilScript.dp(UIHelper.screenDpi, 8)
+        border.width: UtilScript.dp(UIHelper.screenDpi, 2)
         border.color: "steelblue"
     }
 
     contentItem: Rectangle {
-        implicitWidth:  UtilScript.pt(UIHelper.screenDpi, 300)
-        implicitHeight: UtilScript.pt(UIHelper.screenDpi, 300)
+        implicitWidth:  UtilScript.dp(UIHelper.screenDpi, 300)
+        implicitHeight: UtilScript.dp(UIHelper.screenDpi, 300)
         color:          "transparent"
 
         ColumnLayout {
             anchors.fill: parent
-            spacing:      UtilScript.pt(UIHelper.screenDpi, 8)
+            spacing:      UtilScript.dp(UIHelper.screenDpi, 8)
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Auto")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -47,8 +47,8 @@ Popup {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Light theme")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -59,8 +59,8 @@ Popup {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Dark theme")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -71,8 +71,8 @@ Popup {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Cancel")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
