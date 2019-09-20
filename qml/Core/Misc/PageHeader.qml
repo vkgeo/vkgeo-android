@@ -60,14 +60,14 @@ ColumnLayout {
             Text {
                 text:                pageHeader.text
                 color:               "white"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 font.bold:           true
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 Layout.fillWidth:    true
                 Layout.fillHeight:   true
             }

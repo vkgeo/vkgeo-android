@@ -36,13 +36,13 @@ Popup {
                 text:                qsTr("We keep this app free by showing ads. Ad network will <a href=\"https://policies.google.com/technologies/ads\">collect data and use a unique identifier on your device</a> to show you ads. <b>Do you allow to use your data to tailor ads for you?</b>")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 textFormat:          Text.StyledText
                 Layout.fillWidth:    true
                 Layout.fillHeight:   true
