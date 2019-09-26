@@ -25,6 +25,8 @@ Pane {
         TextField {
             id:               textField
             placeholderText:  filterTextField.placeholderText
+            font.pixelSize:   UtilScript.dp(UIHelper.screenDpi, 20)
+            font.family:      "Helvetica"
             inputMethodHints: Qt.ImhNoPredictiveText
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
