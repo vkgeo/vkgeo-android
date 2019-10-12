@@ -1,7 +1,6 @@
 package com.derevenetz.oleg.vkgeo.stdalone;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -55,15 +54,15 @@ import com.vk.sdk.api.VKResponse;
 
 public class VKGeoActivity extends QtActivity
 {
-    private static final long           AD_RELOAD_ON_FAILURE_DELAY = 60000;
+    private static final long  AD_RELOAD_ON_FAILURE_DELAY = 60000;
 
-    private boolean                     statusBarVisible           = false,
-                                        showPersonalizedAds        = false;
-    private int                         statusBarHeight            = 0;
-    private Messenger                   serviceMessenger           = null;
-    private AdView                      bannerView                 = null;
-    private InterstitialAd              interstitial               = null;
-    private HashMap<VKRequest, Boolean> vkRequestTracker           = new HashMap<>();
+    private boolean            statusBarVisible           = false,
+                               showPersonalizedAds        = false;
+    private int                statusBarHeight            = 0;
+    private Messenger          serviceMessenger           = null;
+    private AdView             bannerView                 = null;
+    private InterstitialAd     interstitial               = null;
+    private HashSet<VKRequest> vkRequestTracker           = new HashSet<>();
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -596,13 +595,13 @@ public class VKGeoActivity extends QtActivity
 
                         final VKRequest vk_request = new VKRequest("execute", VKParameters.from("code", execute_code.toString()));
 
-                        vkRequestTracker.put(vk_request, true);
+                        vkRequestTracker.add(vk_request);
 
                         vk_request.executeWithListener(new VKRequestListener() {
                             @Override
                             public void onComplete(VKResponse response)
                             {
-                                if (vkRequestTracker.containsKey(vk_request)) {
+                                if (vkRequestTracker.contains(vk_request)) {
                                     vkRequestTracker.remove(vk_request);
 
                                     if (response != null && response.json != null) {
@@ -667,7 +666,7 @@ public class VKGeoActivity extends QtActivity
                             @Override
                             public void onError(VKError error)
                             {
-                                if (vkRequestTracker.containsKey(vk_request)) {
+                                if (vkRequestTracker.contains(vk_request)) {
                                     vkRequestTracker.remove(vk_request);
 
                                     String error_str = "";
@@ -696,7 +695,7 @@ public class VKGeoActivity extends QtActivity
             @Override
             public void run()
             {
-                Iterator<VKRequest> vk_request_tracker_keys_iter = new HashSet<VKRequest>(vkRequestTracker.keySet()).iterator();
+                Iterator<VKRequest> vk_request_tracker_keys_iter = new HashSet<>(vkRequestTracker).iterator();
 
                 while (vk_request_tracker_keys_iter.hasNext()) {
                     vk_request_tracker_keys_iter.next().cancel();

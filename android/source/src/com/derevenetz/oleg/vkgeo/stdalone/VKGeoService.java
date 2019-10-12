@@ -2,7 +2,6 @@ package com.derevenetz.oleg.vkgeo.stdalone;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -78,26 +77,26 @@ public class VKGeoService extends QtService implements LocationListener
         }
     }
 
-    public static final int             MESSAGE_NOT_AUTHORIZED             = 1001,
-                                        MESSAGE_AUTHORIZED                 = 1002;
+    public static final int      MESSAGE_NOT_AUTHORIZED             = 1001,
+                                 MESSAGE_AUTHORIZED                 = 1002;
 
-    private static final int            VK_API_ERROR_AUTHORIZATION_FAILED  = 5;
+    private static final int     VK_API_ERROR_AUTHORIZATION_FAILED  = 5;
 
-    private static final int            LOCATION_SOURCE_SELECTION_INTERVAL = 60000;
-    private static final long           LOCATION_UPDATE_MIN_TIME           = 30000,
-                                        CENTRAL_LOCATION_CHANGE_TIMEOUT    = 900000;
-    private static final float          LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
-                                        CENTRAL_LOCATION_CHANGE_DISTANCE   = 500.0f;
+    private static final int     LOCATION_SOURCE_SELECTION_INTERVAL = 60000;
+    private static final long    LOCATION_UPDATE_MIN_TIME           = 30000,
+                                 CENTRAL_LOCATION_CHANGE_TIMEOUT    = 900000;
+    private static final float   LOCATION_UPDATE_MIN_DISTANCE       = 100.0f,
+                                 CENTRAL_LOCATION_CHANGE_DISTANCE   = 500.0f;
 
-    private boolean                     centralLocationChanged             = true;
-    private long                        centralLocationChangeHandleRtNanos = 0;
-    private String                      locationProvider                   = null;
-    private Location                    currentLocation                    = null,
-                                        centralLocation                    = null;
-    private Criteria                    locationSourceSelectionCriteria    = new Criteria();
-    private Notification.Builder        serviceNotificationBuilder         = null;
-    private Messenger                   messenger                          = new Messenger(new MessageHandler(this));
-    private HashMap<VKRequest, Boolean> vkRequestTracker                   = new HashMap<>();
+    private boolean              centralLocationChanged             = true;
+    private long                 centralLocationChangeHandleRtNanos = 0;
+    private String               locationProvider                   = null;
+    private Location             currentLocation                    = null,
+                                 centralLocation                    = null;
+    private Criteria             locationSourceSelectionCriteria    = new Criteria();
+    private Notification.Builder serviceNotificationBuilder         = null;
+    private Messenger            messenger                          = new Messenger(new MessageHandler(this));
+    private HashSet<VKRequest>   vkRequestTracker                   = new HashSet<>();
 
     private static native void locationUpdated(double latitude, double longitude);
     private static native void batteryStatusUpdated(String status, int level);
@@ -333,13 +332,13 @@ public class VKGeoService extends QtService implements LocationListener
 
                         final VKRequest vk_request = new VKRequest("execute", VKParameters.from("code", execute_code.toString()));
 
-                        vkRequestTracker.put(vk_request, true);
+                        vkRequestTracker.add(vk_request);
 
                         vk_request.executeWithListener(new VKRequestListener() {
                             @Override
                             public void onComplete(VKResponse response)
                             {
-                                if (vkRequestTracker.containsKey(vk_request)) {
+                                if (vkRequestTracker.contains(vk_request)) {
                                     vkRequestTracker.remove(vk_request);
 
                                     if (response != null && response.json != null) {
@@ -404,7 +403,7 @@ public class VKGeoService extends QtService implements LocationListener
                             @Override
                             public void onError(VKError error)
                             {
-                                if (vkRequestTracker.containsKey(vk_request)) {
+                                if (vkRequestTracker.contains(vk_request)) {
                                     vkRequestTracker.remove(vk_request);
 
                                     String error_str = "";
@@ -438,7 +437,7 @@ public class VKGeoService extends QtService implements LocationListener
             @Override
             public void run()
             {
-                Iterator<VKRequest> vk_request_tracker_keys_iter = new HashSet<VKRequest>(vkRequestTracker.keySet()).iterator();
+                Iterator<VKRequest> vk_request_tracker_keys_iter = new HashSet<>(vkRequestTracker).iterator();
 
                 while (vk_request_tracker_keys_iter.hasNext()) {
                     vk_request_tracker_keys_iter.next().cancel();
