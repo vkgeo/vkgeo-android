@@ -53,10 +53,10 @@ android {
         android/source/settings.gradle \
         android/source/gradle/wrapper/gradle-wrapper.jar \
         android/source/gradle/wrapper/gradle-wrapper.properties \
-        android/source/libssl/arm64-v8a/libcrypto.so \
-        android/source/libssl/arm64-v8a/libssl.so \
-        android/source/libssl/armeabi-v7a/libcrypto.so \
-        android/source/libssl/armeabi-v7a/libssl.so \
+        android/source/libssl/arm64-v8a/libcrypto_1_1.so \
+        android/source/libssl/arm64-v8a/libssl_1_1.so \
+        android/source/libssl/armeabi-v7a/libcrypto_1_1.so \
+        android/source/libssl/armeabi-v7a/libssl_1_1.so \
         android/source/res/drawable/splash_qt.xml \
         android/source/res/drawable/splash_theme.xml \
         android/source/res/drawable-hdpi/ic_launcher_foreground.png \
