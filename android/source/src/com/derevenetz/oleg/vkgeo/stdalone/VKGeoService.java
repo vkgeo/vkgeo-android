@@ -68,7 +68,7 @@ public class VKGeoService extends QtService implements LocationListener
 
                         vkAuthUpdated(true);
                     } catch (Exception ex) {
-                        Log.w("VKGeoService", "handleMessage() : " + ex.toString());
+                        Log.e("VKGeoService", "handleMessage() : " + ex.toString());
                     }
                 }
             } else {
@@ -425,7 +425,7 @@ public class VKGeoService extends QtService implements LocationListener
                         });
                     }
                 } catch (Exception ex) {
-                    Log.w("VKGeoService", "executeVKBatch() : " + ex.toString());
+                    Log.e("VKGeoService", "executeVKBatch() : " + ex.toString());
                 }
             }
         });
@@ -499,7 +499,7 @@ public class VKGeoService extends QtService implements LocationListener
                                 notification_manager.notify(getResources().getInteger(R.integer.service_foreground_notification_id), serviceNotificationBuilder.build());
                             }
                         } catch (Exception ex) {
-                            Log.w("VKGeoService", "selectLocationSource() : " + ex.toString());
+                            Log.e("VKGeoService", "selectLocationSource() : " + ex.toString());
                         }
                     } else {
                         if (centralLocationChanged) {
