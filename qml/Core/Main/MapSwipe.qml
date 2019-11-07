@@ -301,7 +301,7 @@ Rectangle {
                     }
                 }
             } else {
-                console.log(component.errorString());
+                console.error(component.errorString());
             }
 
             map.addMapItem(map.myMapItem);
@@ -354,7 +354,7 @@ Rectangle {
 
             map.addMapItem(map.myMapItem);
         } else {
-            console.log(component.errorString());
+            console.error(component.errorString());
         }
     }
 }

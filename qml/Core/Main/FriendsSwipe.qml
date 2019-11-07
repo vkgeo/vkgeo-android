@@ -74,7 +74,7 @@ Rectangle {
                 }
             }
         } else {
-            console.log(component.errorString());
+            console.error(component.errorString());
         }
     }
 
