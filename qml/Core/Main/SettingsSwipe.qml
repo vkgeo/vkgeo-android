@@ -146,7 +146,7 @@ Rectangle {
                             mainWindow.showInterstitial();
                         }
                     } else {
-                        console.log(component.errorString());
+                        console.error(component.errorString());
                     }
                 }
             }
@@ -216,7 +216,7 @@ Rectangle {
                             mainWindow.showInterstitial();
                         }
                     } else {
-                        console.log(component.errorString());
+                        console.error(component.errorString());
                     }
                 }
             }
@@ -337,7 +337,7 @@ Rectangle {
                         my_profile_page.status            = "";
                         my_profile_page.batteryStatus     = "";
                     } else {
-                        console.log(component.errorString());
+                        console.error(component.errorString());
                     }
                 }
             }
