@@ -93,7 +93,7 @@ public class VKGeoActivity extends QtActivity
 
                         serviceMessenger.send(msg);
                     } catch (Exception ex) {
-                        Log.w("VKGeoActivity", "onVKAccessTokenChanged() : " + ex.toString());
+                        Log.e("VKGeoActivity", "onVKAccessTokenChanged() : " + ex.toString());
                     }
                 }
 
@@ -103,7 +103,7 @@ public class VKGeoActivity extends QtActivity
                     try {
                         serviceMessenger.send(Message.obtain(null, VKGeoService.MESSAGE_NOT_AUTHORIZED));
                     } catch (Exception ex) {
-                        Log.w("VKGeoActivity", "onVKAccessTokenChanged() : " + ex.toString());
+                        Log.e("VKGeoActivity", "onVKAccessTokenChanged() : " + ex.toString());
                     }
                 }
 
@@ -260,7 +260,7 @@ public class VKGeoActivity extends QtActivity
         try {
             startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", getPackageName(), null)));
         } catch (Exception ex) {
-            Log.w("VKGeoActivity", "showAppSettings() : " + ex.toString());
+            Log.e("VKGeoActivity", "showAppSettings() : " + ex.toString());
         }
     }
 
@@ -274,7 +274,7 @@ public class VKGeoActivity extends QtActivity
 
             startActivity(Intent.createChooser(intent, getResources().getString(R.string.send_invitation_chooser_title)));
         } catch (Exception ex) {
-            Log.w("VKGeoActivity", "sendInvitation() : " + ex.toString());
+            Log.e("VKGeoActivity", "sendInvitation() : " + ex.toString());
         }
     }
 
@@ -538,7 +538,7 @@ public class VKGeoActivity extends QtActivity
 
                     VKSdk.login(f_activity, vk_auth_scope.toArray(new String[vk_auth_scope.size()]));
                 } catch (Exception ex) {
-                    Log.w("VKGeoActivity", "loginVK() : " + ex.toString());
+                    Log.e("VKGeoActivity", "loginVK() : " + ex.toString());
                 }
             }
         });
@@ -556,7 +556,7 @@ public class VKGeoActivity extends QtActivity
                     try {
                         serviceMessenger.send(Message.obtain(null, VKGeoService.MESSAGE_NOT_AUTHORIZED));
                     } catch (Exception ex) {
-                        Log.w("VKGeoActivity", "logoutVK() : " + ex.toString());
+                        Log.e("VKGeoActivity", "logoutVK() : " + ex.toString());
                     }
                 }
             }
@@ -683,7 +683,7 @@ public class VKGeoActivity extends QtActivity
                         });
                     }
                 } catch (Exception ex) {
-                    Log.w("VKGeoActivity", "executeVKBatch() : " + ex.toString());
+                    Log.e("VKGeoActivity", "executeVKBatch() : " + ex.toString());
                 }
             }
         });
@@ -725,7 +725,7 @@ public class VKGeoActivity extends QtActivity
                     error_str = error.toString();
                 }
 
-                Log.w("VKGeoActivity", "onActivityResult() : " + error_str);
+                Log.e("VKGeoActivity", "onActivityResult() : " + error_str);
             }
         });
     }
