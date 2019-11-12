@@ -6,17 +6,18 @@ CONFIG += c++11
 
 DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
-SOURCES += src/main.cpp \
-    src/androidgw.cpp \
+SOURCES += \
     src/admobhelper.cpp \
+    src/androidgw.cpp \
     src/batteryhelper.cpp \
+    src/main.cpp \
     src/uihelper.cpp \
     src/vkhelper.cpp \
     src/vkservice.cpp
 
 HEADERS += \
-    src/androidgw.h \
     src/admobhelper.h \
+    src/androidgw.h \
     src/batteryhelper.h \
     src/uihelper.h \
     src/vkhelper.h \
