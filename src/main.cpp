@@ -8,10 +8,10 @@
 #include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidService>
 
-#include "androidgw.h"
 #include "admobhelper.h"
-#include "storehelper.h"
+#include "androidgw.h"
 #include "batteryhelper.h"
+#include "storehelper.h"
 #include "uihelper.h"
 #include "vkhelper.h"
 #include "vkservice.h"
@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
         QQmlApplicationEngine engine;
 
         engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), &AdMobHelper::GetInstance());
-        engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), &StoreHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
+        engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), &StoreHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), &UIHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), &VKHelper::GetInstance());
 
