@@ -8,8 +8,8 @@
 #include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidService>
 
-#include "androidgw.h"
 #include "admobhelper.h"
+#include "androidgw.h"
 #include "batteryhelper.h"
 #include "uihelper.h"
 #include "vkhelper.h"
