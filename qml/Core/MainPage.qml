@@ -79,12 +79,6 @@ Page {
 
     property bool componentCompleted:       false
 
-    Keys.onReleased: {
-        if (event.key === Qt.Key_Back && settingsSwipe.handleBackKey()) {
-            event.accepted = true;
-        }
-    }
-
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateAuthorized && componentCompleted) {
             VKHelper.updateFriends();
@@ -94,6 +88,12 @@ Page {
     onComponentCompletedChanged: {
         if (vkAuthState === VKAuthState.StateAuthorized && componentCompleted) {
             VKHelper.updateFriends();
+        }
+    }
+
+    Keys.onReleased: {
+        if (event.key === Qt.Key_Back && settingsSwipe.handleBackKey()) {
+            event.accepted = true;
         }
     }
 
