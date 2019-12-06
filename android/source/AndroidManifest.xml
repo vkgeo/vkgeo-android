@@ -1,7 +1,15 @@
 <?xml version="1.0"?>
-<manifest package="com.derevenetz.oleg.vkgeo.gplay" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.1.1" android:versionCode="86" android:installLocation="auto">
+<manifest package="com.derevenetz.oleg.vkgeo.gplay"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionName="1.1.1"
+          android:versionCode="86"
+          android:installLocation="auto">
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>
-    <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true" android:xlargeScreens="true"/>
+    <supports-screens android:anyDensity="true"
+                      android:largeScreens="true"
+                      android:normalScreens="true"
+                      android:smallScreens="true"
+                      android:xlargeScreens="true"/>
     <!-- Additional permissions not covered by Qt -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -14,7 +22,11 @@
          Remove the comment if you do not require these default features. -->
     <!-- %%INSERT_FEATURES -->
 
-    <application android:hardwareAccelerated="true" android:name=".VKGeoApplication" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:allowBackup="true">
+    <application android:hardwareAccelerated="true"
+                 android:name=".VKGeoApplication"
+                 android:icon="@mipmap/ic_launcher"
+                 android:label="@string/app_name"
+                 android:allowBackup="true">
         <activity android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
                   android:name=".VKGeoActivity"
                   android:label="@string/app_name"
@@ -56,7 +68,8 @@
             <meta-data android:name="android.app.extract_android_style" android:value="full"/>
         </activity>
 
-        <service android:name=".VKGeoService" android:process=":VKGeoService">
+        <service android:name=".VKGeoService"
+                 android:process=":VKGeoService">
             <!-- Application arguments -->
             <meta-data android:name="android.app.arguments" android:value="-service"/>
             <!-- Ministro -->
