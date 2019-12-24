@@ -310,7 +310,6 @@ public class VKGeoActivity extends QtActivity
                                 Bundle extras = new Bundle();
 
                                 extras.putString("npa", "1");
-                                extras.putInt("rdp", 1);
 
                                 interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
                                                            .build());
@@ -335,7 +334,6 @@ public class VKGeoActivity extends QtActivity
                                             Bundle extras = new Bundle();
 
                                             extras.putString("npa", "1");
-                                            extras.putInt("rdp", 1);
 
                                             interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
                                                                        .build());
@@ -355,7 +353,6 @@ public class VKGeoActivity extends QtActivity
                     Bundle extras = new Bundle();
 
                     extras.putString("npa", "1");
-                    extras.putInt("rdp", 1);
 
                     interstitial.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
                                                .build());
@@ -462,7 +459,6 @@ public class VKGeoActivity extends QtActivity
                         Bundle extras = new Bundle();
 
                         extras.putString("npa", "1");
-                        extras.putInt("rdp", 1);
 
                         bannerView.loadAd(builder.addNetworkExtrasBundle(AdMobAdapter.class, extras)
                                                  .build());
