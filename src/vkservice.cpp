@@ -41,7 +41,7 @@ void VKService::handleDataSending()
 
 void VKService::handleFriendsUpdate()
 {
-    auto vk_helper = qobject_cast<VKHelper *>(QObject::sender());
+    auto vk_helper = qobject_cast<VKHelper *>(sender());
 
     if (vk_helper != nullptr) {
         QVariantMap friends_data = vk_helper->getFriends();
@@ -66,7 +66,7 @@ void VKService::handleFriendsUpdate()
 
 void VKService::handleTrackedFriendDataUpdate(const QString &friend_user_id, const QVariantMap &friend_data)
 {
-    auto vk_helper = qobject_cast<VKHelper *>(QObject::sender());
+    auto vk_helper = qobject_cast<VKHelper *>(sender());
 
     if (vk_helper != nullptr && friend_data.contains(QStringLiteral("latitude")) &&
                                 friend_data.contains(QStringLiteral("longitude"))) {
