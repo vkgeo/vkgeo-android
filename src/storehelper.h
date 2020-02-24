@@ -21,7 +21,7 @@ public:
 
     static StoreHelper &GetInstance();
 
-    Q_INVOKABLE QString getPackageName();
+    Q_INVOKABLE QString getPackageName() const;
 };
 
 #endif // STOREHELPER_H

@@ -14,14 +14,14 @@ BatteryHelper &BatteryHelper::GetInstance()
     return instance;
 }
 
-QString BatteryHelper::getBatteryStatus()
+QString BatteryHelper::getBatteryStatus() const
 {
     QAndroidJniObject j_battery_status = QtAndroid::androidActivity().callObjectMethod<jstring>("getBatteryStatus");
 
     return j_battery_status.toString();
 }
 
-int BatteryHelper::getBatteryLevel()
+int BatteryHelper::getBatteryLevel() const
 {
     return QtAndroid::androidActivity().callMethod<jint>("getBatteryLevel");
 }

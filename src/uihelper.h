@@ -44,8 +44,8 @@ public:
     int configuredTheme() const;
     void setConfiguredTheme(int theme);
 
-    Q_INVOKABLE void showAppSettings();
-    Q_INVOKABLE void sendInvitation(const QString &text);
+    Q_INVOKABLE void showAppSettings() const;
+    Q_INVOKABLE void sendInvitation(const QString &text) const;
 
 public slots:
     void handleDeviceConfigurationUpdate();

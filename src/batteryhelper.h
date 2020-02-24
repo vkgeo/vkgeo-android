@@ -21,8 +21,8 @@ public:
 
     static BatteryHelper &GetInstance();
 
-    Q_INVOKABLE QString getBatteryStatus();
-    Q_INVOKABLE int getBatteryLevel();
+    Q_INVOKABLE QString getBatteryStatus() const;
+    Q_INVOKABLE int getBatteryLevel() const;
 };
 
 #endif // BATTERYHELPER_H

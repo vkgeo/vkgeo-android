@@ -14,7 +14,7 @@ StoreHelper &StoreHelper::GetInstance()
     return instance;
 }
 
-QString StoreHelper::getPackageName()
+QString StoreHelper::getPackageName() const
 {
     QAndroidJniObject j_package_name = QtAndroid::androidActivity().callObjectMethod<jstring>("getPackageName");
 
