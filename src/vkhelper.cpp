@@ -187,12 +187,12 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
     }
 }
 
-void VKHelper::initVK()
+void VKHelper::initVK() const
 {
     AndroidContext.callMethod<void>("initVK");
 }
 
-void VKHelper::login()
+void VKHelper::login() const
 {
     QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
 
@@ -253,12 +253,12 @@ void VKHelper::updateFriends()
     }
 }
 
-QVariantMap VKHelper::getFriends()
+QVariantMap VKHelper::getFriends() const
 {
     return FriendsData;
 }
 
-QVariantList VKHelper::getFriendsList()
+QVariantList VKHelper::getFriendsList() const
 {
     QVariantList friends_list = FriendsData.values();
 
@@ -729,7 +729,7 @@ void VKHelper::ContextTrackerDelRequest(const QVariantMap &request)
     }
 }
 
-bool VKHelper::ContextHasActiveRequests(const QString &context)
+bool VKHelper::ContextHasActiveRequests(const QString &context) const
 {
     return (ContextTracker.contains(context) && ContextTracker[context] > 0);
 }

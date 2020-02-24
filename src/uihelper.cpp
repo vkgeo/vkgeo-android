@@ -57,12 +57,12 @@ void UIHelper::setConfiguredTheme(int theme)
     }
 }
 
-void UIHelper::showAppSettings()
+void UIHelper::showAppSettings() const
 {
     QtAndroid::androidActivity().callMethod<void>("showAppSettings");
 }
 
-void UIHelper::sendInvitation(const QString &text)
+void UIHelper::sendInvitation(const QString &text) const
 {
     QAndroidJniObject j_text = QAndroidJniObject::fromString(text);
 
