@@ -555,7 +555,7 @@ void VKHelper::handleRequestQueueTimerTimeout()
                     ContextTrackerDelRequest(request);
                 }
             } else {
-                qWarning() << "requestQueueTimerTimeout() : invalid request";
+                qWarning() << "handleRequestQueueTimerTimeout() : invalid request";
 
                 ContextTrackerDelRequest(request);
             }
