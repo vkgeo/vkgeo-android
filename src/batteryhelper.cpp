@@ -3,7 +3,8 @@
 
 #include "batteryhelper.h"
 
-BatteryHelper::BatteryHelper(QObject *parent) : QObject(parent)
+BatteryHelper::BatteryHelper(QObject *parent) :
+    QObject(parent)
 {
 }
 

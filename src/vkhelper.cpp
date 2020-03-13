@@ -56,19 +56,19 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
     }
 }
 
-VKHelper::VKHelper(QObject *parent) : QObject(parent)
+VKHelper::VKHelper(QObject *parent) :
+    QObject                         (parent),
+    CurrentDataState                (DataNotUpdated),
+    AuthState                       (VKAuthState::StateUnknown),
+    MaxTrustedFriendsCount          (DEFAULT_MAX_TRUSTED_FRIENDS_COUNT),
+    MaxTrackedFriendsCount          (DEFAULT_MAX_TRACKED_FRIENDS_COUNT),
+    SendDataTryNumber               (0),
+    LastSendDataTime                (0),
+    LastUpdateTrackedFriendsDataTime(0),
+    NextRequestQueueTimerTimeout    (0),
+    PhotoUrl                        (DEFAULT_PHOTO_URL),
+    BigPhotoUrl                     (DEFAULT_PHOTO_URL)
 {
-    CurrentDataState                 = DataNotUpdated;
-    AuthState                        = VKAuthState::StateUnknown;
-    MaxTrustedFriendsCount           = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
-    MaxTrackedFriendsCount           = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
-    SendDataTryNumber                = 0;
-    LastSendDataTime                 = 0;
-    LastUpdateTrackedFriendsDataTime = 0;
-    NextRequestQueueTimerTimeout     = 0;
-    PhotoUrl                         = DEFAULT_PHOTO_URL;
-    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
-
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::handleRequestQueueTimerTimeout);
 
     RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
