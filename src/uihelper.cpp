@@ -3,11 +3,12 @@
 
 #include "uihelper.h"
 
-UIHelper::UIHelper(QObject *parent) : QObject(parent)
+UIHelper::UIHelper(QObject *parent) :
+    QObject        (parent),
+    DarkTheme      (QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus")),
+    ScreenDpi      (QtAndroid::androidActivity().callMethod<jint>("getScreenDpi")),
+    ConfiguredTheme(UITheme::ThemeAuto)
 {
-    DarkTheme       = QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus");
-    ScreenDpi       = QtAndroid::androidActivity().callMethod<jint>("getScreenDpi");
-    ConfiguredTheme = UITheme::ThemeAuto;
 }
 
 UIHelper &UIHelper::GetInstance()

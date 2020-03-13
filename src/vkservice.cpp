@@ -6,10 +6,10 @@
 #include "vkhelper.h"
 #include "vkservice.h"
 
-VKService::VKService(QObject *parent) : QObject(parent)
+VKService::VKService(QObject *parent) :
+    QObject              (parent),
+    LastUpdateFriendsTime(0)
 {
-    LastUpdateFriendsTime = 0;
-
     connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::handleUpdateFriendsTimerTimeout);
 
     UpdateFriendsTimer.setInterval(UPDATE_FRIENDS_TIMER_INTERVAL);
