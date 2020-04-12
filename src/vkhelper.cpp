@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
 #include <QtCore/QVariant>
