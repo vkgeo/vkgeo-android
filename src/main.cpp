@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
 
         VKHelper::GetInstance().initVK();
 
-        qmlRegisterUncreatableType<UITheme>    ("UIHelper", 1, 0, "UITheme",     QStringLiteral("Could not create object of type UITheme"));
-        qmlRegisterUncreatableType<VKAuthState>("VKHelper", 1, 0, "VKAuthState", QStringLiteral("Could not create object of type VKAuthState"));
+        qmlRegisterUncreatableType<UITheme>    ("UIHelper", 1, 0, "UITheme",     QStringLiteral("Could not create an object of type UITheme"));
+        qmlRegisterUncreatableType<VKAuthState>("VKHelper", 1, 0, "VKAuthState", QStringLiteral("Could not create an object of type VKAuthState"));
 
         QQmlApplicationEngine engine;
 
