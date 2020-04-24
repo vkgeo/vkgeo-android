@@ -21,7 +21,7 @@ IF NOT "%~1"=="" (
      && make.exe install INSTALL_ROOT=android-build ^
      && androiddeployqt.exe --input android-libvkgeo.so-deployment-settings.json --output android-build --android-platform %ANDROID_PLATFORM% --deployment bundled --gradle --no-gdbserver ^
      && CD .. ^
-     && sonar-scanner.bat -D"sonar.projectKey=vkgeo:vkgeo-android" ^
+     && sonar-scanner.bat -D"sonar.projectKey=vkgeo_vkgeo-android" ^
                           -D"sonar.projectName=VKGeo Android" ^
                           -D"sonar.organization=vkgeo-github" ^
                           -D"sonar.sources=." ^
