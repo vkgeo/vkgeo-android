@@ -4,6 +4,7 @@
 #include <QtAndroidExtras/QAndroidJniObject>
 
 #include "vkhelper.h"
+
 #include "vkservice.h"
 
 VKService::VKService(QObject *parent) :
