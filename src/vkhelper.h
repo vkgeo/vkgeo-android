@@ -11,9 +11,9 @@
 #include <QtCore/QTimer>
 #include <QtAndroidExtras/QAndroidJniObject>
 
-class VKAuthState : public QObject
+class VKAuthState
 {
-    Q_OBJECT
+    Q_GADGET
 
 public:
     enum AuthState {

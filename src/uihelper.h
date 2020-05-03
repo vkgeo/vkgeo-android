@@ -4,9 +4,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-class UITheme : public QObject
+class UITheme
 {
-    Q_OBJECT
+    Q_GADGET
 
 public:
     enum Theme {
