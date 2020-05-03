@@ -2,6 +2,7 @@
 #define UIHELPER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
 
 class UITheme : public QObject
 {
