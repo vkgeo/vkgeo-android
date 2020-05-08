@@ -3,8 +3,7 @@
 
 #include "uihelper.h"
 
-static const int ANDROID_SDK_VERSION_M = 23,
-                 ANDROID_SDK_VERSION_Q = 29;
+static const int ANDROID_SDK_VERSION_Q = 29;
 
 UIHelper::UIHelper(QObject *parent) :
     QObject        (parent),
@@ -63,8 +62,7 @@ void UIHelper::setConfiguredTheme(int theme)
 
 bool UIHelper::hasFineLocationPermission() const
 {
-    return (QtAndroid::androidSdkVersion() < ANDROID_SDK_VERSION_M ||
-            QtAndroid::checkPermission(QStringLiteral("android.permission.ACCESS_FINE_LOCATION")) == QtAndroid::PermissionResult::Granted);
+    return (QtAndroid::checkPermission(QStringLiteral("android.permission.ACCESS_FINE_LOCATION")) == QtAndroid::PermissionResult::Granted);
 }
 
 void UIHelper::requestBackgroundLocationPermission() const
