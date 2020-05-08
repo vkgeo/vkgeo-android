@@ -45,6 +45,9 @@ public:
     int configuredTheme() const;
     void setConfiguredTheme(int theme);
 
+    Q_INVOKABLE bool hasFineLocationPermission() const;
+    Q_INVOKABLE void requestBackgroundLocationPermission() const;
+
     Q_INVOKABLE void showAppSettings() const;
     Q_INVOKABLE void sendInvitation(const QString &text) const;
 

@@ -449,7 +449,9 @@ public class VKGeoService extends QtService implements LocationListener
     private void selectLocationSource()
     {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-            checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+             (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
+              checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED))) {
             LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
             if (manager != null) {
