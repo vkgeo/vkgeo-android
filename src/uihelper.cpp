@@ -3,6 +3,9 @@
 
 #include "uihelper.h"
 
+static const int ANDROID_SDK_VERSION_M = 23,
+                 ANDROID_SDK_VERSION_Q = 29;
+
 UIHelper::UIHelper(QObject *parent) :
     QObject        (parent),
     DarkTheme      (QtAndroid::androidActivity().callMethod<jboolean>("getNightModeStatus")),
@@ -55,6 +58,20 @@ void UIHelper::setConfiguredTheme(int theme)
 
             emit darkThemeChanged(DarkTheme);
         }
+    }
+}
+
+bool UIHelper::hasFineLocationPermission() const
+{
+    return (QtAndroid::androidSdkVersion() < ANDROID_SDK_VERSION_M ||
+            QtAndroid::checkPermission(QStringLiteral("android.permission.ACCESS_FINE_LOCATION")) == QtAndroid::PermissionResult::Granted);
+}
+
+void UIHelper::requestBackgroundLocationPermission() const
+{
+    if (QtAndroid::androidSdkVersion() >= ANDROID_SDK_VERSION_Q &&
+        QtAndroid::checkPermission(QStringLiteral("android.permission.ACCESS_BACKGROUND_LOCATION")) != QtAndroid::PermissionResult::Granted) {
+        QtAndroid::requestPermissionsSync(QStringList(QStringLiteral("android.permission.ACCESS_BACKGROUND_LOCATION")));
     }
 }
 

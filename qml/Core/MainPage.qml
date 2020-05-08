@@ -73,6 +73,7 @@ Page {
     }
 
     readonly property bool appInForeground: Qt.application.state === Qt.ApplicationActive
+    readonly property bool pageActive:      StackView.status === StackView.Active
 
     readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
     readonly property int vkAuthState:      VKHelper.authState
@@ -152,6 +153,23 @@ Page {
             VKHelper.updateTrackedFriendsData(false);
 
             mapSwipe.updateMapItemsStates();
+        }
+    }
+
+    Timer {
+        id:       backgroundLocationPermissionRequestTimer
+        running:  mainPage.appInForeground && mainPage.pageActive && !wasRequested
+        interval: 5000
+        repeat:   true
+
+        property bool wasRequested: false
+
+        onTriggered: {
+            if (UIHelper.hasFineLocationPermission()) {
+                UIHelper.requestBackgroundLocationPermission();
+
+                wasRequested = true;
+            }
         }
     }
 
