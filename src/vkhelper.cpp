@@ -772,8 +772,8 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
 
                 QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
 
-                for (int i = 0; i < json_items.count(); i++) {
-                    QJsonObject json_note = json_items.at(i).toObject();
+                for (const QJsonValue &json_item : json_items) {
+                    QJsonObject json_note = json_item.toObject();
 
                     if (json_note.contains(QStringLiteral("id")) && json_note.contains(QStringLiteral("title")) &&
                         json_note.value(QStringLiteral("title")).toString() == DATA_NOTE_TITLE) {
@@ -855,8 +855,8 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
 
                 QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
 
-                for (int i = 0; i < json_items.count(); i++) {
-                    QJsonObject json_note = json_items.at(i).toObject();
+                for (const QJsonValue &json_item : json_items) {
+                    QJsonObject json_note = json_item.toObject();
 
                     if (json_note.contains(QStringLiteral("title")) && json_note.contains(QStringLiteral("text")) &&
                         json_note.value(QStringLiteral("title")).toString() == DATA_NOTE_TITLE) {
@@ -926,10 +926,10 @@ void VKHelper::HandleNotesAddResponse(const QString &response, const QVariantMap
             notes_to_delete = resp_request[QStringLiteral("notes_to_delete")].toString().split(QStringLiteral(","));
         }
 
-        for (int i = 0; i < notes_to_delete.count(); i++) {
+        for (const QString &note_id : notes_to_delete) {
             QVariantMap request, parameters;
 
-            parameters[QStringLiteral("note_id")] = notes_to_delete[i].toLongLong();
+            parameters[QStringLiteral("note_id")] = note_id.toLongLong();
 
             request[QStringLiteral("method")]     = QStringLiteral("notes.delete");
             request[QStringLiteral("context")]    = resp_request[QStringLiteral("context")].toString();
@@ -992,8 +992,8 @@ void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantM
                 QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
 
                 if (list_id == QStringLiteral("")) {
-                    for (int i = 0; i < json_items.count(); i++) {
-                        QJsonObject json_friend = json_items.at(i).toObject();
+                    for (const QJsonValue &json_item : json_items) {
+                        QJsonObject json_friend = json_item.toObject();
 
                         if (json_friend.contains(QStringLiteral("id"))) {
                             if (!json_friend.contains(QStringLiteral("deactivated"))) {
@@ -1160,10 +1160,8 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
             if (json_response.contains(QStringLiteral("count")) && json_response.contains(QStringLiteral("items"))) {
                 QString trusted_friends_list_id, tracked_friends_list_id;
 
-                QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
-
-                for (int i = 0; i < json_items.count(); i++) {
-                    QJsonObject json_list = json_items.at(i).toObject();
+                for (const QJsonValue &json_item : json_response.value(QStringLiteral("items")).toArray()) {
+                    QJsonObject json_list = json_item.toObject();
 
                     if (json_list.contains(QStringLiteral("id")) && json_list.contains(QStringLiteral("name"))) {
                         if (json_list.value(QStringLiteral("name")).toString() == TRUSTED_FRIENDS_LIST_NAME) {
@@ -1215,10 +1213,8 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
             if (json_response.contains(QStringLiteral("count")) && json_response.contains(QStringLiteral("items"))) {
                 QString trusted_friends_list_id, tracked_friends_list_id;
 
-                QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
-
-                for (int i = 0; i < json_items.count(); i++) {
-                    QJsonObject json_list = json_items.at(i).toObject();
+                for (const QJsonValue &json_item : json_response.value(QStringLiteral("items")).toArray()) {
+                    QJsonObject json_list = json_item.toObject();
 
                     if (json_list.contains(QStringLiteral("id")) && json_list.contains(QStringLiteral("name"))) {
                         if (json_list.value(QStringLiteral("name")).toString() == TRUSTED_FRIENDS_LIST_NAME) {
@@ -1288,10 +1284,8 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
             if (json_response.contains(QStringLiteral("count")) && json_response.contains(QStringLiteral("items"))) {
                 QString trusted_friends_list_id;
 
-                QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
-
-                for (int i = 0; i < json_items.count(); i++) {
-                    QJsonObject json_list = json_items.at(i).toObject();
+                for (const QJsonValue &json_item : json_response.value(QStringLiteral("items")).toArray()) {
+                    QJsonObject json_list = json_item.toObject();
 
                     if (json_list.contains(QStringLiteral("id")) && json_list.contains(QStringLiteral("name")) &&
                         json_list.value(QStringLiteral("name")).toString() == TRUSTED_FRIENDS_LIST_NAME) {
@@ -1350,10 +1344,8 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
             if (json_response.contains(QStringLiteral("count")) && json_response.contains(QStringLiteral("items"))) {
                 QString tracked_friends_list_id;
 
-                QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
-
-                for (int i = 0; i < json_items.count(); i++) {
-                    QJsonObject json_list = json_items.at(i).toObject();
+                for (const QJsonValue &json_item : json_response.value(QStringLiteral("items")).toArray()) {
+                    QJsonObject json_list = json_item.toObject();
 
                     if (json_list.contains(QStringLiteral("id")) && json_list.contains(QStringLiteral("name")) &&
                         json_list.value(QStringLiteral("name")).toString() == TRACKED_FRIENDS_LIST_NAME) {
