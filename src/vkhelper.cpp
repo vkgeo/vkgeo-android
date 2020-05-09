@@ -1068,7 +1068,7 @@ void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantM
                     }
                 } else if (list_id == TrustedFriendsListId) {
                     for (int i = 0; i < json_items.count() && offset + i < MaxTrustedFriendsCount; i++) {
-                        QString user_id = QString::number(json_items.at(i).toVariant().toLongLong());
+                        QString user_id = QString::number(json_items[i].toVariant().toLongLong());
 
                         if (FriendsDataTmp.contains(user_id)) {
                             QVariantMap frnd = FriendsDataTmp[user_id].toMap();
@@ -1081,7 +1081,7 @@ void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantM
                     }
                 } else if (list_id == TrackedFriendsListId) {
                     for (int i = 0; i < json_items.count() && offset + i < MaxTrackedFriendsCount; i++) {
-                        QString user_id = QString::number(json_items.at(i).toVariant().toLongLong());
+                        QString user_id = QString::number(json_items[i].toVariant().toLongLong());
 
                         if (FriendsDataTmp.contains(user_id)) {
                             QVariantMap frnd = FriendsDataTmp[user_id].toMap();
@@ -1510,7 +1510,7 @@ void VKHelper::HandleUsersGetResponse(const QString &response, const QVariantMap
             QJsonArray json_response = json_document.object().value(QStringLiteral("response")).toArray();
 
             if (json_response.count() == 1) {
-                QJsonObject json_user = json_response.at(0).toObject();
+                QJsonObject json_user = json_response[0].toObject();
 
                 if (json_user.contains(QStringLiteral("id"))) {
                     QString user_id = QString::number(json_user.value(QStringLiteral("id")).toVariant().toLongLong());
