@@ -3,7 +3,7 @@
 
 #include "uihelper.h"
 
-static const int ANDROID_SDK_VERSION_Q = 29;
+static constexpr int ANDROID_SDK_VERSION_Q = 29;
 
 UIHelper::UIHelper(QObject *parent) :
     QObject        (parent),
