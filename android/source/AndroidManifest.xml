@@ -27,7 +27,8 @@
                  android:name=".VKGeoApplication"
                  android:icon="@mipmap/ic_launcher"
                  android:label="@string/app_name"
-                 android:allowBackup="true">
+                 android:allowBackup="true"
+                 android:fullBackupContent="@xml/backup_content">
         <activity android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
                   android:name=".VKGeoActivity"
                   android:label="@string/app_name"
