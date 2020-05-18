@@ -55,7 +55,7 @@ android {
     }
 
     lintOptions {
-        disable 'PropertyEscape', 'MissingTranslation'
+        disable 'GoogleAppIndexingWarning', 'MissingTranslation', 'PropertyEscape'
     }
 }
 

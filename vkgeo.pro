@@ -90,6 +90,7 @@ android {
         android/source/res/values/strings.xml \
         android/source/res/values/themes.xml \
         android/source/res/values-ru/strings.xml \
+        android/source/res/xml/backup_content.xml \
         android/source/src/com/derevenetz/oleg/vkgeo/stdalone/VKGeoActivity.java \
         android/source/src/com/derevenetz/oleg/vkgeo/stdalone/VKGeoApplication.java \
         android/source/src/com/derevenetz/oleg/vkgeo/stdalone/VKGeoReceiver.java \
