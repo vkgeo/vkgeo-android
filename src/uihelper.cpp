@@ -3,7 +3,9 @@
 
 #include "uihelper.h"
 
-static constexpr int ANDROID_SDK_VERSION_Q = 29;
+namespace  {
+    constexpr int ANDROID_SDK_VERSION_Q = 29;
+}
 
 UIHelper::UIHelper(QObject *parent) :
     QObject        (parent),
