@@ -24,7 +24,7 @@ VKService &VKService::GetInstance()
     return instance;
 }
 
-void VKService::handleAuthStateChange(int auth_state)
+void VKService::handleAuthStateChange(int auth_state) const
 {
     if (auth_state == VKAuthState::StateNotAuthorized) {
         QtAndroid::androidService().callMethod<void>("showNotLoggedInNotification");
