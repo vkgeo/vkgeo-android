@@ -3,7 +3,7 @@
 
 #include "uihelper.h"
 
-namespace  {
+namespace {
     constexpr int ANDROID_SDK_VERSION_Q = 29;
 }
 
