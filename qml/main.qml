@@ -50,42 +50,15 @@ ApplicationWindow {
     }
 
     onConfiguredThemeChanged: {
-        setSetting("ConfiguredTheme", configuredTheme);
+        AppSettings.configuredTheme = configuredTheme;
 
         updateFeatures();
     }
 
     onAdMobConsentChanged: {
-        setSetting("AdMobConsent", adMobConsent);
+        AppSettings.adMobConsent = adMobConsent;
 
         updateFeatures();
-    }
-
-    function setSetting(key, value) {
-        var db = LocalStorage.openDatabaseSync("VKGeoDB", "1.0", "VKGeoDB", 1000000);
-
-        db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS SETTINGS(KEY TEXT PRIMARY KEY, VALUE TEXT)");
-
-            tx.executeSql("REPLACE INTO SETTINGS (KEY, VALUE) VALUES (?, ?)", [key, value]);
-        });
-    }
-
-    function getSetting(key, defaultValue) {
-        var value = defaultValue;
-        var db    = LocalStorage.openDatabaseSync("VKGeoDB", "1.0", "VKGeoDB", 1000000);
-
-        db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS SETTINGS(KEY TEXT PRIMARY KEY, VALUE TEXT)");
-
-            var res = tx.executeSql("SELECT VALUE FROM SETTINGS WHERE KEY=?", [key]);
-
-            if (res.rows.length > 0) {
-                value = res.rows.item(0).VALUE;
-            }
-        });
-
-        return value;
     }
 
     function openLoginPage() {
@@ -184,8 +157,8 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        configuredTheme = getSetting("ConfiguredTheme", "");
-        adMobConsent    = getSetting("AdMobConsent",    "");
+        configuredTheme = AppSettings.configuredTheme;
+        adMobConsent    = AppSettings.adMobConsent;
 
         updateFeatures();
 

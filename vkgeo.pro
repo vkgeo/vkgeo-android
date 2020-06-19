@@ -9,6 +9,7 @@ DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 SOURCES += \
     src/admobhelper.cpp \
     src/androidgw.cpp \
+    src/appsettings.cpp \
     src/batteryhelper.cpp \
     src/main.cpp \
     src/uihelper.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 HEADERS += \
     src/admobhelper.h \
     src/androidgw.h \
+    src/appsettings.h \
     src/batteryhelper.h \
     src/uihelper.h \
     src/vkhelper.h \

@@ -57,7 +57,9 @@ public class VKGeoService extends QtService implements LocationListener
         @Override
         public void handleMessage(Message msg)
         {
-            if (msg.what == MESSAGE_NOT_AUTHORIZED) {
+            if (msg.what == MESSAGE_SETTINGS_UPDATED) {
+                settingsUpdated();
+            } else if (msg.what == MESSAGE_NOT_AUTHORIZED) {
                 vkAuthUpdated(false);
             } else if (msg.what == MESSAGE_AUTHORIZED) {
                 Bundle bdl = msg.getData();
@@ -77,8 +79,9 @@ public class VKGeoService extends QtService implements LocationListener
         }
     }
 
-    public static final int      MESSAGE_NOT_AUTHORIZED             = 1001,
-                                 MESSAGE_AUTHORIZED                 = 1002;
+    public static final int      MESSAGE_SETTINGS_UPDATED           = 1001,
+                                 MESSAGE_NOT_AUTHORIZED             = 1002,
+                                 MESSAGE_AUTHORIZED                 = 1003;
 
     private static final int     VK_API_ERROR_AUTHORIZATION_FAILED  = 5;
 
@@ -97,6 +100,8 @@ public class VKGeoService extends QtService implements LocationListener
     private Notification.Builder serviceNotificationBuilder         = null;
     private Messenger            messenger                          = new Messenger(new MessageHandler(this));
     private HashSet<VKRequest>   vkRequestTracker                   = new HashSet<>();
+
+    private static native void settingsUpdated();
 
     private static native void locationUpdated(double latitude, double longitude);
     private static native void batteryStatusUpdated(String status, int level);

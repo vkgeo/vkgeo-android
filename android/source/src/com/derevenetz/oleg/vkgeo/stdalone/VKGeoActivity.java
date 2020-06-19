@@ -236,6 +236,23 @@ public class VKGeoActivity extends QtActivity
         }
     }
 
+    public void notifyServiceAboutSettingsUpdate()
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                if (serviceMessenger != null) {
+                    try {
+                        serviceMessenger.send(Message.obtain(null, VKGeoService.MESSAGE_SETTINGS_UPDATED));
+                    } catch (Exception ex) {
+                        Log.e("VKGeoActivity", "notifyServiceAboutSettingsUpdate() : " + ex.toString());
+                    }
+                }
+            }
+        });
+    }
+
     public void initAds(String interstitial_unit_id)
     {
         final String  f_interstitial_unit_id = interstitial_unit_id;

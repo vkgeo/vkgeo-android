@@ -63,6 +63,11 @@ extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, vkReque
     emit AndroidGW::GetInstance().vkRequestFailed(error_message, request);
 }
 
+extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoService, settingsUpdated)(JNIEnv *, jclass)
+{
+    emit AndroidGW::GetInstance().settingsUpdated();
+}
+
 extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoService, locationUpdated)(JNIEnv *, jclass, jdouble latitude, jdouble longitude)
 {
     emit AndroidGW::GetInstance().locationUpdated(latitude, longitude);

@@ -30,6 +30,7 @@ public:
     static VKService &GetInstance();
 
 public slots:
+    void handleSettingsUpdate() const;
     void handleAuthStateChange(int auth_state) const;
     void handleDataSending();
     void handleFriendsUpdate();
@@ -44,6 +45,8 @@ signals:
     void trackedFriendsDataUpdateRequested(bool expedited);
 
 private:
+    void UpdateSettings() const;
+
     qint64      LastUpdateFriendsTime;
     QTimer      UpdateFriendsTimer;
     QVariantMap FriendsData;

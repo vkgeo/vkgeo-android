@@ -3,6 +3,7 @@
 #include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidJniObject>
 
+#include "appsettings.h"
 #include "vkhelper.h"
 
 #include "vkservice.h"
@@ -11,6 +12,8 @@ VKService::VKService(QObject *parent) :
     QObject              (parent),
     LastUpdateFriendsTime(0)
 {
+    UpdateSettings();
+
     connect(&UpdateFriendsTimer, &QTimer::timeout, this, &VKService::handleUpdateFriendsTimerTimeout);
 
     UpdateFriendsTimer.setInterval(UPDATE_FRIENDS_TIMER_INTERVAL);
@@ -22,6 +25,11 @@ VKService &VKService::GetInstance()
     static VKService instance;
 
     return instance;
+}
+
+void VKService::handleSettingsUpdate() const
+{
+    UpdateSettings();
 }
 
 void VKService::handleAuthStateChange(int auth_state) const
@@ -42,43 +50,37 @@ void VKService::handleDataSending()
 
 void VKService::handleFriendsUpdate()
 {
-    auto vk_helper = qobject_cast<VKHelper *>(sender());
+    QVariantMap friends_data = VKHelper::GetInstance().getFriends();
 
-    if (vk_helper != nullptr) {
-        QVariantMap friends_data = vk_helper->getFriends();
+    for (const QString &key : friends_data.keys()) {
+        QVariantMap frnd = friends_data[key].toMap();
 
-        for (const QString &key : friends_data.keys()) {
-            QVariantMap frnd = friends_data[key].toMap();
-
-            if (FriendsData.contains(key) && FriendsData[key].toMap().contains(QStringLiteral("nearby"))) {
-                frnd[QStringLiteral("nearby")] = FriendsData[key].toMap()[QStringLiteral("nearby")].toBool();
-            } else {
-                frnd[QStringLiteral("nearby")] = false;
-            }
-
-            friends_data[key] = frnd;
+        if (FriendsData.contains(key) && FriendsData[key].toMap().contains(QStringLiteral("nearby"))) {
+            frnd[QStringLiteral("nearby")] = FriendsData[key].toMap()[QStringLiteral("nearby")].toBool();
+        } else {
+            frnd[QStringLiteral("nearby")] = false;
         }
 
-        FriendsData = friends_data;
+        friends_data[key] = frnd;
     }
+
+    FriendsData = friends_data;
 
     emit trackedFriendsDataUpdateRequested(true);
 }
 
 void VKService::handleTrackedFriendDataUpdate(const QString &friend_user_id, const QVariantMap &friend_data)
 {
-    auto vk_helper = qobject_cast<VKHelper *>(sender());
-
-    if (vk_helper != nullptr && friend_data.contains(QStringLiteral("latitude")) &&
-                                friend_data.contains(QStringLiteral("longitude"))) {
+    if (friend_data.contains(QStringLiteral("latitude")) &&
+        friend_data.contains(QStringLiteral("longitude"))) {
         qreal latitude  = friend_data[QStringLiteral("latitude")].toDouble();
         qreal longitude = friend_data[QStringLiteral("longitude")].toDouble();
 
         if (FriendsData.contains(friend_user_id)) {
             QVariantMap frnd = FriendsData[friend_user_id].toMap();
 
-            if (vk_helper->locationValid()) {
-                QGeoCoordinate my_coordinate(vk_helper->locationLatitude(), vk_helper->locationLongitude());
+            if (VKHelper::GetInstance().locationValid()) {
+                QGeoCoordinate my_coordinate(VKHelper::GetInstance().locationLatitude(), VKHelper::GetInstance().locationLongitude());
                 QGeoCoordinate friend_coordinate(latitude, longitude);
 
                 if (my_coordinate.distanceTo(friend_coordinate) < NEARBY_DISTANCE) {
@@ -118,4 +120,10 @@ void VKService::handleUpdateFriendsTimerTimeout()
 
         emit friendsUpdateRequested();
     }
+}
+
+void VKService::UpdateSettings() const
+{
+    VKHelper::GetInstance().setMaxTrustedFriendsCount(15);
+    VKHelper::GetInstance().setMaxTrackedFriendsCount(15);
 }
