@@ -59,64 +59,37 @@ ApplicationWindow {
     }
 
     onDisableAdsChanged: {
-        setSetting("DisableAds", disableAds ? "true" : "false");
+        AppSettings.disableAds = disableAds;
 
         updateFeatures();
     }
 
     onEnableTrackedFriendsChanged: {
-        setSetting("EnableTrackedFriends", enableTrackedFriends ? "true" : "false");
+        AppSettings.enableTrackedFriends = enableTrackedFriends;
 
         updateFeatures();
     }
 
     onIncreaseTrackingLimitsChanged: {
-        setSetting("IncreaseTrackingLimits", increaseTrackingLimits ? "true" : "false");
+        AppSettings.increaseTrackingLimits = increaseTrackingLimits;
 
         updateFeatures();
     }
 
     onAppRatedChanged: {
-        setSetting("AppRated", appRated ? "true" : "false");
+        AppSettings.appRated = appRated;
     }
 
     onConfiguredThemeChanged: {
-        setSetting("ConfiguredTheme", configuredTheme);
+        AppSettings.configuredTheme = configuredTheme;
 
         updateFeatures();
     }
 
     onAdMobConsentChanged: {
-        setSetting("AdMobConsent", adMobConsent);
+        AppSettings.adMobConsent = adMobConsent;
 
         updateFeatures();
-    }
-
-    function setSetting(key, value) {
-        var db = LocalStorage.openDatabaseSync("VKGeoDB", "1.0", "VKGeoDB", 1000000);
-
-        db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS SETTINGS(KEY TEXT PRIMARY KEY, VALUE TEXT)");
-
-            tx.executeSql("REPLACE INTO SETTINGS (KEY, VALUE) VALUES (?, ?)", [key, value]);
-        });
-    }
-
-    function getSetting(key, defaultValue) {
-        var value = defaultValue;
-        var db    = LocalStorage.openDatabaseSync("VKGeoDB", "1.0", "VKGeoDB", 1000000);
-
-        db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS SETTINGS(KEY TEXT PRIMARY KEY, VALUE TEXT)");
-
-            var res = tx.executeSql("SELECT VALUE FROM SETTINGS WHERE KEY=?", [key]);
-
-            if (res.rows.length > 0) {
-                value = res.rows.item(0).VALUE;
-            }
-        });
-
-        return value;
     }
 
     function openLoginPage() {
@@ -312,12 +285,12 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        disableAds             = (getSetting("DisableAds",             "false") === "true");
-        enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
-        increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
-        appRated               = (getSetting("AppRated",               "false") === "true");
-        configuredTheme        =  getSetting("ConfiguredTheme",        "");
-        adMobConsent           =  getSetting("AdMobConsent",           "");
+        disableAds             = AppSettings.disableAds;
+        enableTrackedFriends   = AppSettings.enableTrackedFriends;
+        increaseTrackingLimits = AppSettings.increaseTrackingLimits;
+        appRated               = AppSettings.appRated;
+        configuredTheme        = AppSettings.configuredTheme;
+        adMobConsent           = AppSettings.adMobConsent;
 
         updateFeatures();
 

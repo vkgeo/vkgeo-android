@@ -10,6 +10,7 @@
 
 #include "admobhelper.h"
 #include "androidgw.h"
+#include "appsettings.h"
 #include "batteryhelper.h"
 #include "storehelper.h"
 #include "uihelper.h"
@@ -28,6 +29,10 @@ int main(int argc, char *argv[])
 
         VKHelper::AndroidContext = QtAndroid::androidActivity();
 
+        QObject::connect(&AppSettings::GetInstance(), &AppSettings::settingsUpdated, [] () {
+            QtAndroid::androidActivity().callMethod<void>("notifyServiceAboutSettingsUpdate");
+        });
+
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::deviceConfigurationUpdated, &UIHelper::GetInstance(),    &UIHelper::handleDeviceConfigurationUpdate);
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::bannerViewHeightUpdated,    &AdMobHelper::GetInstance(), &AdMobHelper::setBannerViewHeight);
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::authStateUpdated,           &VKHelper::GetInstance(),    &VKHelper::setAuthState);
@@ -42,6 +47,7 @@ int main(int argc, char *argv[])
         QQmlApplicationEngine engine;
 
         engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), &AdMobHelper::GetInstance());
+        engine.rootContext()->setContextProperty(QStringLiteral("AppSettings"), &AppSettings::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), &StoreHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), &UIHelper::GetInstance());
@@ -68,6 +74,7 @@ int main(int argc, char *argv[])
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestFailed,                   &VKHelper::GetInstance(),  &VKHelper::handleError);
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::locationUpdated,                   &VKHelper::GetInstance(),  &VKHelper::handleLocationUpdate);
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::batteryStatusUpdated,              &VKHelper::GetInstance(),  &VKHelper::handleBatteryStatusUpdate);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::settingsUpdated,                   &VKService::GetInstance(), &VKService::handleSettingsUpdate);
         QObject::connect(&VKHelper::GetInstance(),  &VKHelper::authStateChanged,                   &VKService::GetInstance(), &VKService::handleAuthStateChange);
         QObject::connect(&VKHelper::GetInstance(),  &VKHelper::dataSent,                           &VKService::GetInstance(), &VKService::handleDataSending);
         QObject::connect(&VKHelper::GetInstance(),  &VKHelper::friendsUpdated,                     &VKService::GetInstance(), &VKService::handleFriendsUpdate);

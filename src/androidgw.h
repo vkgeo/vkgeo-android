@@ -28,6 +28,7 @@ signals:
     void authStateUpdated(int authState);
     void vkRequestCompleted(const QString &response, const QString &request);
     void vkRequestFailed(const QString &errorMessage, const QString &request);
+    void settingsUpdated();
     void locationUpdated(qreal latitude, qreal longitude);
     void batteryStatusUpdated(const QString &status, int level);
 };

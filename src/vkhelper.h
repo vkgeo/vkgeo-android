@@ -49,9 +49,7 @@ private:
     ~VKHelper() noexcept override = default;
 
 public:
-    static constexpr int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT    = 5,
-                         DEFAULT_MAX_TRACKED_FRIENDS_COUNT    = 5,
-                         MAX_SEND_DATA_TRIES_COUNT            = 5,
+    static constexpr int MAX_SEND_DATA_TRIES_COUNT            = 5,
                          REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
                          SEND_DATA_ON_UPDATE_TIMER_INTERVAL   = 100,
                          SEND_DATA_TIMER_INTERVAL             = 60000,
