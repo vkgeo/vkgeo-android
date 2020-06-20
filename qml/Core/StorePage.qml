@@ -10,7 +10,6 @@ Page {
     id: storePage
 
     header: PageHeader {
-        bannerViewHeight:  storePage.bannerViewHeight
         text:              qsTr("Store")
         doneButtonVisible: false
 
@@ -22,8 +21,6 @@ Page {
     background: Rectangle {
         color: UIHelper.darkTheme ? "black" : "white"
     }
-
-    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
     Keys.onReleased: {
         if (event.key === Qt.Key_Back) {

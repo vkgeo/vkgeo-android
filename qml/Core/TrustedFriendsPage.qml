@@ -11,8 +11,7 @@ Page {
     id: trustedFriendsPage
 
     header: PageHeader {
-        bannerViewHeight: trustedFriendsPage.bannerViewHeight
-        text:             qsTr("Trusted friends")
+        text: qsTr("Trusted friends")
 
         onBackClicked: {
             mainStackView.pop();
@@ -39,11 +38,9 @@ Page {
         color: UIHelper.darkTheme ? "black" : "white"
     }
 
-    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
+    property int trustedFriendsCount: 0
 
-    property int trustedFriendsCount:       0
-
-    property var friendsList:               []
+    property var friendsList:         []
 
     Keys.onReleased: {
         if (event.key === Qt.Key_Back) {

@@ -11,8 +11,7 @@ Page {
     id: trackedFriendsPage
 
     header: PageHeader {
-        bannerViewHeight: trackedFriendsPage.bannerViewHeight
-        text:             qsTr("Tracked friends")
+        text: qsTr("Tracked friends")
 
         onBackClicked: {
             mainStackView.pop();
@@ -39,11 +38,9 @@ Page {
         color: UIHelper.darkTheme ? "black" : "white"
     }
 
-    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
+    property int trackedFriendsCount: 0
 
-    property int trackedFriendsCount:       0
-
-    property var friendsList:               []
+    property var friendsList:         []
 
     Keys.onReleased: {
         if (event.key === Qt.Key_Back) {
