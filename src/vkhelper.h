@@ -49,22 +49,6 @@ private:
     ~VKHelper() noexcept override = default;
 
 public:
-    static constexpr int MAX_SEND_DATA_TRIES_COUNT            = 5,
-                         REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
-                         SEND_DATA_ON_UPDATE_TIMER_INTERVAL   = 100,
-                         SEND_DATA_TIMER_INTERVAL             = 60000,
-                         SEND_DATA_INTERVAL                   = 300,
-                         UPDATE_TRACKED_FRIENDS_DATA_INTERVAL = 60,
-                         MAX_BATCH_SIZE                       = 25,
-                         MAX_NOTES_GET_COUNT                  = 100,
-                         MAX_FRIENDS_GET_COUNT                = 500;
-
-    static const QString AUTH_SCOPE,
-                         DEFAULT_PHOTO_URL,
-                         DATA_NOTE_TITLE,
-                         TRUSTED_FRIENDS_LIST_NAME,
-                         TRACKED_FRIENDS_LIST_NAME;
-
     VKHelper(const VKHelper &) = delete;
     VKHelper(VKHelper &&) noexcept = delete;
 
@@ -186,6 +170,22 @@ private:
 
     void HandleUsersGetResponse(const QString &response, const QVariantMap &resp_request);
     void HandleUsersGetError(const QVariantMap &err_request);
+
+    static constexpr int MAX_SEND_DATA_TRIES_COUNT            = 5,
+                         REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
+                         SEND_DATA_ON_UPDATE_TIMER_INTERVAL   = 100,
+                         SEND_DATA_TIMER_INTERVAL             = 60000,
+                         SEND_DATA_INTERVAL                   = 300,
+                         UPDATE_TRACKED_FRIENDS_DATA_INTERVAL = 60,
+                         MAX_BATCH_SIZE                       = 25,
+                         MAX_NOTES_GET_COUNT                  = 100,
+                         MAX_FRIENDS_GET_COUNT                = 500;
+
+    static const QString AUTH_SCOPE,
+                         DEFAULT_PHOTO_URL,
+                         DATA_NOTE_TITLE,
+                         TRUSTED_FRIENDS_LIST_NAME,
+                         TRACKED_FRIENDS_LIST_NAME;
 
     enum DataState {
         DataNotUpdated,
