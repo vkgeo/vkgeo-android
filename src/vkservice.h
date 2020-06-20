@@ -16,11 +16,6 @@ private:
     ~VKService() noexcept override = default;
 
 public:
-    static constexpr int UPDATE_FRIENDS_TIMER_INTERVAL = 60000,
-                         UPDATE_FRIENDS_INTERVAL       = 600,
-                         UPDATE_FRIENDS_ON_AUTH_DELAY  = 15000,
-                         NEARBY_DISTANCE               = 500;
-
     VKService(const VKService &) = delete;
     VKService(VKService &&) noexcept = delete;
 
@@ -46,6 +41,11 @@ signals:
 
 private:
     void UpdateSettings() const;
+
+    static constexpr int UPDATE_FRIENDS_TIMER_INTERVAL = 60000,
+                         UPDATE_FRIENDS_INTERVAL       = 600,
+                         UPDATE_FRIENDS_ON_AUTH_DELAY  = 15000,
+                         NEARBY_DISTANCE               = 500;
 
     qint64      LastUpdateFriendsTime;
     QTimer      UpdateFriendsTimer;

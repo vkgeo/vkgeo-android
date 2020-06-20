@@ -15,9 +15,6 @@ private:
     ~AdMobHelper() noexcept override = default;
 
 public:
-    static const QString ADMOB_BANNERVIEW_UNIT_ID,
-                         ADMOB_INTERSTITIAL_UNIT_ID;
-
     AdMobHelper(const AdMobHelper &) = delete;
     AdMobHelper(AdMobHelper &&) noexcept = delete;
 
@@ -44,6 +41,9 @@ signals:
     void bannerViewHeightChanged(int bannerViewHeight);
 
 private:
+    static const QString ADMOB_BANNERVIEW_UNIT_ID,
+                         ADMOB_INTERSTITIAL_UNIT_ID;
+
     bool Initialized;
     int  BannerViewHeight;
 };
