@@ -1,1 +1,1 @@
-include ':vksdk_library'
+include ':3rdparty:vksdk_library'
