@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.android.gms:play-services-ads:19.2.0'
-    implementation project(':vksdk_library')
+    implementation project(':3rdparty:vksdk_library')
 }
 
 android {
