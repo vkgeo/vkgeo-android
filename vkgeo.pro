@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = vkgeo
 
-QT += quick quickcontrols2 sql location positioning
+QT += quick quickcontrols2 location positioning
 CONFIG += c++17
 
 DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
