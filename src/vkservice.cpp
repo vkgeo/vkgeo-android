@@ -90,8 +90,8 @@ void VKService::handleTrackedFriendDataUpdate(const QString &friend_user_id, con
 
                         if (frnd.contains(QStringLiteral("firstName")) && frnd.contains(QStringLiteral("lastName"))) {
                             QAndroidJniObject j_user_id   = QAndroidJniObject::fromString(friend_user_id);
-                            QAndroidJniObject j_user_name = QAndroidJniObject::fromString(QStringLiteral("%1 %2").arg(frnd[QStringLiteral("firstName")].toString())
-                                                                                                                 .arg(frnd[QStringLiteral("lastName")].toString()));
+                            QAndroidJniObject j_user_name = QAndroidJniObject::fromString(QStringLiteral("%1 %2").arg(frnd[QStringLiteral("firstName")].toString(),
+                                                                                                                      frnd[QStringLiteral("lastName")].toString()));
 
                             QtAndroid::androidService().callMethod<void>("showFriendsNearbyNotification", "(Ljava/lang/String;Ljava/lang/String;)V", j_user_id.object<jstring>(),
                                                                                                                                                      j_user_name.object<jstring>());

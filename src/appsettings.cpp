@@ -1,3 +1,5 @@
+#include <QtCore/QLatin1String>
+
 #include "appsettings.h"
 
 AppSettings::AppSettings(QObject *parent) :
@@ -39,7 +41,7 @@ QString AppSettings::configuredTheme()
     if (Settings.contains(QStringLiteral("ConfiguredTheme"))) {
         return Settings.value(QStringLiteral("ConfiguredTheme")).toString();
     } else {
-        return QStringLiteral("");
+        return QLatin1String("");
     }
 }
 
@@ -59,7 +61,7 @@ QString AppSettings::adMobConsent()
     if (Settings.contains(QStringLiteral("AdMobConsent"))) {
         return Settings.value(QStringLiteral("AdMobConsent")).toString();
     } else {
-        return QStringLiteral("");
+        return QLatin1String("");
     }
 }
 
@@ -79,7 +81,7 @@ QString AppSettings::encryptionKey()
     if (Settings.contains(QStringLiteral("EncryptionKey"))) {
         return Settings.value(QStringLiteral("EncryptionKey")).toString();
     } else {
-        return QStringLiteral("");
+        return QLatin1String("");
     }
 }
 
