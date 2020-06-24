@@ -1,5 +1,6 @@
 #include <QtCore/QtGlobal>
 #include <QtCore/QLatin1Char>
+#include <QtCore/QLatin1String>
 #include <QtCore/QRandomGenerator>
 #include <QtCore/QCryptographicHash>
 
@@ -59,13 +60,13 @@ QString CryptoHelper::getFriendEncryptionKey(const QString &friend_user_id) cons
     if (FriendsEncryptionKeys.contains(friend_user_id)) {
         return FriendsEncryptionKeys[friend_user_id].toString();
     } else {
-        return QStringLiteral("");
+        return QLatin1String("");
     }
 }
 
 void CryptoHelper::setFriendEncryptionKey(const QString &friend_user_id, const QString &friend_encryption_key)
 {
-    if (friend_user_id != QStringLiteral("") && (!FriendsEncryptionKeys.contains(friend_user_id) ||
+    if (friend_user_id != QLatin1String("") && (!FriendsEncryptionKeys.contains(friend_user_id) ||
                                                   FriendsEncryptionKeys[friend_user_id] != friend_encryption_key)) {
         FriendsEncryptionKeys[friend_user_id] = friend_encryption_key;
 
@@ -115,7 +116,7 @@ QByteArray CryptoHelper::DecryptAES256CBC(const QString &key, const QString &iv,
 
 QString CryptoHelper::GenerateRandomString(int length) const
 {
-    QString key = QStringLiteral("");
+    QString key = QLatin1String("");
 
     for (int i = 0; i < length;) {
         quint32 next_char = QRandomGenerator::system()->bounded('0', '{');
