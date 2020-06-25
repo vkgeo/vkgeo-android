@@ -25,6 +25,8 @@ const QString VKHelper::TRACKED_FRIENDS_LIST_NAME(QStringLiteral("VKGeo Tracked 
 
 QAndroidJniObject VKHelper::AndroidContext;
 
+namespace {
+
 bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 {
     bool friend_1_trusted = friend_1.toMap().contains(QStringLiteral("trusted")) ? (friend_1.toMap())[QStringLiteral("trusted")].toBool() : false;
@@ -60,6 +62,8 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
     } else {
         return friend_1_trusted;
     }
+}
+
 }
 
 VKHelper::VKHelper(QObject *parent) :
