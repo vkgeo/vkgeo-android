@@ -16,7 +16,7 @@ Popup {
     property bool encryptionEnabled: false
 
     signal toggleEncryptionSelected()
-    signal regenerateEncryptionKeySelected()
+    signal regenerateSharedKeySelected()
     signal resetKeystoreSelected()
     signal cancelled()
 
@@ -51,11 +51,11 @@ Popup {
             VKButton {
                 implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
                 implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
-                text:             qsTr("Regenerate the encryption key")
+                text:             qsTr("Regenerate the shared key")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    encryptionSettingsDialog.regenerateEncryptionKeySelected();
+                    encryptionSettingsDialog.regenerateSharedKeySelected();
                     encryptionSettingsDialog.close();
                 }
             }

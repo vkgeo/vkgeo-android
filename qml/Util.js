@@ -12,7 +12,7 @@ function dp(dpi, size) {
     }
 }
 
-function formatEncryptionKey(key) {
+function formatSharedKey(key) {
     var result = "";
 
     for (var i = 0; i < key.length; i++) {
@@ -26,6 +26,6 @@ function formatEncryptionKey(key) {
     return result;
 }
 
-function concatEncryptionKey(formatted_key) {
+function concatSharedKey(formatted_key) {
     return formatted_key.trim().split(/\s+/).join("");
 }

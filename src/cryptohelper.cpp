@@ -20,75 +20,75 @@ CryptoHelper &CryptoHelper::GetInstance()
     return instance;
 }
 
-QString CryptoHelper::encryptionKey() const
+QString CryptoHelper::sharedKey() const
 {
-    return EncryptionKey;
+    return SharedKey;
 }
 
-void CryptoHelper::setEncryptionKey(const QString &key)
+void CryptoHelper::setSharedKey(const QString &key)
 {
-    if (EncryptionKey != key) {
-        EncryptionKey = key;
+    if (SharedKey != key) {
+        SharedKey = key;
 
-        emit encryptionKeyChanged(EncryptionKey);
+        emit sharedKeyChanged(SharedKey);
     }
 }
 
-QVariantMap CryptoHelper::friendsEncryptionKeys() const
+QVariantMap CryptoHelper::sharedKeysOfFriends() const
 {
-    return FriendsEncryptionKeys;
+    return SharedKeysOfFriends;
 }
 
-void CryptoHelper::setFriendsEncryptionKeys(const QVariantMap &keys)
+void CryptoHelper::setSharedKeysOfFriends(const QVariantMap &keys)
 {
-    if (FriendsEncryptionKeys != keys) {
-        FriendsEncryptionKeys = keys;
+    if (SharedKeysOfFriends != keys) {
+        SharedKeysOfFriends = keys;
 
-        emit friendsEncryptionKeysChanged(FriendsEncryptionKeys);
+        emit sharedKeysOfFriendsChanged(SharedKeysOfFriends);
     }
 }
 
-void CryptoHelper::regenerateEncryptionKey()
+void CryptoHelper::regenerateSharedKey()
 {
-    EncryptionKey = GenerateRandomString(ENCRYPTION_KEY_LENGTH);
+    SharedKey = GenerateRandomString(SHARED_KEY_LENGTH);
 
-    emit encryptionKeyChanged(EncryptionKey);
+    emit sharedKeyChanged(SharedKey);
 }
 
-QString CryptoHelper::getFriendEncryptionKey(const QString &friend_user_id) const
+QString CryptoHelper::getSharedKeyOfFriend(const QString &friend_user_id) const
 {
-    if (FriendsEncryptionKeys.contains(friend_user_id)) {
-        return FriendsEncryptionKeys[friend_user_id].toString();
+    if (SharedKeysOfFriends.contains(friend_user_id)) {
+        return SharedKeysOfFriends[friend_user_id].toString();
     } else {
         return QLatin1String("");
     }
 }
 
-void CryptoHelper::setFriendEncryptionKey(const QString &friend_user_id, const QString &friend_encryption_key)
+void CryptoHelper::setSharedKeyOfFriend(const QString &friend_user_id, const QString &friend_key)
 {
-    if (friend_user_id != QLatin1String("") && (!FriendsEncryptionKeys.contains(friend_user_id) ||
-                                                  FriendsEncryptionKeys[friend_user_id] != friend_encryption_key)) {
-        FriendsEncryptionKeys[friend_user_id] = friend_encryption_key;
+    if (friend_user_id != QLatin1String("") && (!SharedKeysOfFriends.contains(friend_user_id) ||
+                                                 SharedKeysOfFriends[friend_user_id] != friend_key)) {
+        SharedKeysOfFriends[friend_user_id] = friend_key;
 
-        emit friendsEncryptionKeysChanged(FriendsEncryptionKeys);
+        emit sharedKeysOfFriendsChanged(SharedKeysOfFriends);
     }
 }
 
-void CryptoHelper::removeFriendEncryptionKey(const QString &friend_user_id)
+void CryptoHelper::removeSharedKeyOfFriend(const QString &friend_user_id)
 {
-    if (FriendsEncryptionKeys.contains(friend_user_id)) {
-        FriendsEncryptionKeys.remove(friend_user_id);
+    if (SharedKeysOfFriends.contains(friend_user_id)) {
+        SharedKeysOfFriends.remove(friend_user_id);
 
-        emit friendsEncryptionKeysChanged(FriendsEncryptionKeys);
+        emit sharedKeysOfFriendsChanged(SharedKeysOfFriends);
     }
 }
 
-void CryptoHelper::clearFriendsEncryptionKeys()
+void CryptoHelper::clearSharedKeysOfFriends()
 {
-    if (!FriendsEncryptionKeys.isEmpty()) {
-        FriendsEncryptionKeys.clear();
+    if (!SharedKeysOfFriends.isEmpty()) {
+        SharedKeysOfFriends.clear();
 
-        emit friendsEncryptionKeysChanged(FriendsEncryptionKeys);
+        emit sharedKeysOfFriendsChanged(SharedKeysOfFriends);
     }
 }
 

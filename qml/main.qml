@@ -11,24 +11,24 @@ ApplicationWindow {
     title:   qsTr("Friends on Map")
     visible: true
 
-    readonly property int screenDpi:             UIHelper.screenDpi
-    readonly property int vkAuthState:           VKHelper.authState
+    readonly property int screenDpi:           UIHelper.screenDpi
+    readonly property int vkAuthState:         VKHelper.authState
 
-    readonly property string encryptionKey:      CryptoHelper.encryptionKey
+    readonly property string sharedKey:        CryptoHelper.sharedKey
 
-    readonly property var friendsEncryptionKeys: CryptoHelper.friendsEncryptionKeys
+    readonly property var sharedKeysOfFriends: CryptoHelper.sharedKeysOfFriends
 
-    property bool componentCompleted:            false
-    property bool disableAds:                    false
-    property bool enableTrackedFriends:          false
-    property bool increaseTrackingLimits:        false
-    property bool appRated:                      false
-    property bool enableEncryption:              false
+    property bool componentCompleted:          false
+    property bool disableAds:                  false
+    property bool enableTrackedFriends:        false
+    property bool increaseTrackingLimits:      false
+    property bool appRated:                    false
+    property bool enableEncryption:            false
 
-    property string configuredTheme:             ""
-    property string adMobConsent:                ""
+    property string configuredTheme:           ""
+    property string adMobConsent:              ""
 
-    property var loginPage:                      null
+    property var loginPage:                    null
 
     onScreenDpiChanged: {
         if (mainStackView.depth > 0 && typeof mainStackView.currentItem.bannerViewHeight === "number") {
@@ -52,15 +52,15 @@ ApplicationWindow {
         }
     }
 
-    onEncryptionKeyChanged: {
+    onSharedKeyChanged: {
         if (componentCompleted) {
-            AppSettings.encryptionKey = encryptionKey;
+            AppSettings.sharedKey = sharedKey;
         }
     }
 
-    onFriendsEncryptionKeysChanged: {
+    onSharedKeysOfFriendsChanged: {
         if (componentCompleted) {
-            AppSettings.friendsEncryptionKeys = friendsEncryptionKeys;
+            AppSettings.sharedKeysOfFriends = sharedKeysOfFriends;
         }
     }
 
@@ -72,8 +72,8 @@ ApplicationWindow {
                 closeLoginPage();
             }
 
-            AppSettings.encryptionKey         = encryptionKey;
-            AppSettings.friendsEncryptionKeys = friendsEncryptionKeys;
+            AppSettings.sharedKey           = sharedKey;
+            AppSettings.sharedKeysOfFriends = sharedKeysOfFriends;
         }
     }
 
@@ -312,13 +312,13 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        if (AppSettings.encryptionKey !== "") {
-            CryptoHelper.encryptionKey = AppSettings.encryptionKey;
+        if (AppSettings.sharedKey !== "") {
+            CryptoHelper.sharedKey = AppSettings.sharedKey;
         } else {
-            CryptoHelper.regenerateEncryptionKey();
+            CryptoHelper.regenerateSharedKey();
         }
 
-        CryptoHelper.friendsEncryptionKeys = AppSettings.friendsEncryptionKeys;
+        CryptoHelper.sharedKeysOfFriends = AppSettings.sharedKeysOfFriends;
 
         disableAds             = AppSettings.disableAds;
         enableTrackedFriends   = AppSettings.enableTrackedFriends;

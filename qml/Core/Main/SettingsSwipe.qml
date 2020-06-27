@@ -24,14 +24,14 @@ Rectangle {
     }
 
     Toast {
-        id:              encryptionKeyCopiedToClipboardToast
+        id:              sharedKeyCopiedToClipboardToast
         anchors.top:     parent.top
         anchors.left:    parent.left
         anchors.right:   parent.right
         anchors.margins: UtilScript.dp(UIHelper.screenDpi, 4)
         z:               1
         height:          UtilScript.dp(UIHelper.screenDpi, 48)
-        text:            qsTr("The encryption key has been copied to the clipboard")
+        text:            qsTr("The shared key has been copied to the clipboard")
     }
 
     Toast {
@@ -241,7 +241,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                qsTr("You can enable encryption of your location data. If you do this, your trusted friends <b>will additionally need this encryption key</b> to see your location.")
+                text:                qsTr("You can enable encryption of your location data. If you do this, your trusted friends <b>will additionally need this shared key</b> to see your location.")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
@@ -259,7 +259,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                qsTr("Only pass this encryption key to <b>trusted friends</b>. <b>Do not use VK services to transfer the key</b>; do this only through separate trusted and secure channels.")
+                text:                qsTr("Only pass this shared key to <b>trusted friends</b>. <b>Do not use VK services to transfer the key</b>; do this only through separate trusted and secure channels.")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
@@ -277,7 +277,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                UtilScript.formatEncryptionKey(CryptoHelper.encryptionKey)
+                text:                UtilScript.formatSharedKey(CryptoHelper.sharedKey)
                 color:               textColor(UIHelper.darkTheme, VKHelper.encryptionEnabled)
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 20)
                 font.family:         "Helvetica"
@@ -305,9 +305,9 @@ Rectangle {
                     anchors.fill: parent
 
                     onPressAndHold: {
-                        UIHelper.copyToClipboard(UtilScript.formatEncryptionKey(CryptoHelper.encryptionKey));
+                        UIHelper.copyToClipboard(UtilScript.formatSharedKey(CryptoHelper.sharedKey));
 
-                        encryptionKeyCopiedToClipboardToast.visible = true;
+                        sharedKeyCopiedToClipboardToast.visible = true;
                     }
                 }
             }
@@ -457,7 +457,7 @@ Rectangle {
                         my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
                         my_profile_page.status            = "";
                         my_profile_page.batteryStatus     = "";
-                        my_profile_page.encryptionKey     = "";
+                        my_profile_page.sharedKey         = "";
                     } else {
                         console.error(component.errorString());
                     }
@@ -485,8 +485,8 @@ Rectangle {
             mainWindow.enableEncryption = !VKHelper.encryptionEnabled;
         }
 
-        onRegenerateEncryptionKeySelected: {
-            regenerateEncryptionKeyMessageDialog.open();
+        onRegenerateSharedKeySelected: {
+            regenerateSharedKeyMessageDialog.open();
         }
 
         onResetKeystoreSelected: {
@@ -511,25 +511,25 @@ Rectangle {
     }
 
     MessageDialog {
-        id:              regenerateEncryptionKeyMessageDialog
-        title:           qsTr("Regenerate the encryption key")
-        text:            qsTr("Are you sure you want to regenerate the encryption key?")
+        id:              regenerateSharedKeyMessageDialog
+        title:           qsTr("Regenerate the shared key")
+        text:            qsTr("Are you sure you want to regenerate the shared key?")
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {
-            CryptoHelper.regenerateEncryptionKey();
+            CryptoHelper.regenerateSharedKey();
         }
     }
 
     MessageDialog {
         id:              resetKeystoreMessageDialog
         title:           qsTr("Reset the keystore")
-        text:            qsTr("Are you sure you want to reset the keystore? All encryption keys associated with your friends will be deleted and your encryption key will be regenerated.")
+        text:            qsTr("Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your shared key will be regenerated.")
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {
-            CryptoHelper.clearFriendsEncryptionKeys();
-            CryptoHelper.regenerateEncryptionKey();
+            CryptoHelper.clearSharedKeysOfFriends();
+            CryptoHelper.regenerateSharedKey();
         }
     }
 
