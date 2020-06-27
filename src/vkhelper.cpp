@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <tuple>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
@@ -10,6 +11,8 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>
 #include <QtAndroidExtras/QtAndroid>
+
+#include "cryptohelper.h"
 
 #include "vkhelper.h"
 
@@ -60,6 +63,7 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 
 VKHelper::VKHelper(QObject *parent) :
     QObject                         (parent),
+    EncryptionEnabled               (false),
     CurrentDataState                (DataNotUpdated),
     AuthState                       (VKAuthState::StateUnknown),
     MaxTrustedFriendsCount          (0),
@@ -159,6 +163,20 @@ QString VKHelper::photoUrl() const
 QString VKHelper::bigPhotoUrl() const
 {
     return BigPhotoUrl;
+}
+
+bool VKHelper::encryptionEnabled() const
+{
+    return EncryptionEnabled;
+}
+
+void VKHelper::setEncryptionEnabled(bool enabled)
+{
+    if (EncryptionEnabled != enabled) {
+        EncryptionEnabled = enabled;
+
+        emit encryptionEnabledChanged(EncryptionEnabled);
+    }
 }
 
 int VKHelper::maxTrustedFriendsCount() const
@@ -658,11 +676,30 @@ void VKHelper::SendData(bool expedited)
         if (!ContextHasActiveRequests(QStringLiteral("sendData")) &&
             AuthState == VKAuthState::StateAuthorized &&
             (expedited || elapsed < 0 || elapsed > SEND_DATA_INTERVAL)) {
+            QString     user_data_string;
             QVariantMap request, parameters;
 
-            QString user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
-                                                                                        .toJson(QJsonDocument::Compact)
-                                                                                        .toBase64()));
+            if (EncryptionEnabled) {
+                QString     iv;
+                QByteArray  encrypted_payload;
+                QVariantMap user_data;
+
+                std::tie(iv, encrypted_payload) = CryptoHelper::GetInstance().EncryptWithAES256CBC(CryptoHelper::GetInstance().encryptionKey(),
+                                                                                                   QJsonDocument::fromVariant(CurrentData)
+                                                                                                   .toJson(QJsonDocument::Compact));
+
+                user_data[QStringLiteral("encryption")]        = QStringLiteral("AES-256-CBC-PSK");
+                user_data[QStringLiteral("iv")]                = iv;
+                user_data[QStringLiteral("encrypted_payload")] = encrypted_payload.toBase64();
+
+                user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
+                                                                                    .toJson(QJsonDocument::Compact)
+                                                                                    .toBase64()));
+            } else {
+                user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
+                                                                                    .toJson(QJsonDocument::Compact)
+                                                                                    .toBase64()));
+            }
 
             if (TrustedFriendsListId == QStringLiteral("")) {
                 request[QStringLiteral("method")]    = QStringLiteral("friends.getLists");
@@ -867,9 +904,32 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                             QRegExp base64_regexp(QStringLiteral("\\{\\{\\{([^\\}]+)\\}\\}\\}"));
 
                             if (base64_regexp.indexIn(note_text) != -1) {
-                                QString note_base64 = base64_regexp.cap(1);
+                                QVariantMap friend_data = QJsonDocument::fromJson(QByteArray::fromBase64(base64_regexp.cap(1).toUtf8())).toVariant().toMap();
 
-                                emit trackedFriendDataUpdated(user_id, QJsonDocument::fromJson(QByteArray::fromBase64(note_base64.toUtf8())).toVariant().toMap());
+                                if (friend_data.contains(QStringLiteral("encryption"))) {
+                                    if (friend_data[QStringLiteral("encryption")] == QStringLiteral("AES-256-CBC-PSK")) {
+                                        if (friend_data.contains(QStringLiteral("iv")) &&
+                                            friend_data.contains(QStringLiteral("encrypted_payload"))) {
+                                            QString key = CryptoHelper::GetInstance().getFriendEncryptionKey(user_id);
+
+                                            if (key != QStringLiteral("")) {
+                                                QString    iv                = friend_data[QStringLiteral("iv")].toString();
+                                                QByteArray encrypted_payload = QByteArray::fromBase64(friend_data[QStringLiteral("encrypted_payload")].toByteArray());
+                                                QByteArray payload           = CryptoHelper::GetInstance().DecryptAES256CBC(key, iv, encrypted_payload);
+
+                                                emit trackedFriendDataUpdated(user_id, QJsonDocument::fromJson(payload).toVariant().toMap());
+                                            } else {
+                                                qWarning() << "HandleNotesGetResponse() : user data is encrypted using AES-256-CBC-PSK, but the encryption key is not available";
+                                            }
+                                        } else {
+                                            qWarning() << "HandleNotesGetResponse() : invalid user data";
+                                        }
+                                    } else {
+                                        qWarning() << "HandleNotesGetResponse() : unknown encryption method";
+                                    }
+                                } else {
+                                    emit trackedFriendDataUpdated(user_id, friend_data);
+                                }
                             } else {
                                 qWarning() << "HandleNotesGetResponse() : invalid user data";
                             }

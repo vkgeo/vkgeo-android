@@ -4,6 +4,7 @@
 #include <QtAndroidExtras/QAndroidJniObject>
 
 #include "appsettings.h"
+#include "cryptohelper.h"
 #include "vkhelper.h"
 
 #include "vkservice.h"
@@ -124,6 +125,10 @@ void VKService::handleUpdateFriendsTimerTimeout()
 
 void VKService::UpdateSettings() const
 {
+    CryptoHelper::GetInstance().setEncryptionKey        (AppSettings::GetInstance().encryptionKey());
+    CryptoHelper::GetInstance().setFriendsEncryptionKeys(AppSettings::GetInstance().friendsEncryptionKeys());
+
+    VKHelper::GetInstance().setEncryptionEnabled     (AppSettings::GetInstance().enableEncryption());
     VKHelper::GetInstance().setMaxTrustedFriendsCount(15);
     VKHelper::GetInstance().setMaxTrackedFriendsCount(15);
 }
