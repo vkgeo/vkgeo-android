@@ -12,8 +12,8 @@ class CryptoHelper : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString     encryptionKey         READ encryptionKey         WRITE setEncryptionKey         NOTIFY encryptionKeyChanged)
-    Q_PROPERTY(QVariantMap friendsEncryptionKeys READ friendsEncryptionKeys WRITE setFriendsEncryptionKeys NOTIFY friendsEncryptionKeysChanged)
+    Q_PROPERTY(QString     sharedKey           READ sharedKey           WRITE setSharedKey           NOTIFY sharedKeyChanged)
+    Q_PROPERTY(QVariantMap sharedKeysOfFriends READ sharedKeysOfFriends WRITE setSharedKeysOfFriends NOTIFY sharedKeysOfFriendsChanged)
 
 private:
     explicit CryptoHelper(QObject *parent = nullptr);
@@ -28,34 +28,34 @@ public:
 
     static CryptoHelper &GetInstance();
 
-    QString encryptionKey() const;
-    void setEncryptionKey(const QString &key);
+    QString sharedKey() const;
+    void setSharedKey(const QString &key);
 
-    QVariantMap friendsEncryptionKeys() const;
-    void setFriendsEncryptionKeys(const QVariantMap &keys);
+    QVariantMap sharedKeysOfFriends() const;
+    void setSharedKeysOfFriends(const QVariantMap &keys);
 
-    Q_INVOKABLE void regenerateEncryptionKey();
+    Q_INVOKABLE void regenerateSharedKey();
 
-    Q_INVOKABLE QString getFriendEncryptionKey(const QString &friend_user_id) const;
-    Q_INVOKABLE void setFriendEncryptionKey(const QString &friend_user_id, const QString &friend_encryption_key);
-    Q_INVOKABLE void removeFriendEncryptionKey(const QString &friend_user_id);
-    Q_INVOKABLE void clearFriendsEncryptionKeys();
+    Q_INVOKABLE QString getSharedKeyOfFriend(const QString &friend_user_id) const;
+    Q_INVOKABLE void setSharedKeyOfFriend(const QString &friend_user_id, const QString &friend_key);
+    Q_INVOKABLE void removeSharedKeyOfFriend(const QString &friend_user_id);
+    Q_INVOKABLE void clearSharedKeysOfFriends();
 
     std::tuple<QString, QByteArray> EncryptWithAES256CBC(const QString &key, const QByteArray &payload) const;
     QByteArray DecryptAES256CBC(const QString &key, const QString &iv, const QByteArray &encrypted_payload) const;
 
 signals:
-    void encryptionKeyChanged(const QString &encryptionKey);
-    void friendsEncryptionKeysChanged(const QVariantMap &friendsEncryptionKeys);
+    void sharedKeyChanged(const QString &sharedKey);
+    void sharedKeysOfFriendsChanged(const QVariantMap &sharedKeysOfFriends);
 
 private:
     QString GenerateRandomString(int length) const;
 
-    static constexpr int ENCRYPTION_KEY_LENGTH = 32,
-                         AES_256_IV_LENGTH     = 16;
+    static constexpr int SHARED_KEY_LENGTH = 32,
+                         AES_256_IV_LENGTH = 16;
 
-    QString     EncryptionKey;
-    QVariantMap FriendsEncryptionKeys;
+    QString     SharedKey;
+    QVariantMap SharedKeysOfFriends;
 };
 
 #endif // CRYPTOHELPER_H

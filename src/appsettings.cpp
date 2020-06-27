@@ -74,40 +74,40 @@ void AppSettings::setAdMobConsent(const QString &consent)
     emit settingsUpdated();
 }
 
-QString AppSettings::encryptionKey()
+QString AppSettings::sharedKey()
 {
     Settings.sync();
 
-    if (Settings.contains(QStringLiteral("EncryptionKey"))) {
-        return Settings.value(QStringLiteral("EncryptionKey")).toString();
+    if (Settings.contains(QStringLiteral("SharedKey"))) {
+        return Settings.value(QStringLiteral("SharedKey")).toString();
     } else {
         return QLatin1String("");
     }
 }
 
-void AppSettings::setEncryptionKey(const QString &key)
+void AppSettings::setSharedKey(const QString &key)
 {
-    Settings.setValue(QStringLiteral("EncryptionKey"), key);
+    Settings.setValue(QStringLiteral("SharedKey"), key);
 
     Settings.sync();
 
     emit settingsUpdated();
 }
 
-QVariantMap AppSettings::friendsEncryptionKeys()
+QVariantMap AppSettings::sharedKeysOfFriends()
 {
     Settings.sync();
 
-    if (Settings.contains(QStringLiteral("FriendsEncryptionKeys"))) {
-        return Settings.value(QStringLiteral("FriendsEncryptionKeys")).toMap();
+    if (Settings.contains(QStringLiteral("SharedKeysOfFriends"))) {
+        return Settings.value(QStringLiteral("SharedKeysOfFriends")).toMap();
     } else {
         return QVariantMap();
     }
 }
 
-void AppSettings::setFriendsEncryptionKeys(const QVariantMap &keys)
+void AppSettings::setSharedKeysOfFriends(const QVariantMap &keys)
 {
-    Settings.setValue(QStringLiteral("FriendsEncryptionKeys"), keys);
+    Settings.setValue(QStringLiteral("SharedKeysOfFriends"), keys);
 
     Settings.sync();
 

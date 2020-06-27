@@ -689,7 +689,7 @@ void VKHelper::SendData(bool expedited)
                 QByteArray  encrypted_payload;
                 QVariantMap user_data;
 
-                std::tie(iv, encrypted_payload) = CryptoHelper::GetInstance().EncryptWithAES256CBC(CryptoHelper::GetInstance().encryptionKey(),
+                std::tie(iv, encrypted_payload) = CryptoHelper::GetInstance().EncryptWithAES256CBC(CryptoHelper::GetInstance().sharedKey(),
                                                                                                    QJsonDocument::fromVariant(CurrentData)
                                                                                                    .toJson(QJsonDocument::Compact));
 
@@ -915,7 +915,7 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                                     if (friend_data[QStringLiteral("encryption")] == QStringLiteral("AES-256-CBC-PSK")) {
                                         if (friend_data.contains(QStringLiteral("iv")) &&
                                             friend_data.contains(QStringLiteral("encrypted_payload"))) {
-                                            QString key = CryptoHelper::GetInstance().getFriendEncryptionKey(user_id);
+                                            QString key = CryptoHelper::GetInstance().getSharedKeyOfFriend(user_id);
 
                                             if (key != QLatin1String("")) {
                                                 QString    iv                = friend_data[QStringLiteral("iv")].toString();
@@ -924,7 +924,7 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
 
                                                 emit trackedFriendDataUpdated(user_id, QJsonDocument::fromJson(payload).toVariant().toMap());
                                             } else {
-                                                qWarning() << "HandleNotesGetResponse() : user data is encrypted using AES-256-CBC-PSK, but the encryption key is not available";
+                                                qWarning() << "HandleNotesGetResponse() : no suitable shared key";
                                             }
                                         } else {
                                             qWarning() << "HandleNotesGetResponse() : invalid user data";

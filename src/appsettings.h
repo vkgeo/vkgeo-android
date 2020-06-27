@@ -10,11 +10,11 @@ class AppSettings : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool        enableEncryption      READ enableEncryption      WRITE setEnableEncryption)
-    Q_PROPERTY(QString     configuredTheme       READ configuredTheme       WRITE setConfiguredTheme)
-    Q_PROPERTY(QString     adMobConsent          READ adMobConsent          WRITE setAdMobConsent)
-    Q_PROPERTY(QString     encryptionKey         READ encryptionKey         WRITE setEncryptionKey)
-    Q_PROPERTY(QVariantMap friendsEncryptionKeys READ friendsEncryptionKeys WRITE setFriendsEncryptionKeys)
+    Q_PROPERTY(bool        enableEncryption    READ enableEncryption    WRITE setEnableEncryption)
+    Q_PROPERTY(QString     configuredTheme     READ configuredTheme     WRITE setConfiguredTheme)
+    Q_PROPERTY(QString     adMobConsent        READ adMobConsent        WRITE setAdMobConsent)
+    Q_PROPERTY(QString     sharedKey           READ sharedKey           WRITE setSharedKey)
+    Q_PROPERTY(QVariantMap sharedKeysOfFriends READ sharedKeysOfFriends WRITE setSharedKeysOfFriends)
 
 private:
     explicit AppSettings(QObject *parent = nullptr);
@@ -38,11 +38,11 @@ public:
     QString adMobConsent();
     void setAdMobConsent(const QString &consent);
 
-    QString encryptionKey();
-    void setEncryptionKey(const QString &key);
+    QString sharedKey();
+    void setSharedKey(const QString &key);
 
-    QVariantMap friendsEncryptionKeys();
-    void setFriendsEncryptionKeys(const QVariantMap &keys);
+    QVariantMap sharedKeysOfFriends();
+    void setSharedKeysOfFriends(const QVariantMap &keys);
 
 signals:
     void settingsUpdated();

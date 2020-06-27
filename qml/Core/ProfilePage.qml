@@ -19,12 +19,12 @@ Page {
         }
 
         onDoneClicked: {
-            var encryption_key = UtilScript.concatEncryptionKey(encryptionKeyTextField.displayText);
+            var key = UtilScript.concatSharedKey(sharedKeyTextField.displayText);
 
-            if (encryption_key !== "") {
-                CryptoHelper.setFriendEncryptionKey(profilePage.userId, encryption_key);
+            if (key !== "") {
+                CryptoHelper.setSharedKeyOfFriend(profilePage.userId, key);
             } else {
-                CryptoHelper.removeFriendEncryptionKey(profilePage.userId);
+                CryptoHelper.removeSharedKeyOfFriend(profilePage.userId);
             }
 
             mainStackView.pop();
@@ -54,7 +54,7 @@ Page {
     property string screenName:      ""
     property string status:          ""
     property string batteryStatus:   ""
-    property string encryptionKey:   ""
+    property string sharedKey:       ""
 
     signal locationOnMapRequested(string userId)
 
@@ -274,9 +274,9 @@ Page {
             }
 
             TextField {
-                id:                   encryptionKeyTextField
-                text:                 UtilScript.formatEncryptionKey(profilePage.encryptionKey)
-                placeholderText:      qsTr("Encryption key")
+                id:                   sharedKeyTextField
+                text:                 UtilScript.formatSharedKey(profilePage.sharedKey)
+                placeholderText:      qsTr("Shared key")
                 font.pixelSize:       UtilScript.dp(UIHelper.screenDpi, 20)
                 font.family:          "Helvetica"
                 inputMethodHints:     Qt.ImhNoPredictiveText
@@ -309,7 +309,7 @@ Page {
                     var text = UIHelper.pasteFromClipboard();
 
                     if (text !== "") {
-                        encryptionKeyTextField.text = text;
+                        sharedKeyTextField.text = text;
                     }
                 }
             }
