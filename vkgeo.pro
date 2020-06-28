@@ -6,11 +6,15 @@ CONFIG += c++17
 
 DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
+INCLUDEPATH += 3rdparty
+
 SOURCES += \
+    3rdparty/qt-aes/qaesencryption.cpp \
     src/admobhelper.cpp \
     src/androidgw.cpp \
     src/appsettings.cpp \
     src/batteryhelper.cpp \
+    src/cryptohelper.cpp \
     src/main.cpp \
     src/storehelper.cpp \
     src/uihelper.cpp \
@@ -18,10 +22,12 @@ SOURCES += \
     src/vkservice.cpp
 
 HEADERS += \
+    3rdparty/qt-aes/qaesencryption.h \
     src/admobhelper.h \
     src/androidgw.h \
     src/appsettings.h \
     src/batteryhelper.h \
+    src/cryptohelper.h \
     src/storehelper.h \
     src/uihelper.h \
     src/vkhelper.h \

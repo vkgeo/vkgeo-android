@@ -3,18 +3,22 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QVariantMap>
 #include <QtCore/QSettings>
 
 class AppSettings : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool    disableAds             READ disableAds             WRITE setDisableAds)
-    Q_PROPERTY(bool    enableTrackedFriends   READ enableTrackedFriends   WRITE setEnableTrackedFriends)
-    Q_PROPERTY(bool    increaseTrackingLimits READ increaseTrackingLimits WRITE setIncreaseTrackingLimits)
-    Q_PROPERTY(bool    appRated               READ appRated               WRITE setAppRated)
-    Q_PROPERTY(QString configuredTheme        READ configuredTheme        WRITE setConfiguredTheme)
-    Q_PROPERTY(QString adMobConsent           READ adMobConsent           WRITE setAdMobConsent)
+    Q_PROPERTY(bool        disableAds             READ disableAds             WRITE setDisableAds)
+    Q_PROPERTY(bool        enableTrackedFriends   READ enableTrackedFriends   WRITE setEnableTrackedFriends)
+    Q_PROPERTY(bool        increaseTrackingLimits READ increaseTrackingLimits WRITE setIncreaseTrackingLimits)
+    Q_PROPERTY(bool        appRated               READ appRated               WRITE setAppRated)
+    Q_PROPERTY(bool        enableEncryption       READ enableEncryption       WRITE setEnableEncryption)
+    Q_PROPERTY(QString     configuredTheme        READ configuredTheme        WRITE setConfiguredTheme)
+    Q_PROPERTY(QString     adMobConsent           READ adMobConsent           WRITE setAdMobConsent)
+    Q_PROPERTY(QString     encryptionKey          READ encryptionKey          WRITE setEncryptionKey)
+    Q_PROPERTY(QVariantMap friendsEncryptionKeys  READ friendsEncryptionKeys  WRITE setFriendsEncryptionKeys)
 
 private:
     explicit AppSettings(QObject *parent = nullptr);
@@ -41,11 +45,20 @@ public:
     bool appRated();
     void setAppRated(bool rated);
 
+    bool enableEncryption();
+    void setEnableEncryption(bool enable);
+
     QString configuredTheme();
     void setConfiguredTheme(const QString &theme);
 
     QString adMobConsent();
     void setAdMobConsent(const QString &consent);
+
+    QString encryptionKey();
+    void setEncryptionKey(const QString &key);
+
+    QVariantMap friendsEncryptionKeys();
+    void setFriendsEncryptionKeys(const QVariantMap &keys);
 
 signals:
     void settingsUpdated();

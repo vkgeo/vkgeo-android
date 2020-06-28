@@ -92,6 +92,26 @@ void AppSettings::setAppRated(bool rated)
     emit settingsUpdated();
 }
 
+bool AppSettings::enableEncryption()
+{
+    Settings.sync();
+
+    if (Settings.contains(QStringLiteral("EnableEncryption"))) {
+        return Settings.value(QStringLiteral("EnableEncryption")).toBool();
+    } else {
+        return false;
+    }
+}
+
+void AppSettings::setEnableEncryption(bool enable)
+{
+    Settings.setValue(QStringLiteral("EnableEncryption"), enable);
+
+    Settings.sync();
+
+    emit settingsUpdated();
+}
+
 QString AppSettings::configuredTheme()
 {
     Settings.sync();
@@ -126,6 +146,46 @@ QString AppSettings::adMobConsent()
 void AppSettings::setAdMobConsent(const QString &consent)
 {
     Settings.setValue(QStringLiteral("AdMobConsent"), consent);
+
+    Settings.sync();
+
+    emit settingsUpdated();
+}
+
+QString AppSettings::encryptionKey()
+{
+    Settings.sync();
+
+    if (Settings.contains(QStringLiteral("EncryptionKey"))) {
+        return Settings.value(QStringLiteral("EncryptionKey")).toString();
+    } else {
+        return QStringLiteral("");
+    }
+}
+
+void AppSettings::setEncryptionKey(const QString &key)
+{
+    Settings.setValue(QStringLiteral("EncryptionKey"), key);
+
+    Settings.sync();
+
+    emit settingsUpdated();
+}
+
+QVariantMap AppSettings::friendsEncryptionKeys()
+{
+    Settings.sync();
+
+    if (Settings.contains(QStringLiteral("FriendsEncryptionKeys"))) {
+        return Settings.value(QStringLiteral("FriendsEncryptionKeys")).toMap();
+    } else {
+        return QVariantMap();
+    }
+}
+
+void AppSettings::setFriendsEncryptionKeys(const QVariantMap &keys)
+{
+    Settings.setValue(QStringLiteral("FriendsEncryptionKeys"), keys);
 
     Settings.sync();
 

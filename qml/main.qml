@@ -11,19 +11,24 @@ ApplicationWindow {
     title:   qsTr("Friends on Map")
     visible: true
 
-    readonly property int screenDpi:      UIHelper.screenDpi
-    readonly property int vkAuthState:    VKHelper.authState
+    readonly property int screenDpi:             UIHelper.screenDpi
+    readonly property int vkAuthState:           VKHelper.authState
 
-    property bool componentCompleted:     false
-    property bool disableAds:             false
-    property bool enableTrackedFriends:   false
-    property bool increaseTrackingLimits: false
-    property bool appRated:               false
+    readonly property string encryptionKey:      CryptoHelper.encryptionKey
 
-    property string configuredTheme:      ""
-    property string adMobConsent:         ""
+    readonly property var friendsEncryptionKeys: CryptoHelper.friendsEncryptionKeys
 
-    property var loginPage:               null
+    property bool componentCompleted:            false
+    property bool disableAds:                    false
+    property bool enableTrackedFriends:          false
+    property bool increaseTrackingLimits:        false
+    property bool appRated:                      false
+    property bool enableEncryption:              false
+
+    property string configuredTheme:             ""
+    property string adMobConsent:                ""
+
+    property var loginPage:                      null
 
     onScreenDpiChanged: {
         if (mainStackView.depth > 0 && typeof mainStackView.currentItem.bannerViewHeight === "number") {
@@ -47,6 +52,18 @@ ApplicationWindow {
         }
     }
 
+    onEncryptionKeyChanged: {
+        if (componentCompleted) {
+            AppSettings.encryptionKey = encryptionKey;
+        }
+    }
+
+    onFriendsEncryptionKeysChanged: {
+        if (componentCompleted) {
+            AppSettings.friendsEncryptionKeys = friendsEncryptionKeys;
+        }
+    }
+
     onComponentCompletedChanged: {
         if (componentCompleted) {
             if (vkAuthState === VKAuthState.StateNotAuthorized) {
@@ -54,6 +71,9 @@ ApplicationWindow {
             } else if (vkAuthState === VKAuthState.StateAuthorized) {
                 closeLoginPage();
             }
+
+            AppSettings.encryptionKey         = encryptionKey;
+            AppSettings.friendsEncryptionKeys = friendsEncryptionKeys;
         }
     }
 
@@ -77,6 +97,12 @@ ApplicationWindow {
 
     onAppRatedChanged: {
         AppSettings.appRated = appRated;
+    }
+
+    onEnableEncryptionChanged: {
+        AppSettings.enableEncryption = enableEncryption;
+
+        updateFeatures();
     }
 
     onConfiguredThemeChanged: {
@@ -128,6 +154,8 @@ ApplicationWindow {
         } else {
             AdMobHelper.hideBannerView();
         }
+
+        VKHelper.encryptionEnabled = enableEncryption;
 
         if (increaseTrackingLimits) {
             VKHelper.maxTrustedFriendsCount = 15;
@@ -284,10 +312,19 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
+        if (AppSettings.encryptionKey !== "") {
+            CryptoHelper.encryptionKey = AppSettings.encryptionKey;
+        } else {
+            CryptoHelper.regenerateEncryptionKey();
+        }
+
+        CryptoHelper.friendsEncryptionKeys = AppSettings.friendsEncryptionKeys;
+
         disableAds             = AppSettings.disableAds;
         enableTrackedFriends   = AppSettings.enableTrackedFriends;
         increaseTrackingLimits = AppSettings.increaseTrackingLimits;
         appRated               = AppSettings.appRated;
+        enableEncryption       = AppSettings.enableEncryption;
         configuredTheme        = AppSettings.configuredTheme;
         adMobConsent           = AppSettings.adMobConsent;
 

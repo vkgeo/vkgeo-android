@@ -41,8 +41,9 @@ class VKHelper : public QObject
     Q_PROPERTY(QString photoUrl     READ photoUrl     NOTIFY photoUrlChanged)
     Q_PROPERTY(QString bigPhotoUrl  READ bigPhotoUrl  NOTIFY bigPhotoUrlChanged)
 
-    Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount NOTIFY maxTrustedFriendsCountChanged)
-    Q_PROPERTY(int maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
+    Q_PROPERTY(bool encryptionEnabled      READ encryptionEnabled      WRITE setEncryptionEnabled      NOTIFY encryptionEnabledChanged)
+    Q_PROPERTY(int  maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount NOTIFY maxTrustedFriendsCountChanged)
+    Q_PROPERTY(int  maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
 
 private:
     explicit VKHelper(QObject *parent = nullptr);
@@ -69,6 +70,9 @@ public:
     QString lastName() const;
     QString photoUrl() const;
     QString bigPhotoUrl() const;
+
+    bool encryptionEnabled() const;
+    void setEncryptionEnabled(bool enabled);
 
     int maxTrustedFriendsCount() const;
     void setMaxTrustedFriendsCount(int count);
@@ -118,6 +122,7 @@ signals:
     void lastNameChanged(const QString &lastName);
     void photoUrlChanged(const QString &photoUrl);
     void bigPhotoUrlChanged(const QString &bigPhotoUrl);
+    void encryptionEnabledChanged(bool encryptionEnabled);
     void maxTrustedFriendsCountChanged(int maxTrustedFriendsCount);
     void maxTrackedFriendsCountChanged(int maxTrackedFriendsCount);
     void locationUpdated();
@@ -193,6 +198,7 @@ private:
         DataUpdatedAndSent
     };
 
+    bool                EncryptionEnabled;
     int                 CurrentDataState, AuthState, MaxTrustedFriendsCount,
                         MaxTrackedFriendsCount, SendDataTryNumber;
     qint64              LastSendDataTime, LastUpdateTrackedFriendsDataTime,

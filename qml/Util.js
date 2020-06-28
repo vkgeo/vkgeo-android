@@ -11,3 +11,21 @@ function dp(dpi, size) {
         return Math.floor(size);
     }
 }
+
+function formatEncryptionKey(key) {
+    var result = "";
+
+    for (var i = 0; i < key.length; i++) {
+        if (i > 0 && i % 4 === 0) {
+            result = result + " ";
+        }
+
+        result = result + key[i];
+    }
+
+    return result;
+}
+
+function concatEncryptionKey(formatted_key) {
+    return formatted_key.trim().split(/\s+/).join("");
+}

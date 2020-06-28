@@ -48,6 +48,9 @@ public:
     Q_INVOKABLE bool hasFineLocationPermission() const;
     Q_INVOKABLE void requestBackgroundLocationPermission() const;
 
+    Q_INVOKABLE void copyToClipboard(const QString &text) const;
+    Q_INVOKABLE QString pasteFromClipboard() const;
+
     Q_INVOKABLE void showAppSettings() const;
     Q_INVOKABLE void sendInvitation(const QString &text) const;
 

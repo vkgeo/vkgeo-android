@@ -1,3 +1,5 @@
+#include <QtGui/QClipboard>
+#include <QtGui/QGuiApplication>
 #include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidJniObject>
 
@@ -73,6 +75,16 @@ void UIHelper::requestBackgroundLocationPermission() const
         QtAndroid::checkPermission(QStringLiteral("android.permission.ACCESS_BACKGROUND_LOCATION")) != QtAndroid::PermissionResult::Granted) {
         QtAndroid::requestPermissionsSync(QStringList(QStringLiteral("android.permission.ACCESS_BACKGROUND_LOCATION")));
     }
+}
+
+void UIHelper::copyToClipboard(const QString &text) const
+{
+    QGuiApplication::clipboard()->setText(text);
+}
+
+QString UIHelper::pasteFromClipboard() const
+{
+    return QGuiApplication::clipboard()->text();
 }
 
 void UIHelper::showAppSettings() const

@@ -12,6 +12,7 @@
 #include "androidgw.h"
 #include "appsettings.h"
 #include "batteryhelper.h"
+#include "cryptohelper.h"
 #include "storehelper.h"
 #include "uihelper.h"
 #include "vkhelper.h"
@@ -49,6 +50,7 @@ int main(int argc, char *argv[])
         engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), &AdMobHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("AppSettings"), &AppSettings::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
+        engine.rootContext()->setContextProperty(QStringLiteral("CryptoHelper"), &CryptoHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), &StoreHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), &UIHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), &VKHelper::GetInstance());
