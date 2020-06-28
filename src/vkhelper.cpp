@@ -895,16 +895,16 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                     user_id = (resp_request[QStringLiteral("parameters")].toMap())[QStringLiteral("user_id")].toString();
                 }
 
-                QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
+                if (user_id != QLatin1String("")) {
+                    QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
 
-                for (const QJsonValueRef &json_item : json_items) {
-                    QJsonObject json_note = json_item.toObject();
+                    for (const QJsonValueRef &json_item : json_items) {
+                        QJsonObject json_note = json_item.toObject();
 
-                    if (json_note.contains(QStringLiteral("title")) && json_note.contains(QStringLiteral("text")) &&
-                        json_note.value(QStringLiteral("title")).toString() == DATA_NOTE_TITLE) {
-                        data_note_found = true;
+                        if (json_note.contains(QStringLiteral("title")) && json_note.contains(QStringLiteral("text")) &&
+                            json_note.value(QStringLiteral("title")).toString() == DATA_NOTE_TITLE) {
+                            data_note_found = true;
 
-                        if (user_id != QLatin1String("")) {
                             QString note_text = json_note.value(QStringLiteral("text")).toString();
                             QRegExp base64_regexp(QStringLiteral("\\{\\{\\{([^\\}]+)\\}\\}\\}"));
 
@@ -938,33 +938,27 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                             } else {
                                 qWarning() << "HandleNotesGetResponse() : invalid user data";
                             }
-                        } else {
-                            qWarning() << "HandleNotesGetResponse() : invalid request";
+
+                            break;
                         }
-
-                        break;
                     }
-                }
 
-                if (!data_note_found) {
-                    if (user_id != QLatin1String("")) {
-                        if (json_items.count() > 0 && offset + json_items.count() < notes_count) {
-                            QVariantMap request, parameters;
+                    if (!data_note_found && json_items.count() > 0 && offset + json_items.count() < notes_count) {
+                        QVariantMap request, parameters;
 
-                            parameters[QStringLiteral("count")]   = MAX_NOTES_GET_COUNT;
-                            parameters[QStringLiteral("offset")]  = offset + json_items.count();
-                            parameters[QStringLiteral("sort")]    = 0;
-                            parameters[QStringLiteral("user_id")] = user_id.toLongLong();
+                        parameters[QStringLiteral("count")]   = MAX_NOTES_GET_COUNT;
+                        parameters[QStringLiteral("offset")]  = offset + json_items.count();
+                        parameters[QStringLiteral("sort")]    = 0;
+                        parameters[QStringLiteral("user_id")] = user_id.toLongLong();
 
-                            request[QStringLiteral("method")]     = QStringLiteral("notes.get");
-                            request[QStringLiteral("context")]    = resp_request[QStringLiteral("context")].toString();
-                            request[QStringLiteral("parameters")] = parameters;
+                        request[QStringLiteral("method")]     = QStringLiteral("notes.get");
+                        request[QStringLiteral("context")]    = resp_request[QStringLiteral("context")].toString();
+                        request[QStringLiteral("parameters")] = parameters;
 
-                            EnqueueRequest(request);
-                        }
-                    } else {
-                        qWarning() << "HandleNotesGetResponse() : invalid request";
+                        EnqueueRequest(request);
                     }
+                } else {
+                    qWarning() << "HandleNotesGetResponse() : invalid request";
                 }
             } else {
                 qWarning() << "HandleNotesGetResponse() : invalid response";
