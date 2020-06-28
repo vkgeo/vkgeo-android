@@ -6,6 +6,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
+#include <QtCore/QJsonValue>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
