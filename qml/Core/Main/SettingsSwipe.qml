@@ -14,7 +14,11 @@ Rectangle {
     color: "transparent"
 
     function handleBackKey() {
-        if (themeSelectionDialog.visible) {
+        if (encryptionSettingsDialog.visible) {
+            encryptionSettingsDialog.close();
+
+            return true;
+        } else if (themeSelectionDialog.visible) {
             themeSelectionDialog.close();
 
             return true;
