@@ -20,10 +20,10 @@ ApplicationWindow {
 
     property bool componentCompleted:          false
     property bool disableAds:                  false
+    property bool enableEncryption:            false
     property bool enableTrackedFriends:        false
     property bool increaseTrackingLimits:      false
     property bool appRated:                    false
-    property bool enableEncryption:            false
 
     property string configuredTheme:           ""
     property string adMobConsent:              ""
@@ -83,6 +83,12 @@ ApplicationWindow {
         updateFeatures();
     }
 
+    onEnableEncryptionChanged: {
+        AppSettings.enableEncryption = enableEncryption;
+
+        updateFeatures();
+    }
+
     onEnableTrackedFriendsChanged: {
         AppSettings.enableTrackedFriends = enableTrackedFriends;
 
@@ -97,12 +103,6 @@ ApplicationWindow {
 
     onAppRatedChanged: {
         AppSettings.appRated = appRated;
-    }
-
-    onEnableEncryptionChanged: {
-        AppSettings.enableEncryption = enableEncryption;
-
-        updateFeatures();
     }
 
     onConfiguredThemeChanged: {
@@ -321,10 +321,10 @@ ApplicationWindow {
         CryptoHelper.sharedKeysOfFriends = AppSettings.sharedKeysOfFriends;
 
         disableAds             = AppSettings.disableAds;
+        enableEncryption       = AppSettings.enableEncryption;
         enableTrackedFriends   = AppSettings.enableTrackedFriends;
         increaseTrackingLimits = AppSettings.increaseTrackingLimits;
         appRated               = AppSettings.appRated;
-        enableEncryption       = AppSettings.enableEncryption;
         configuredTheme        = AppSettings.configuredTheme;
         adMobConsent           = AppSettings.adMobConsent;
 

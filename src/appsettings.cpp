@@ -34,6 +34,26 @@ void AppSettings::setDisableAds(bool disable)
     emit settingsUpdated();
 }
 
+bool AppSettings::enableEncryption()
+{
+    Settings.sync();
+
+    if (Settings.contains(QStringLiteral("EnableEncryption"))) {
+        return Settings.value(QStringLiteral("EnableEncryption")).toBool();
+    } else {
+        return false;
+    }
+}
+
+void AppSettings::setEnableEncryption(bool enable)
+{
+    Settings.setValue(QStringLiteral("EnableEncryption"), enable);
+
+    Settings.sync();
+
+    emit settingsUpdated();
+}
+
 bool AppSettings::enableTrackedFriends()
 {
     Settings.sync();
@@ -88,26 +108,6 @@ bool AppSettings::appRated()
 void AppSettings::setAppRated(bool rated)
 {
     Settings.setValue(QStringLiteral("AppRated"), rated);
-
-    Settings.sync();
-
-    emit settingsUpdated();
-}
-
-bool AppSettings::enableEncryption()
-{
-    Settings.sync();
-
-    if (Settings.contains(QStringLiteral("EnableEncryption"))) {
-        return Settings.value(QStringLiteral("EnableEncryption")).toBool();
-    } else {
-        return false;
-    }
-}
-
-void AppSettings::setEnableEncryption(bool enable)
-{
-    Settings.setValue(QStringLiteral("EnableEncryption"), enable);
 
     Settings.sync();
 
