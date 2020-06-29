@@ -1,5 +1,4 @@
 #include <QtCore/QtGlobal>
-#include <QtCore/QLatin1Char>
 #include <QtCore/QLatin1String>
 #include <QtCore/QRandomGenerator>
 #include <QtCore/QCryptographicHash>
@@ -116,19 +115,13 @@ QByteArray CryptoHelper::DecryptAES256CBC(const QString &key, const QString &iv,
 
 QString CryptoHelper::GenerateRandomString(int length) const
 {
-    QString key = QLatin1String("");
+    const QLatin1String allowed_chars("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 
-    for (int i = 0; i < length;) {
-        quint32 next_char = QRandomGenerator::system()->bounded('0', '{');
+    QString result;
 
-        if ((next_char >= '0' && next_char <= '9') ||
-            (next_char >= 'A' && next_char <= 'Z') ||
-            (next_char >= 'a' && next_char <= 'z')) {
-            key.append(QLatin1Char(static_cast<char>(next_char)));
-
-            i++;
-        }
+    for (int i = 0; i < length; i++) {
+        result.append(allowed_chars[QRandomGenerator::system()->bounded(0, allowed_chars.size())]);
     }
 
-    return key;
+    return result;
 }
