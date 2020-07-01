@@ -174,6 +174,18 @@ Page {
     }
 
     Connections {
+        target: CryptoHelper
+
+        onSharedKeyChanged: {
+            VKHelper.sendData();
+        }
+
+        onSharedKeysOfFriendsChanged: {
+            VKHelper.updateTrackedFriendsData(true);
+        }
+    }
+
+    Connections {
         target: VKHelper
 
         onDataSent: {

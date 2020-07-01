@@ -10,7 +10,8 @@ MapQuickItem {
     width:       sourceItem.width
     height:      sourceItem.height
     anchorPoint: Qt.point(width / 2, height / 2)
-    visible:     false
+    coordinate:  QtPositioning.coordinate()
+    visible:     coordinate.isValid
 
     readonly property int dataTimeout: 24 * 60 * 60
 
@@ -70,10 +71,6 @@ MapQuickItem {
                 vkMapItem.profilePageRequested(vkMapItem.userId);
             }
         }
-    }
-
-    onCoordinateChanged: {
-        visible = true;
     }
 
     onUpdateTimeChanged: {
