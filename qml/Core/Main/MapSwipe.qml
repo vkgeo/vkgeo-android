@@ -303,6 +303,13 @@ Rectangle {
                         typeof friendData.longitude   === "number" && isFinite(friendData.longitude)) {
                         map_item.coordinate = QtPositioning.coordinate(friendData.latitude, friendData.longitude);
                         map_item.updateTime = friendData.update_time;
+                    } else {
+                        if (map_item === map.trackedMapItem) {
+                            map.trackMapItem(null);
+                        }
+
+                        map_item.coordinate = QtPositioning.coordinate();
+                        map_item.updateTime = 0;
                     }
 
                     break;

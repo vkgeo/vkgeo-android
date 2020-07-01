@@ -72,13 +72,13 @@ void VKService::handleFriendsUpdate()
 
 void VKService::handleTrackedFriendDataUpdate(const QString &friend_user_id, const QVariantMap &friend_data)
 {
-    if (friend_data.contains(QStringLiteral("latitude")) &&
-        friend_data.contains(QStringLiteral("longitude"))) {
-        qreal latitude  = friend_data[QStringLiteral("latitude")].toDouble();
-        qreal longitude = friend_data[QStringLiteral("longitude")].toDouble();
+    if (FriendsData.contains(friend_user_id)) {
+        QVariantMap frnd = FriendsData[friend_user_id].toMap();
 
-        if (FriendsData.contains(friend_user_id)) {
-            QVariantMap frnd = FriendsData[friend_user_id].toMap();
+        if (friend_data.contains(QStringLiteral("latitude")) &&
+            friend_data.contains(QStringLiteral("longitude"))) {
+            qreal latitude  = friend_data[QStringLiteral("latitude")].toDouble();
+            qreal longitude = friend_data[QStringLiteral("longitude")].toDouble();
 
             if (VKHelper::GetInstance().locationValid()) {
                 QGeoCoordinate my_coordinate(VKHelper::GetInstance().locationLatitude(), VKHelper::GetInstance().locationLongitude());
@@ -100,10 +100,14 @@ void VKService::handleTrackedFriendDataUpdate(const QString &friend_user_id, con
                 } else {
                     frnd[QStringLiteral("nearby")] = false;
                 }
+            } else {
+                frnd[QStringLiteral("nearby")] = false;
             }
-
-            FriendsData[friend_user_id] = frnd;
+        } else {
+            frnd[QStringLiteral("nearby")] = false;
         }
+
+        FriendsData[friend_user_id] = frnd;
     }
 }
 
