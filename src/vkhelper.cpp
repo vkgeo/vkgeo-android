@@ -608,9 +608,7 @@ void VKHelper::handleSendDataTimerTimeout()
     if (CurrentDataState == DataUpdated || (CurrentDataState == DataUpdatedAndSent && SendDataTryNumber < MAX_SEND_DATA_TRIES_COUNT)) {
         qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
 
-        if (elapsed < 0 || elapsed > SEND_DATA_INTERVAL) {
-            SendData();
-
+        if ((elapsed < 0 || elapsed > SEND_DATA_INTERVAL) && SendData()) {
             if (CurrentDataState == DataUpdatedAndSent) {
                 SendDataTryNumber = SendDataTryNumber + 1;
             } else {
@@ -688,7 +686,7 @@ void VKHelper::Cleanup()
     emit friendsUpdated();
 }
 
-void VKHelper::SendData()
+bool VKHelper::SendData()
 {
     if (!ContextHasActiveRequests(QStringLiteral("sendData"))) {
         QString     user_data_string;
@@ -731,6 +729,10 @@ void VKHelper::SendData()
         }
 
         EnqueueRequest(request);
+
+        return true;
+    } else {
+        return false;
     }
 }
 
