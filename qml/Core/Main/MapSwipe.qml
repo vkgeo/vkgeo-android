@@ -225,7 +225,7 @@ Rectangle {
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {
-            VKHelper.sendData();
+            VKHelper.sendDataImmediately();
         }
     }
 
@@ -234,8 +234,8 @@ Rectangle {
 
         onLocationUpdated: {
             if (VKHelper.locationValid && map.myMapItem !== null) {
-                map.myMapItem.coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
-                map.myMapItem.updateTime = VKHelper.locationUpdateTime;
+                map.myMapItem.coordinate = QtPositioning.coordinate(VKHelper.latitude, VKHelper.longitude);
+                map.myMapItem.updateTime = VKHelper.updateTime;
 
                 if (!map.wasTouched && map.trackedMapItem === null) {
                     map.centerOnMyMapItemOnce();

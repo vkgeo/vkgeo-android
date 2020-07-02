@@ -85,7 +85,7 @@ VKHelper::VKHelper(QObject *parent) :
 
     RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
 
-    connect(&SendDataOnUpdateTimer, &QTimer::timeout, this, &VKHelper::handleSendDataOnUpdateTimerTimeout);
+    connect(&SendDataOnUpdateTimer, &QTimer::timeout, this, &VKHelper::handleSendDataTimerTimeout);
 
     SendDataOnUpdateTimer.setInterval(SEND_DATA_ON_UPDATE_TIMER_INTERVAL);
     SendDataOnUpdateTimer.setSingleShot(true);
@@ -109,7 +109,7 @@ bool VKHelper::locationValid() const
            CurrentData.contains(QStringLiteral("longitude"));
 }
 
-qint64 VKHelper::locationUpdateTime() const
+qint64 VKHelper::updateTime() const
 {
     if (CurrentData.contains(QStringLiteral("update_time"))) {
         return CurrentData[QStringLiteral("update_time")].toLongLong();
@@ -118,7 +118,7 @@ qint64 VKHelper::locationUpdateTime() const
     }
 }
 
-qreal VKHelper::locationLatitude() const
+qreal VKHelper::latitude() const
 {
     if (CurrentData.contains(QStringLiteral("latitude"))) {
         return CurrentData[QStringLiteral("latitude")].toDouble();
@@ -127,7 +127,7 @@ qreal VKHelper::locationLatitude() const
     }
 }
 
-qreal VKHelper::locationLongitude() const
+qreal VKHelper::longitude() const
 {
     if (CurrentData.contains(QStringLiteral("longitude"))) {
         return CurrentData[QStringLiteral("longitude")].toDouble();
@@ -256,9 +256,9 @@ void VKHelper::updateBatteryStatus(const QString &status, int level)
     SendDataOnUpdateTimer.start();
 }
 
-void VKHelper::sendData()
+void VKHelper::sendDataImmediately()
 {
-    SendData(true);
+    SendData();
 }
 
 void VKHelper::updateFriends()
@@ -394,11 +394,11 @@ void VKHelper::updateTrackedFriendsList(const QVariantList &tracked_friends_list
     }
 }
 
-void VKHelper::updateTrackedFriendsData(bool expedited)
+void VKHelper::updateTrackedFriendsData(bool immediately)
 {
     qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastUpdateTrackedFriendsDataTime;
 
-    if (expedited || elapsed < 0 || elapsed > UPDATE_TRACKED_FRIENDS_DATA_INTERVAL) {
+    if (immediately || elapsed < 0 || elapsed > UPDATE_TRACKED_FRIENDS_DATA_INTERVAL) {
         LastUpdateTrackedFriendsDataTime = QDateTime::currentSecsSinceEpoch();
 
         for (const QString &key : FriendsData.keys()) {
@@ -603,14 +603,29 @@ void VKHelper::handleRequestQueueTimerTimeout()
     }
 }
 
-void VKHelper::handleSendDataOnUpdateTimerTimeout()
-{
-    SendData(false);
-}
-
 void VKHelper::handleSendDataTimerTimeout()
 {
-    SendData(false);
+    if (CurrentDataState == DataUpdated || (CurrentDataState == DataUpdatedAndSent && SendDataTryNumber < MAX_SEND_DATA_TRIES_COUNT)) {
+        qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
+
+        if (elapsed < 0 || elapsed > SEND_DATA_INTERVAL) {
+            SendData();
+
+            if (CurrentDataState == DataUpdatedAndSent) {
+                SendDataTryNumber = SendDataTryNumber + 1;
+            } else {
+                SendDataTryNumber = 1;
+            }
+
+            CurrentDataState = DataUpdatedAndSent;
+        }
+
+        if (!SendDataTimer.isActive()) {
+            SendDataTimer.start();
+        }
+    } else {
+        SendDataTimer.stop();
+    }
 }
 
 void VKHelper::Cleanup()
@@ -673,70 +688,49 @@ void VKHelper::Cleanup()
     emit friendsUpdated();
 }
 
-void VKHelper::SendData(bool expedited)
+void VKHelper::SendData()
 {
-    if (CurrentDataState == DataUpdated || (CurrentDataState == DataUpdatedAndSent &&
-                                            SendDataTryNumber < MAX_SEND_DATA_TRIES_COUNT)) {
-        qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
+    if (!ContextHasActiveRequests(QStringLiteral("sendData"))) {
+        QString     user_data_string;
+        QVariantMap request, parameters;
 
-        if (!ContextHasActiveRequests(QStringLiteral("sendData")) &&
-            AuthState == VKAuthState::StateAuthorized &&
-            (expedited || elapsed < 0 || elapsed > SEND_DATA_INTERVAL)) {
-            QString     user_data_string;
-            QVariantMap request, parameters;
+        if (EncryptionEnabled) {
+            QString     iv;
+            QByteArray  encrypted_payload;
+            QVariantMap user_data;
 
-            if (EncryptionEnabled) {
-                QString     iv;
-                QByteArray  encrypted_payload;
-                QVariantMap user_data;
+            std::tie(iv, encrypted_payload) = CryptoHelper::GetInstance().EncryptWithAES256CBC(CryptoHelper::GetInstance().sharedKey(),
+                                                                                               QJsonDocument::fromVariant(CurrentData)
+                                                                                               .toJson(QJsonDocument::Compact));
 
-                std::tie(iv, encrypted_payload) = CryptoHelper::GetInstance().EncryptWithAES256CBC(CryptoHelper::GetInstance().sharedKey(),
-                                                                                                   QJsonDocument::fromVariant(CurrentData)
-                                                                                                   .toJson(QJsonDocument::Compact));
+            user_data[QStringLiteral("encryption")]        = QStringLiteral("AES-256-CBC-PSK");
+            user_data[QStringLiteral("iv")]                = iv;
+            user_data[QStringLiteral("encrypted_payload")] = encrypted_payload.toBase64();
 
-                user_data[QStringLiteral("encryption")]        = QStringLiteral("AES-256-CBC-PSK");
-                user_data[QStringLiteral("iv")]                = iv;
-                user_data[QStringLiteral("encrypted_payload")] = encrypted_payload.toBase64();
-
-                user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
-                                                                                    .toJson(QJsonDocument::Compact)
-                                                                                    .toBase64()));
-            } else {
-                user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
-                                                                                    .toJson(QJsonDocument::Compact)
-                                                                                    .toBase64()));
-            }
-
-            if (TrustedFriendsListId == QLatin1String("")) {
-                request[QStringLiteral("method")]    = QStringLiteral("friends.getLists");
-                request[QStringLiteral("context")]   = QStringLiteral("sendData");
-                request[QStringLiteral("user_data")] = user_data_string;
-            } else {
-                parameters[QStringLiteral("count")] = MAX_NOTES_GET_COUNT;
-                parameters[QStringLiteral("sort")]  = 0;
-
-                request[QStringLiteral("method")]     = QStringLiteral("notes.get");
-                request[QStringLiteral("context")]    = QStringLiteral("sendData");
-                request[QStringLiteral("user_data")]  = user_data_string;
-                request[QStringLiteral("parameters")] = parameters;
-            }
-
-            EnqueueRequest(request);
-
-            if (CurrentDataState == DataUpdatedAndSent) {
-                SendDataTryNumber = SendDataTryNumber + 1;
-            } else {
-                SendDataTryNumber = 0;
-            }
-
-            CurrentDataState = DataUpdatedAndSent;
+            user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
+                                                                                .toJson(QJsonDocument::Compact)
+                                                                                .toBase64()));
+        } else {
+            user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
+                                                                                .toJson(QJsonDocument::Compact)
+                                                                                .toBase64()));
         }
 
-        if (!SendDataTimer.isActive()) {
-            SendDataTimer.start();
+        if (TrustedFriendsListId == QLatin1String("")) {
+            request[QStringLiteral("method")]    = QStringLiteral("friends.getLists");
+            request[QStringLiteral("context")]   = QStringLiteral("sendData");
+            request[QStringLiteral("user_data")] = user_data_string;
+        } else {
+            parameters[QStringLiteral("count")] = MAX_NOTES_GET_COUNT;
+            parameters[QStringLiteral("sort")]  = 0;
+
+            request[QStringLiteral("method")]     = QStringLiteral("notes.get");
+            request[QStringLiteral("context")]    = QStringLiteral("sendData");
+            request[QStringLiteral("user_data")]  = user_data_string;
+            request[QStringLiteral("parameters")] = parameters;
         }
-    } else {
-        SendDataTimer.stop();
+
+        EnqueueRequest(request);
     }
 }
 
