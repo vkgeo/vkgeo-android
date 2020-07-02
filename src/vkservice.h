@@ -37,7 +37,7 @@ private slots:
 
 signals:
     void friendsUpdateRequested();
-    void trackedFriendsDataUpdateRequested(bool expedited);
+    void trackedFriendsDataUpdateRequested(bool immediately);
 
 private:
     void UpdateSettings() const;
