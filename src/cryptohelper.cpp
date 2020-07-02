@@ -1,4 +1,3 @@
-#include <QtCore/QtGlobal>
 #include <QtCore/QLatin1String>
 #include <QtCore/QRandomGenerator>
 #include <QtCore/QCryptographicHash>
