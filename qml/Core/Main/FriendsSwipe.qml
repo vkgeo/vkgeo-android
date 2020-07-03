@@ -46,7 +46,7 @@ Rectangle {
                 my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
                 my_profile_page.status            = "";
                 my_profile_page.batteryStatus     = "";
-                my_profile_page.sharedKey         = "";
+                my_profile_page.publicKey         = "";
             } else {
                 for (var i = 0; i < friendsListModel.count; i++) {
                     var frnd = friendsListModel.get(i);
@@ -69,7 +69,7 @@ Rectangle {
                         profile_page.screenName        = frnd.screenName;
                         profile_page.status            = frnd.status;
                         profile_page.batteryStatus     = frnd.batteryStatus;
-                        profile_page.sharedKey         = CryptoHelper.getSharedKeyOfFriend(frnd.userId);
+                        profile_page.publicKey         = CryptoHelper.getPublicKeyOfFriend(frnd.userId);
 
                         profile_page.locationOnMapRequested.connect(friendsSwipe.locationOnMapRequested);
 

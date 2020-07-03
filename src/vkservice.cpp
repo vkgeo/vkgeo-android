@@ -129,8 +129,9 @@ void VKService::handleUpdateFriendsTimerTimeout()
 
 void VKService::UpdateSettings() const
 {
-    CryptoHelper::GetInstance().setSharedKey          (AppSettings::GetInstance().sharedKey());
-    CryptoHelper::GetInstance().setSharedKeysOfFriends(AppSettings::GetInstance().sharedKeysOfFriends());
+    CryptoHelper::GetInstance().setPublicKey          (AppSettings::GetInstance().publicKey());
+    CryptoHelper::GetInstance().setPrivateKey         (AppSettings::GetInstance().privateKey());
+    CryptoHelper::GetInstance().setPublicKeysOfFriends(AppSettings::GetInstance().publicKeysOfFriends());
 
     VKHelper::GetInstance().setEncryptionEnabled     (AppSettings::GetInstance().enableEncryption());
     VKHelper::GetInstance().setMaxTrustedFriendsCount(15);

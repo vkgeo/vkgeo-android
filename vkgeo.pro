@@ -6,10 +6,14 @@ CONFIG += c++17
 
 DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
-INCLUDEPATH += 3rdparty
+INCLUDEPATH += \
+    3rdparty/qt-secret/src/mini-gmp/src \
+    3rdparty/qt-secret/src/Qt-RSA
 
 SOURCES += \
-    3rdparty/qt-aes/qaesencryption.cpp \
+    3rdparty/qt-secret/src/mini-gmp/src/bigint.cpp \
+    3rdparty/qt-secret/src/mini-gmp/src/mini-gmp.c \
+    3rdparty/qt-secret/src/Qt-RSA/qrsaencryption.cpp \
     src/admobhelper.cpp \
     src/androidgw.cpp \
     src/appsettings.cpp \
@@ -21,7 +25,10 @@ SOURCES += \
     src/vkservice.cpp
 
 HEADERS += \
-    3rdparty/qt-aes/qaesencryption.h \
+    3rdparty/qt-secret/src/mini-gmp/src/bigint.h \
+    3rdparty/qt-secret/src/mini-gmp/src/mini-gmp.h \
+    3rdparty/qt-secret/src/mini-gmp/src/minigmp_global.h \
+    3rdparty/qt-secret/src/Qt-RSA/qrsaencryption.h \
     src/admobhelper.h \
     src/androidgw.h \
     src/appsettings.h \

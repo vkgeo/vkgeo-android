@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <tuple>
 
 #include <QtCore/QLatin1String>
 #include <QtCore/QByteArray>
@@ -23,6 +22,7 @@ const QString VKHelper::DEFAULT_PHOTO_URL        (QStringLiteral("https://vk.com
 const QString VKHelper::DATA_NOTE_TITLE          (QStringLiteral("VKGeo Data"));
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME(QStringLiteral("VKGeo Trusted Friends"));
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME(QStringLiteral("VKGeo Tracked Friends"));
+const QString VKHelper::ENCRYPTED_PAYLOAD_COOKIE (QStringLiteral("VKGeo Payload Cookie"));
 
 QAndroidJniObject VKHelper::AndroidContext;
 
@@ -693,21 +693,43 @@ bool VKHelper::SendData()
         QVariantMap request, parameters;
 
         if (EncryptionEnabled) {
-            QString     iv;
-            QByteArray  encrypted_payload;
-            QVariantMap user_data;
+            if (!FriendsData.isEmpty()) {
+                QVariantList encrypted_payload;
 
-            std::tie(iv, encrypted_payload) = CryptoHelper::GetInstance().EncryptWithAES256CBC(CryptoHelper::GetInstance().sharedKey(),
-                                                                                               QJsonDocument::fromVariant(CurrentData)
-                                                                                               .toJson(QJsonDocument::Compact));
+                for (const QString &key : FriendsData.keys()) {
+                    QVariantMap frnd = FriendsData[key].toMap();
 
-            user_data[QStringLiteral("encryption")]        = QStringLiteral("AES-256-CBC-PSK");
-            user_data[QStringLiteral("iv")]                = iv;
-            user_data[QStringLiteral("encrypted_payload")] = encrypted_payload.toBase64();
+                    if (frnd.contains(QStringLiteral("userId")) && frnd.contains(QStringLiteral("trusted")) && frnd[QStringLiteral("trusted")].toBool()) {
+                        QString friend_key = CryptoHelper::GetInstance().getPublicKeyOfFriend(frnd[QStringLiteral("userId")].toString());
 
-            user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
-                                                                                .toJson(QJsonDocument::Compact)
-                                                                                .toBase64()));
+                        if (friend_key != QLatin1String("")) {
+                            QVariantMap payload_item;
+
+                            payload_item[QStringLiteral("payload_cookie")] = ENCRYPTED_PAYLOAD_COOKIE;
+                            payload_item[QStringLiteral("data")]           = CurrentData;
+
+                            QByteArray encrypted_payload_item = CryptoHelper::GetInstance().EncryptWithRSA(QByteArray::fromBase64(friend_key.toUtf8()),
+                                                                                                           QJsonDocument::fromVariant(payload_item)
+                                                                                                           .toJson(QJsonDocument::Compact));
+
+                            if (!encrypted_payload_item.isEmpty()) {
+                                encrypted_payload.append(QString::fromUtf8(encrypted_payload_item.toBase64()));
+                            }
+                        }
+                    }
+                }
+
+                QVariantMap user_data;
+
+                user_data[QStringLiteral("encryption")]        = QStringLiteral("RSA-2048");
+                user_data[QStringLiteral("encrypted_payload")] = encrypted_payload;
+
+                user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
+                                                                                    .toJson(QJsonDocument::Compact)
+                                                                                    .toBase64()));
+            } else {
+                return false;
+            }
         } else {
             user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
                                                                                 .toJson(QJsonDocument::Compact)
@@ -909,19 +931,24 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                                 QVariantMap friend_data = QJsonDocument::fromJson(QByteArray::fromBase64(base64_regexp.cap(1).toUtf8())).toVariant().toMap();
 
                                 if (friend_data.contains(QStringLiteral("encryption"))) {
-                                    if (friend_data[QStringLiteral("encryption")] == QStringLiteral("AES-256-CBC-PSK")) {
-                                        if (friend_data.contains(QStringLiteral("iv")) &&
-                                            friend_data.contains(QStringLiteral("encrypted_payload"))) {
-                                            QString key = CryptoHelper::GetInstance().getSharedKeyOfFriend(user_id);
+                                    if (friend_data[QStringLiteral("encryption")] == QStringLiteral("RSA-2048")) {
+                                        if (friend_data.contains(QStringLiteral("encrypted_payload"))) {
+                                            QByteArray   raw_private_key   = QByteArray::fromBase64(CryptoHelper::GetInstance().privateKey().toUtf8());
+                                            QVariantList encrypted_payload = friend_data[QStringLiteral("encrypted_payload")].toList();
 
-                                            if (key != QLatin1String("")) {
-                                                QString    iv                = friend_data[QStringLiteral("iv")].toString();
-                                                QByteArray encrypted_payload = QByteArray::fromBase64(friend_data[QStringLiteral("encrypted_payload")].toByteArray());
-                                                QByteArray payload           = CryptoHelper::GetInstance().DecryptAES256CBC(key, iv, encrypted_payload);
+                                            for (const QVariant &variant_item : encrypted_payload) {
+                                                QByteArray  encrypted_payload_item = QByteArray::fromBase64(variant_item.toString().toUtf8());
+                                                QVariantMap payload_item           = QJsonDocument::fromJson(CryptoHelper::GetInstance().DecryptRSA(raw_private_key,
+                                                                                                                                                    encrypted_payload_item))
+                                                                                                                                        .toVariant().toMap();
 
-                                                emit trackedFriendDataUpdated(user_id, QJsonDocument::fromJson(payload).toVariant().toMap());
-                                            } else {
-                                                qWarning() << "HandleNotesGetResponse() : no suitable shared key";
+                                                if (payload_item.contains(QStringLiteral("payload_cookie")) &&
+                                                    payload_item.contains(QStringLiteral("data")) &&
+                                                    payload_item[QStringLiteral("payload_cookie")] == ENCRYPTED_PAYLOAD_COOKIE) {
+                                                    emit trackedFriendDataUpdated(user_id, payload_item[QStringLiteral("data")].toMap());
+
+                                                    break;
+                                                }
                                             }
                                         } else {
                                             qWarning() << "HandleNotesGetResponse() : invalid user data";
