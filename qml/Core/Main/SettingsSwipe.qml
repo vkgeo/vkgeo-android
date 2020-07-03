@@ -245,7 +245,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                qsTr("You can enable encryption of your location data. If you do this, your location will only be visible to trusted friends <b>whose public keys you have</b>.")
+                text:                qsTr("You can enable encryption of your location data. If you do this, <b>your location will only be visible</b> to trusted friends <b>whose public keys you have</b>.")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
@@ -263,7 +263,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                qsTr("Pass this public key to trusted and tracked friends who <b>use encryption and whose location you want to see</b>. Press and hold your finger on the partial public key text below to copy the public key to the clipboard.")
+                text:                qsTr("<b>Pass this public key</b> to trusted and tracked friends who use encryption and <b>whose location you want to see</b>. Press and hold your finger on the partial public key text below to copy the public key to the clipboard.")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
