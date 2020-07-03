@@ -333,6 +333,7 @@ Page {
                 implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Reset the key")
                 visible:          profilePage.editable
+                enabled:          publicKeyTextArea.text !== ""
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
