@@ -1,8 +1,7 @@
 #include <QtCore/QLatin1String>
-#include <QtCore/QRandomGenerator>
-#include <QtCore/QCryptographicHash>
+#include <QtCore/QDebug>
 
-#include <qt-aes/qaesencryption.h>
+#include <qrsaencryption.h>
 
 #include "cryptohelper.h"
 
@@ -18,109 +17,130 @@ CryptoHelper &CryptoHelper::GetInstance()
     return instance;
 }
 
-QString CryptoHelper::sharedKey() const
+QString CryptoHelper::publicKey() const
 {
-    return SharedKey;
+    return PublicKey;
 }
 
-void CryptoHelper::setSharedKey(const QString &key)
+void CryptoHelper::setPublicKey(const QString &key)
 {
-    if (SharedKey != key) {
-        SharedKey = key;
+    if (PublicKey != key) {
+        PublicKey = key;
 
-        emit sharedKeyChanged(SharedKey);
+        emit publicKeyChanged(PublicKey);
     }
 }
 
-QVariantMap CryptoHelper::sharedKeysOfFriends() const
+QString CryptoHelper::privateKey() const
 {
-    return SharedKeysOfFriends;
+    return PrivateKey;
 }
 
-void CryptoHelper::setSharedKeysOfFriends(const QVariantMap &keys)
+void CryptoHelper::setPrivateKey(const QString &key)
 {
-    if (SharedKeysOfFriends != keys) {
-        SharedKeysOfFriends = keys;
+    if (PrivateKey != key) {
+        PrivateKey = key;
 
-        emit sharedKeysOfFriendsChanged(SharedKeysOfFriends);
+        emit privateKeyChanged(PrivateKey);
     }
 }
 
-void CryptoHelper::regenerateSharedKey()
+QVariantMap CryptoHelper::publicKeysOfFriends() const
 {
-    SharedKey = GenerateRandomString(SHARED_KEY_LENGTH);
-
-    emit sharedKeyChanged(SharedKey);
+    return PublicKeysOfFriends;
 }
 
-QString CryptoHelper::getSharedKeyOfFriend(const QString &friend_user_id) const
+void CryptoHelper::setPublicKeysOfFriends(const QVariantMap &keys)
 {
-    if (SharedKeysOfFriends.contains(friend_user_id)) {
-        return SharedKeysOfFriends[friend_user_id].toString();
+    if (PublicKeysOfFriends != keys) {
+        PublicKeysOfFriends = keys;
+
+        emit publicKeysOfFriendsChanged(PublicKeysOfFriends);
+    }
+}
+
+bool CryptoHelper::validateKeyPair(const QString &public_key, const QString &private_key) const
+{
+    const QByteArray test_payload("TEST PAYLOAD FOR KEY PAIR VALIDATION");
+
+    QRSAEncryption rsa(QRSAEncryption::Rsa::RSA_2048);
+
+    return rsa.decode(rsa.encode(test_payload, QByteArray::fromBase64(public_key.toUtf8())),
+                      QByteArray::fromBase64(private_key.toUtf8())) == test_payload;
+}
+
+void CryptoHelper::regenerateKeyPair()
+{
+    QRSAEncryption rsa(QRSAEncryption::Rsa::RSA_2048);
+
+    QByteArray raw_public_key, raw_private_key;
+
+    if (rsa.generatePairKey(raw_public_key, raw_private_key)) {
+        QString public_key  = QString::fromUtf8(raw_public_key.toBase64());
+        QString private_key = QString::fromUtf8(raw_private_key.toBase64());
+
+        if (PublicKey != public_key) {
+            PublicKey = public_key;
+
+            emit publicKeyChanged(PublicKey);
+        }
+        if (PrivateKey != private_key) {
+            PrivateKey = private_key;
+
+            emit privateKeyChanged(PrivateKey);
+        }
+    } else {
+        qWarning() << "regenerateKeyPair() : QRSAEncryption::generatePairKey() failed";
+    }
+}
+
+QString CryptoHelper::getPublicKeyOfFriend(const QString &friend_user_id) const
+{
+    if (PublicKeysOfFriends.contains(friend_user_id)) {
+        return PublicKeysOfFriends[friend_user_id].toString();
     } else {
         return QLatin1String("");
     }
 }
 
-void CryptoHelper::setSharedKeyOfFriend(const QString &friend_user_id, const QString &friend_key)
+void CryptoHelper::setPublicKeyOfFriend(const QString &friend_user_id, const QString &friend_key)
 {
-    if (friend_user_id != QLatin1String("") && (!SharedKeysOfFriends.contains(friend_user_id) ||
-                                                 SharedKeysOfFriends[friend_user_id] != friend_key)) {
-        SharedKeysOfFriends[friend_user_id] = friend_key;
+    if (friend_user_id != QLatin1String("") && (!PublicKeysOfFriends.contains(friend_user_id) ||
+                                                 PublicKeysOfFriends[friend_user_id] != friend_key)) {
+        PublicKeysOfFriends[friend_user_id] = friend_key;
 
-        emit sharedKeysOfFriendsChanged(SharedKeysOfFriends);
+        emit publicKeysOfFriendsChanged(PublicKeysOfFriends);
     }
 }
 
-void CryptoHelper::removeSharedKeyOfFriend(const QString &friend_user_id)
+void CryptoHelper::removePublicKeyOfFriend(const QString &friend_user_id)
 {
-    if (SharedKeysOfFriends.contains(friend_user_id)) {
-        SharedKeysOfFriends.remove(friend_user_id);
+    if (PublicKeysOfFriends.contains(friend_user_id)) {
+        PublicKeysOfFriends.remove(friend_user_id);
 
-        emit sharedKeysOfFriendsChanged(SharedKeysOfFriends);
+        emit publicKeysOfFriendsChanged(PublicKeysOfFriends);
     }
 }
 
-void CryptoHelper::clearSharedKeysOfFriends()
+void CryptoHelper::clearPublicKeysOfFriends()
 {
-    if (!SharedKeysOfFriends.isEmpty()) {
-        SharedKeysOfFriends.clear();
+    if (!PublicKeysOfFriends.isEmpty()) {
+        PublicKeysOfFriends.clear();
 
-        emit sharedKeysOfFriendsChanged(SharedKeysOfFriends);
+        emit publicKeysOfFriendsChanged(PublicKeysOfFriends);
     }
 }
 
-std::tuple<QString, QByteArray> CryptoHelper::EncryptWithAES256CBC(const QString &key, const QByteArray &payload) const
+QByteArray CryptoHelper::EncryptWithRSA(const QByteArray &public_key, const QByteArray &payload) const
 {
-    QString iv = GenerateRandomString(AES_256_IV_LENGTH);
+    QRSAEncryption rsa(QRSAEncryption::Rsa::RSA_2048);
 
-    QByteArray key_hash = QCryptographicHash::hash(key.toLatin1(), QCryptographicHash::Sha256);
-    QByteArray iv_hash  = QCryptographicHash::hash(iv.toLatin1(),  QCryptographicHash::Md5);
-
-    QAESEncryption aes(QAESEncryption::AES_256, QAESEncryption::CBC);
-
-    return std::make_tuple(iv, aes.encode(payload, key_hash, iv_hash));
+    return rsa.encode(payload, public_key);
 }
 
-QByteArray CryptoHelper::DecryptAES256CBC(const QString &key, const QString &iv, const QByteArray &encrypted_payload) const
+QByteArray CryptoHelper::DecryptRSA(const QByteArray &private_key, const QByteArray &encrypted_payload) const
 {
-    QByteArray key_hash = QCryptographicHash::hash(key.toLatin1(), QCryptographicHash::Sha256);
-    QByteArray iv_hash  = QCryptographicHash::hash(iv.toLatin1(),  QCryptographicHash::Md5);
+    QRSAEncryption rsa(QRSAEncryption::Rsa::RSA_2048);
 
-    QAESEncryption aes(QAESEncryption::AES_256, QAESEncryption::CBC);
-
-    return aes.removePadding(aes.decode(encrypted_payload, key_hash, iv_hash));
-}
-
-QString CryptoHelper::GenerateRandomString(int length) const
-{
-    const QLatin1String allowed_chars("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-
-    QString result;
-
-    for (int i = 0; i < length; i++) {
-        result.append(allowed_chars[QRandomGenerator::system()->bounded(0, allowed_chars.size())]);
-    }
-
-    return result;
+    return rsa.decode(encrypted_payload, private_key);
 }

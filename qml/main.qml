@@ -14,9 +14,10 @@ ApplicationWindow {
     readonly property int screenDpi:           UIHelper.screenDpi
     readonly property int vkAuthState:         VKHelper.authState
 
-    readonly property string sharedKey:        CryptoHelper.sharedKey
+    readonly property string publicKey:        CryptoHelper.publicKey
+    readonly property string privateKey:       CryptoHelper.privateKey
 
-    readonly property var sharedKeysOfFriends: CryptoHelper.sharedKeysOfFriends
+    readonly property var publicKeysOfFriends: CryptoHelper.publicKeysOfFriends
 
     property bool componentCompleted:          false
     property bool disableAds:                  false
@@ -52,15 +53,21 @@ ApplicationWindow {
         }
     }
 
-    onSharedKeyChanged: {
+    onPublicKeyChanged: {
         if (componentCompleted) {
-            AppSettings.sharedKey = sharedKey;
+            AppSettings.publicKey = publicKey;
         }
     }
 
-    onSharedKeysOfFriendsChanged: {
+    onPrivateKeyChanged: {
         if (componentCompleted) {
-            AppSettings.sharedKeysOfFriends = sharedKeysOfFriends;
+            AppSettings.privateKey = privateKey;
+        }
+    }
+
+    onPublicKeysOfFriendsChanged: {
+        if (componentCompleted) {
+            AppSettings.publicKeysOfFriends = publicKeysOfFriends;
         }
     }
 
@@ -72,8 +79,9 @@ ApplicationWindow {
                 closeLoginPage();
             }
 
-            AppSettings.sharedKey           = sharedKey;
-            AppSettings.sharedKeysOfFriends = sharedKeysOfFriends;
+            AppSettings.publicKey           = publicKey;
+            AppSettings.privateKey          = privateKey;
+            AppSettings.publicKeysOfFriends = publicKeysOfFriends;
         }
     }
 
@@ -312,13 +320,14 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        if (AppSettings.sharedKey !== "") {
-            CryptoHelper.sharedKey = AppSettings.sharedKey;
+        if (CryptoHelper.validateKeyPair(AppSettings.publicKey, AppSettings.privateKey)) {
+            CryptoHelper.publicKey  = AppSettings.publicKey;
+            CryptoHelper.privateKey = AppSettings.privateKey;
         } else {
-            CryptoHelper.regenerateSharedKey();
+            CryptoHelper.regenerateKeyPair();
         }
 
-        CryptoHelper.sharedKeysOfFriends = AppSettings.sharedKeysOfFriends;
+        CryptoHelper.publicKeysOfFriends = AppSettings.publicKeysOfFriends;
 
         disableAds             = AppSettings.disableAds;
         enableEncryption       = AppSettings.enableEncryption;

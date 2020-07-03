@@ -17,8 +17,9 @@ class AppSettings : public QObject
     Q_PROPERTY(bool        appRated               READ appRated               WRITE setAppRated)
     Q_PROPERTY(QString     configuredTheme        READ configuredTheme        WRITE setConfiguredTheme)
     Q_PROPERTY(QString     adMobConsent           READ adMobConsent           WRITE setAdMobConsent)
-    Q_PROPERTY(QString     sharedKey              READ sharedKey              WRITE setSharedKey)
-    Q_PROPERTY(QVariantMap sharedKeysOfFriends    READ sharedKeysOfFriends    WRITE setSharedKeysOfFriends)
+    Q_PROPERTY(QString     publicKey              READ publicKey              WRITE setPublicKey)
+    Q_PROPERTY(QString     privateKey             READ privateKey             WRITE setPrivateKey)
+    Q_PROPERTY(QVariantMap publicKeysOfFriends    READ publicKeysOfFriends    WRITE setPublicKeysOfFriends)
 
 private:
     explicit AppSettings(QObject *parent = nullptr);
@@ -54,11 +55,14 @@ public:
     QString adMobConsent();
     void setAdMobConsent(const QString &consent);
 
-    QString sharedKey();
-    void setSharedKey(const QString &key);
+    QString publicKey();
+    void setPublicKey(const QString &key);
 
-    QVariantMap sharedKeysOfFriends();
-    void setSharedKeysOfFriends(const QVariantMap &keys);
+    QString privateKey();
+    void setPrivateKey(const QString &key);
+
+    QVariantMap publicKeysOfFriends();
+    void setPublicKeysOfFriends(const QVariantMap &keys);
 
 signals:
     void settingsUpdated();

@@ -28,14 +28,14 @@ Rectangle {
     }
 
     Toast {
-        id:              sharedKeyCopiedToClipboardToast
+        id:              publicKeyCopiedToClipboardToast
         anchors.top:     parent.top
         anchors.left:    parent.left
         anchors.right:   parent.right
         anchors.margins: UtilScript.dp(UIHelper.screenDpi, 4)
         z:               1
         height:          UtilScript.dp(UIHelper.screenDpi, 48)
-        text:            qsTr("The shared key has been copied to the clipboard")
+        text:            qsTr("The public key has been copied to the clipboard")
     }
 
     Toast {
@@ -245,7 +245,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                qsTr("You can enable encryption of your location data. If you do this, your trusted friends <b>will additionally need this shared key</b> to see your location.")
+                text:                qsTr("You can enable encryption of your location data. If you do this, your location will only be visible to trusted friends <b>whose public keys you have</b>.")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
@@ -263,7 +263,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                qsTr("Only pass this shared key to <b>trusted friends</b>. <b>Do not use VK services to transfer the key</b>; do this only through separate trusted and secure channels.")
+                text:                qsTr("Pass this public key to trusted and tracked friends who <b>use encryption and whose location you want to see</b>. Press and hold your finger on the partial public key text below to copy the public key to the clipboard.")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
@@ -281,7 +281,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                UtilScript.formatSharedKey(CryptoHelper.sharedKey)
+                text:                textText(CryptoHelper.publicKey)
                 color:               textColor(UIHelper.darkTheme, VKHelper.encryptionEnabled)
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 20)
                 font.family:         "Helvetica"
@@ -294,6 +294,10 @@ Rectangle {
                 textFormat:          Text.PlainText
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
+
+                function textText(key) {
+                    return "%1 **** %2".arg(key.slice(0, 8)).arg(key.slice(-8));
+                }
 
                 function textColor(dark_theme, encryption_enabled) {
                     if (encryption_enabled) {
@@ -309,9 +313,9 @@ Rectangle {
                     anchors.fill: parent
 
                     onPressAndHold: {
-                        UIHelper.copyToClipboard(UtilScript.formatSharedKey(CryptoHelper.sharedKey));
+                        UIHelper.copyToClipboard(CryptoHelper.publicKey);
 
-                        sharedKeyCopiedToClipboardToast.visible = true;
+                        publicKeyCopiedToClipboardToast.visible = true;
                     }
                 }
             }
@@ -461,7 +465,7 @@ Rectangle {
                         my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
                         my_profile_page.status            = "";
                         my_profile_page.batteryStatus     = "";
-                        my_profile_page.sharedKey         = "";
+                        my_profile_page.publicKey         = "";
                     } else {
                         console.error(component.errorString());
                     }
@@ -489,8 +493,8 @@ Rectangle {
             mainWindow.enableEncryption = !VKHelper.encryptionEnabled;
         }
 
-        onRegenerateSharedKeySelected: {
-            regenerateSharedKeyMessageDialog.open();
+        onRegenerateKeyPairSelected: {
+            regenerateKeyPairMessageDialog.open();
         }
 
         onResetKeystoreSelected: {
@@ -515,25 +519,25 @@ Rectangle {
     }
 
     MessageDialog {
-        id:              regenerateSharedKeyMessageDialog
-        title:           qsTr("Regenerate the shared key")
-        text:            qsTr("Are you sure you want to regenerate the shared key?")
+        id:              regenerateKeyPairMessageDialog
+        title:           qsTr("Regenerate the key pair")
+        text:            qsTr("Are you sure you want to regenerate the key pair?")
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {
-            CryptoHelper.regenerateSharedKey();
+            CryptoHelper.regenerateKeyPair();
         }
     }
 
     MessageDialog {
         id:              resetKeystoreMessageDialog
         title:           qsTr("Reset the keystore")
-        text:            qsTr("Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your shared key will be regenerated.")
+        text:            qsTr("Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your key pair will be regenerated.")
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {
-            CryptoHelper.clearSharedKeysOfFriends();
-            CryptoHelper.regenerateSharedKey();
+            CryptoHelper.clearPublicKeysOfFriends();
+            CryptoHelper.regenerateKeyPair();
         }
     }
 

@@ -154,40 +154,60 @@ void AppSettings::setAdMobConsent(const QString &consent)
     emit settingsUpdated();
 }
 
-QString AppSettings::sharedKey()
+QString AppSettings::publicKey()
 {
     Settings.sync();
 
-    if (Settings.contains(QStringLiteral("SharedKey"))) {
-        return Settings.value(QStringLiteral("SharedKey")).toString();
+    if (Settings.contains(QStringLiteral("PublicKey"))) {
+        return Settings.value(QStringLiteral("PublicKey")).toString();
     } else {
         return QLatin1String("");
     }
 }
 
-void AppSettings::setSharedKey(const QString &key)
+void AppSettings::setPublicKey(const QString &key)
 {
-    Settings.setValue(QStringLiteral("SharedKey"), key);
+    Settings.setValue(QStringLiteral("PublicKey"), key);
 
     Settings.sync();
 
     emit settingsUpdated();
 }
 
-QVariantMap AppSettings::sharedKeysOfFriends()
+QString AppSettings::privateKey()
 {
     Settings.sync();
 
-    if (Settings.contains(QStringLiteral("SharedKeysOfFriends"))) {
-        return Settings.value(QStringLiteral("SharedKeysOfFriends")).toMap();
+    if (Settings.contains(QStringLiteral("PrivateKey"))) {
+        return Settings.value(QStringLiteral("PrivateKey")).toString();
+    } else {
+        return QLatin1String("");
+    }
+}
+
+void AppSettings::setPrivateKey(const QString &key)
+{
+    Settings.setValue(QStringLiteral("PrivateKey"), key);
+
+    Settings.sync();
+
+    emit settingsUpdated();
+}
+
+QVariantMap AppSettings::publicKeysOfFriends()
+{
+    Settings.sync();
+
+    if (Settings.contains(QStringLiteral("PublicKeysOfFriends"))) {
+        return Settings.value(QStringLiteral("PublicKeysOfFriends")).toMap();
     } else {
         return QVariantMap();
     }
 }
 
-void AppSettings::setSharedKeysOfFriends(const QVariantMap &keys)
+void AppSettings::setPublicKeysOfFriends(const QVariantMap &keys)
 {
-    Settings.setValue(QStringLiteral("SharedKeysOfFriends"), keys);
+    Settings.setValue(QStringLiteral("PublicKeysOfFriends"), keys);
 
     Settings.sync();
 

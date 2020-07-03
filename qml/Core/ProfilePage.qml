@@ -19,12 +19,12 @@ Page {
         }
 
         onDoneClicked: {
-            var key = UtilScript.concatSharedKey(sharedKeyTextField.displayText);
+            var key = publicKeyTextArea.text.trim().split(/\s+/).join("");
 
             if (key !== "") {
-                CryptoHelper.setSharedKeyOfFriend(profilePage.userId, key);
+                CryptoHelper.setPublicKeyOfFriend(profilePage.userId, key);
             } else {
-                CryptoHelper.removeSharedKeyOfFriend(profilePage.userId);
+                CryptoHelper.removePublicKeyOfFriend(profilePage.userId);
             }
 
             mainStackView.pop();
@@ -54,7 +54,7 @@ Page {
     property string screenName:      ""
     property string status:          ""
     property string batteryStatus:   ""
-    property string sharedKey:       ""
+    property string publicKey:       ""
 
     signal locationOnMapRequested(string userId)
 
@@ -273,28 +273,42 @@ Page {
                 Layout.alignment: Qt.AlignVCenter
             }
 
-            TextField {
-                id:                   sharedKeyTextField
-                text:                 UtilScript.formatSharedKey(profilePage.sharedKey)
-                placeholderText:      qsTr("Shared key")
-                font.pixelSize:       UtilScript.dp(UIHelper.screenDpi, 20)
-                font.family:          "Helvetica"
-                inputMethodHints:     Qt.ImhNoPredictiveText
-                horizontalAlignment:  TextField.AlignHCenter
-                verticalAlignment:    TextField.AlignVCenter
-                wrapMode:             TextField.Wrap
+            Rectangle {
+                color:                UIHelper.darkTheme ? "lightgray" : "white"
+                radius:               UtilScript.dp(UIHelper.screenDpi, 8)
                 visible:              profilePage.editable
-                Layout.minimumHeight: UtilScript.dp(UIHelper.screenDpi, 64)
+                border.width:         UtilScript.dp(UIHelper.screenDpi, 1)
+                border.color:         "steelblue"
+                Layout.minimumHeight: UtilScript.dp(UIHelper.screenDpi, 80)
                 Layout.leftMargin:    UtilScript.dp(UIHelper.screenDpi, 16)
                 Layout.rightMargin:   UtilScript.dp(UIHelper.screenDpi, 16)
                 Layout.fillWidth:     true
                 Layout.alignment:     Qt.AlignVCenter
 
-                background: Rectangle {
-                    color:        UIHelper.darkTheme ? "lightgray" : "white"
-                    radius:       UtilScript.dp(UIHelper.screenDpi, 8)
-                    border.width: UtilScript.dp(UIHelper.screenDpi, 1)
-                    border.color: "steelblue"
+                Flickable {
+                    id:            publicKeyFlickable
+                    anchors.fill:  parent
+                    contentWidth:  publicKeyTextArea.paintedWidth
+                    contentHeight: publicKeyTextArea.paintedHeight
+                    clip:          true
+
+                    TextArea {
+                        id:                  publicKeyTextArea
+                        width:               publicKeyFlickable.width
+                        height:              Math.max(publicKeyFlickable.height, publicKeyFlickable.contentHeight)
+                        text:                profilePage.publicKey
+                        placeholderText:     qsTr("No public key")
+                        font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 20)
+                        font.family:         "Helvetica"
+                        readOnly:            true
+                        horizontalAlignment: TextArea.AlignHCenter
+                        verticalAlignment:   TextArea.AlignVCenter
+                        wrapMode:            TextArea.WrapAnywhere
+
+                        background: Rectangle {
+                            color: "transparent"
+                        }
+                    }
                 }
             }
 
@@ -309,8 +323,20 @@ Page {
                     var text = UIHelper.pasteFromClipboard();
 
                     if (text !== "") {
-                        sharedKeyTextField.text = text;
+                        publicKeyTextArea.text = text;
                     }
+                }
+            }
+
+            VKButton {
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
+                text:             qsTr("Reset the key")
+                visible:          profilePage.editable
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    publicKeyTextArea.text = "";
                 }
             }
         }
