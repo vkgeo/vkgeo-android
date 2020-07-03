@@ -331,7 +331,7 @@ Page {
             VKButton {
                 implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
                 implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
-                text:             qsTr("Reset the key")
+                text:             qsTr("Delete the key")
                 visible:          profilePage.editable
                 enabled:          publicKeyTextArea.text !== ""
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
