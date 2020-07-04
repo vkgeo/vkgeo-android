@@ -273,41 +273,34 @@ Page {
                 Layout.alignment: Qt.AlignVCenter
             }
 
-            Rectangle {
-                color:                UIHelper.darkTheme ? "lightgray" : "white"
-                radius:               UtilScript.dp(UIHelper.screenDpi, 8)
-                visible:              profilePage.editable
-                border.width:         UtilScript.dp(UIHelper.screenDpi, 1)
-                border.color:         "steelblue"
-                Layout.minimumHeight: UtilScript.dp(UIHelper.screenDpi, 80)
-                Layout.leftMargin:    UtilScript.dp(UIHelper.screenDpi, 16)
-                Layout.rightMargin:   UtilScript.dp(UIHelper.screenDpi, 16)
-                Layout.fillWidth:     true
-                Layout.alignment:     Qt.AlignVCenter
+            ScrollView {
+                visible:                profilePage.editable
+                Layout.preferredHeight: UtilScript.dp(UIHelper.screenDpi, 80)
+                Layout.leftMargin:      UtilScript.dp(UIHelper.screenDpi, 16)
+                Layout.rightMargin:     UtilScript.dp(UIHelper.screenDpi, 16)
+                Layout.fillWidth:       true
+                Layout.alignment:       Qt.AlignVCenter
 
-                Flickable {
-                    id:            publicKeyFlickable
-                    anchors.fill:  parent
-                    contentWidth:  publicKeyTextArea.paintedWidth
-                    contentHeight: publicKeyTextArea.paintedHeight
-                    clip:          true
+                background: Rectangle {
+                    color:        UIHelper.darkTheme ? "lightgray" : "white"
+                    radius:       UtilScript.dp(UIHelper.screenDpi, 8)
+                    border.width: UtilScript.dp(UIHelper.screenDpi, 1)
+                    border.color: "steelblue"
+                }
 
-                    TextArea {
-                        id:                  publicKeyTextArea
-                        width:               publicKeyFlickable.width
-                        height:              Math.max(publicKeyFlickable.height, publicKeyFlickable.contentHeight)
-                        text:                profilePage.publicKey
-                        placeholderText:     qsTr("No public key")
-                        font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 20)
-                        font.family:         "Helvetica"
-                        readOnly:            true
-                        horizontalAlignment: TextArea.AlignHCenter
-                        verticalAlignment:   TextArea.AlignVCenter
-                        wrapMode:            TextArea.WrapAnywhere
+                TextArea {
+                    id:                  publicKeyTextArea
+                    text:                profilePage.publicKey
+                    placeholderText:     qsTr("No public key")
+                    font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 20)
+                    font.family:         "Helvetica"
+                    readOnly:            true
+                    horizontalAlignment: TextArea.AlignHCenter
+                    verticalAlignment:   TextArea.AlignVCenter
+                    wrapMode:            TextArea.WrapAnywhere
 
-                        background: Rectangle {
-                            color: "transparent"
-                        }
+                    background: Rectangle {
+                        color: "transparent"
                     }
                 }
             }
