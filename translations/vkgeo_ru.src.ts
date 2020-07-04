@@ -33,8 +33,8 @@
     </message>
     <message>
         <location filename="../qml/Core/Dialog/EncryptionSettingsDialog.qml" line="54"/>
-        <source>Regenerate the shared key</source>
-        <translation>Перегенерировать общий ключ</translation>
+        <source>Regenerate the key pair</source>
+        <translation>Перегенерировать ключевую пару</translation>
     </message>
     <message>
         <location filename="../qml/Core/Dialog/EncryptionSettingsDialog.qml" line="66"/>
@@ -119,12 +119,17 @@
         <translation>Открыть профиль</translation>
     </message>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="279"/>
-        <source>Shared key</source>
-        <translation>Общий ключ</translation>
+        <location filename="../qml/Core/ProfilePage.qml" line="294"/>
+        <source>No public key</source>
+        <translation>Нет открытого ключа</translation>
     </message>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="304"/>
+        <location filename="../qml/Core/ProfilePage.qml" line="327"/>
+        <source>Delete the key</source>
+        <translation>Удалить ключ</translation>
+    </message>
+    <message>
+        <location filename="../qml/Core/ProfilePage.qml" line="311"/>
         <source>Paste from the clipboard</source>
         <translation>Вставить из буфера обмена</translation>
     </message>
@@ -182,89 +187,79 @@
         <translation>Список отслеживаемых друзей</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="248"/>
-        <source>You can enable encryption of your location data. If you do this, your trusted friends &lt;b&gt;will additionally need this shared key&lt;/b&gt; to see your location.</source>
-        <translation>Вы можете включить шифрование данных о вашем местоположении. Если вы сделаете это, вашим доверенным друзьям &lt;b&gt;дополнительно понадобится этот общий ключ&lt;/b&gt; для того, чтобы видеть ваше местоположение.</translation>
-    </message>
-    <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="266"/>
-        <source>Only pass this shared key to &lt;b&gt;trusted friends&lt;/b&gt;. &lt;b&gt;Do not use VK services to transfer the key&lt;/b&gt;; do this only through separate trusted and secure channels.</source>
-        <translation>Передавайте этот общий ключ только &lt;b&gt;доверенным друзьям&lt;/b&gt;. &lt;b&gt;Не используйте сервисы ВКонтакте для передачи ключа&lt;/b&gt;; делайте это только по отдельным доверенным и безопасным каналам.</translation>
-    </message>
-    <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="322"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="326"/>
         <source>Encryption settings</source>
         <translation>Настройки шифрования</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="387"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="391"/>
         <source>Store</source>
         <translation>Магазин</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="410"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="414"/>
         <source>Support</source>
         <translation>Поддержка</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="414"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="418"/>
         <source>https://vkgeo.sourceforge.io/</source>
         <translation>vkgeo_app</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="444"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="448"/>
         <source>View my VK profile</source>
         <translation>Посмотреть мой профиль ВКонтакте</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="474"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="478"/>
         <source>Log out of VK</source>
         <translation>Выход из ВКонтакте</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="519"/>
-        <source>Regenerate the shared key</source>
-        <translation>Перегенерировать общий ключ</translation>
-    </message>
-    <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="520"/>
-        <source>Are you sure you want to regenerate the shared key?</source>
-        <translation>Вы уверены, что хотите перегенерировать общий ключ?</translation>
-    </message>
-    <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="530"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="534"/>
         <source>Reset the keystore</source>
         <translation>Очистить хранилище ключей</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="531"/>
-        <source>Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your shared key will be regenerated.</source>
-        <translation>Вы уверены, что хотите очистить хранилище ключей? Все ключи, привязанные к вашим друзьям, будут удалены, а ваш общий ключ будет перегенерирован.</translation>
-    </message>
-    <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="542"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="546"/>
         <source>Join group</source>
         <translation>Вступить в группу</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="427"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="431"/>
         <source>Join VKGeo Friends on Map group</source>
         <translation>Вступить в группу VKGeo Друзья на Карте</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="543"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="38"/>
+        <source>The public key has been copied to the clipboard</source>
+        <translation>Открытый ключ был скопирован в буфер обмена</translation>
+    </message>
+    <message>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="523"/>
+        <source>Regenerate the key pair</source>
+        <translation>Перегенерировать ключевую пару</translation>
+    </message>
+    <message>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="524"/>
+        <source>Are you sure you want to regenerate the key pair?</source>
+        <translation>Вы уверены, что хотите перегенерировать ключевую пару?</translation>
+    </message>
+    <message>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="535"/>
+        <source>Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your key pair will be regenerated.</source>
+        <translation>Вы уверены, что хотите очистить хранилище ключей? Все ключи, привязанные к вашим друзьям, будут удалены, а ваша ключевая пара будет перегенерирована.</translation>
+    </message>
+    <message>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="547"/>
         <source>Do you want to join the VKGeo Friends on Map group?</source>
         <translation>Вы действительно хотите вступить в группу VKGeo Друзья на Карте?</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="376"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="380"/>
         <source>Additional settings</source>
         <translation>Дополнительные настройки</translation>
-    </message>
-    <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="38"/>
-        <source>The shared key has been copied to the clipboard</source>
-        <translation>Общий ключ был скопирован в буфер обмена</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="49"/>
@@ -287,27 +282,37 @@
         <translation>Не удалось присоединиться к группе, повторите попытку позже</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="350"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="248"/>
+        <source>You can enable encryption of your location data. If you do this, &lt;b&gt;your location will only be visible&lt;/b&gt; to trusted friends &lt;b&gt;whose public keys you have&lt;/b&gt;.</source>
+        <translation>Вы можете включить шифрование данных о вашем местоположении. Если вы сделаете это, &lt;b&gt;ваше местоположение будет видно&lt;/b&gt; только тем доверенным друзьям, &lt;b&gt;чьи открытые ключи у вас есть&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="266"/>
+        <source>&lt;b&gt;Pass this public key&lt;/b&gt; to trusted and tracked friends who use encryption and &lt;b&gt;whose location you want to see&lt;/b&gt;. Press and hold your finger on the partial public key text below to copy the public key to the clipboard.</source>
+        <translation>&lt;b&gt;Передайте этот открытый ключ&lt;/b&gt; доверенным и отслеживаемым друзьям, которые используют шифрование, и &lt;b&gt;местоположение которых вы хотите видеть&lt;/b&gt;. Вы можете скопировать открытый ключ в буфер обмена длительным нажатием пальца на находящемся ниже частичном тексте открытого ключа.</translation>
+    </message>
+    <message>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="354"/>
         <source>light</source>
         <translation>светлая</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="352"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="356"/>
         <source>dark</source>
         <translation>темная</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="354"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="358"/>
         <source>auto</source>
         <translation>авто</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="357"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="361"/>
         <source>Interface theme: %1</source>
         <translation>Тема интерфейса: %1</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="364"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="368"/>
         <source>Ad privacy settings</source>
         <translation>Настройки конфиденциальности рекламы</translation>
     </message>
@@ -392,8 +397,8 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="201"/>
-        <location filename="../qml/main.qml" line="204"/>
+        <location filename="../qml/main.qml" line="209"/>
+        <location filename="../qml/main.qml" line="212"/>
         <source>BUY</source>
         <translation>КУПИТЬ</translation>
     </message>
