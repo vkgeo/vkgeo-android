@@ -193,8 +193,7 @@ private:
 
     enum DataState {
         StateNoNewData,
-        StateNewDataArrived,
-        StateDataIsBeingSent
+        StateNewDataAvailable
     };
 
     bool                EncryptionEnabled;

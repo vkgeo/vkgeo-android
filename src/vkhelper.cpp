@@ -233,7 +233,7 @@ void VKHelper::logout()
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
 {
-    CurrentDataState                           = StateNewDataArrived;
+    CurrentDataState                           = StateNewDataAvailable;
     CurrentData[QStringLiteral("update_time")] = QDateTime::currentSecsSinceEpoch();
     CurrentData[QStringLiteral("latitude")]    = latitude;
     CurrentData[QStringLiteral("longitude")]   = longitude;
@@ -245,7 +245,7 @@ void VKHelper::updateLocation(qreal latitude, qreal longitude)
 
 void VKHelper::updateBatteryStatus(const QString &status, int level)
 {
-    CurrentDataState                              = StateNewDataArrived;
+    CurrentDataState                              = StateNewDataAvailable;
     CurrentData[QStringLiteral("update_time")]    = QDateTime::currentSecsSinceEpoch();
     CurrentData[QStringLiteral("battery_status")] = status;
     CurrentData[QStringLiteral("battery_level")]  = level;
@@ -620,16 +620,14 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
 void VKHelper::handleSendDataTimerTimeout()
 {
-    if (CurrentDataState == StateNewDataArrived || CurrentDataState == StateDataIsBeingSent) {
-        qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
+    qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
 
-        if (elapsed < 0 || elapsed > SEND_DATA_INTERVAL) {
-            SendData();
-        }
+    if (elapsed < 0 || elapsed > SEND_DATA_INTERVAL) {
+        SendData();
+    }
 
-        if (!SendDataTimer.isActive()) {
-            SendDataTimer.start();
-        }
+    if (!SendDataTimer.isActive()) {
+        SendDataTimer.start();
     }
 }
 
@@ -881,7 +879,7 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
 
                     request[QStringLiteral("parameters")] = parameters;
 
-                    CurrentDataState = StateDataIsBeingSent;
+                    CurrentDataState = StateNoNewData;
                 }
 
                 EnqueueRequest(request);
@@ -1020,9 +1018,7 @@ void VKHelper::HandleNotesAddResponse(const QString &response, const QVariantMap
 
         LastSendDataTime = QDateTime::currentSecsSinceEpoch();
 
-        if (CurrentDataState == StateDataIsBeingSent) {
-            CurrentDataState = StateNoNewData;
-
+        if (CurrentDataState == StateNoNewData) {
             SendDataTimer.stop();
         }
 
