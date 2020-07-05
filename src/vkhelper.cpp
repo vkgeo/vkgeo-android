@@ -296,8 +296,6 @@ QVariantList VKHelper::getFriendsList() const
 void VKHelper::updateTrustedFriendsList(const QVariantList &trusted_friends_list)
 {
     if (!ContextHasActiveRequests(QStringLiteral("updateTrustedFriendsList"))) {
-        QStringList user_id_list;
-
         for (const QString &key : FriendsData.keys()) {
             QVariantMap frnd = FriendsData[key].toMap();
 
@@ -305,6 +303,8 @@ void VKHelper::updateTrustedFriendsList(const QVariantList &trusted_friends_list
 
             FriendsData[key] = frnd;
         }
+
+        QStringList user_id_list;
 
         for (int i = 0; i < trusted_friends_list.count() && i < MaxTrustedFriendsCount; i++) {
             QString user_id = trusted_friends_list[i].toString();
@@ -346,8 +346,6 @@ void VKHelper::updateTrustedFriendsList(const QVariantList &trusted_friends_list
 void VKHelper::updateTrackedFriendsList(const QVariantList &tracked_friends_list)
 {
     if (!ContextHasActiveRequests(QStringLiteral("updateTrackedFriendsList"))) {
-        QStringList user_id_list;
-
         for (const QString &key : FriendsData.keys()) {
             QVariantMap frnd = FriendsData[key].toMap();
 
@@ -355,6 +353,8 @@ void VKHelper::updateTrackedFriendsList(const QVariantList &tracked_friends_list
 
             FriendsData[key] = frnd;
         }
+
+        QStringList user_id_list;
 
         for (int i = 0; i < tracked_friends_list.count() && i < MaxTrackedFriendsCount; i++) {
             QString user_id = tracked_friends_list[i].toString();
@@ -576,7 +576,23 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
             if (request.contains(QStringLiteral("method")) && request.contains(QStringLiteral("context"))) {
                 if (AuthState == VKAuthState::StateAuthorized) {
-                    request_list.append(request);
+                    //
+                    // Workaround for issue when friends.get with list_id parameter returns empty
+                    // items list if combined with list-related operation in the same batch.
+                    //
+                    if (request[QStringLiteral("method")] == QStringLiteral("friends.getLists") ||
+                        request[QStringLiteral("method")] == QStringLiteral("friends.addList") ||
+                        request[QStringLiteral("method")] == QStringLiteral("friends.editList")) {
+                        if (i == 0) {
+                            request_list.append(request);
+                        } else {
+                            RequestQueue.insert(0, request);
+                        }
+
+                        break;
+                    } else {
+                        request_list.append(request);
+                    }
                 } else {
                     ContextTrackerDelRequest(request);
                 }
@@ -689,64 +705,17 @@ void VKHelper::Cleanup()
 bool VKHelper::SendData()
 {
     if (!ContextHasActiveRequests(QStringLiteral("sendData"))) {
-        QString     user_data_string;
         QVariantMap request, parameters;
 
-        if (EncryptionEnabled) {
-            if (!FriendsData.isEmpty()) {
-                QVariantList encrypted_payload;
-
-                for (const QString &key : FriendsData.keys()) {
-                    QVariantMap frnd = FriendsData[key].toMap();
-
-                    if (frnd.contains(QStringLiteral("userId")) && frnd.contains(QStringLiteral("trusted")) && frnd[QStringLiteral("trusted")].toBool()) {
-                        QString friend_key = CryptoHelper::GetInstance().getPublicKeyOfFriend(frnd[QStringLiteral("userId")].toString());
-
-                        if (friend_key != QLatin1String("")) {
-                            QVariantMap payload_item;
-
-                            payload_item[QStringLiteral("payload_cookie")] = ENCRYPTED_PAYLOAD_COOKIE;
-                            payload_item[QStringLiteral("data")]           = CurrentData;
-
-                            QByteArray encrypted_payload_item = CryptoHelper::GetInstance().EncryptWithRSA(QByteArray::fromBase64(friend_key.toUtf8()),
-                                                                                                           QJsonDocument::fromVariant(payload_item)
-                                                                                                           .toJson(QJsonDocument::Compact));
-
-                            if (!encrypted_payload_item.isEmpty()) {
-                                encrypted_payload.append(QString::fromUtf8(encrypted_payload_item.toBase64()));
-                            }
-                        }
-                    }
-                }
-
-                QVariantMap user_data;
-
-                user_data[QStringLiteral("encryption")]        = QStringLiteral("RSA-2048");
-                user_data[QStringLiteral("encrypted_payload")] = encrypted_payload;
-
-                user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
-                                                                                    .toJson(QJsonDocument::Compact)
-                                                                                    .toBase64()));
-            } else {
-                return false;
-            }
-        } else {
-            user_data_string = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
-                                                                                .toJson(QJsonDocument::Compact)
-                                                                                .toBase64()));
-        }
-
         if (TrustedFriendsListId == QLatin1String("")) {
-            request[QStringLiteral("method")]    = QStringLiteral("friends.getLists");
-            request[QStringLiteral("context")]   = QStringLiteral("sendData");
-            request[QStringLiteral("user_data")] = user_data_string;
+            request[QStringLiteral("method")]  = QStringLiteral("friends.getLists");
+            request[QStringLiteral("context")] = QStringLiteral("sendData");
         } else {
-            parameters[QStringLiteral("count")] = MAX_NOTES_GET_COUNT;
-            parameters[QStringLiteral("sort")]  = 0;
+            parameters[QStringLiteral("count")]   = MAX_FRIENDS_GET_COUNT;
+            parameters[QStringLiteral("list_id")] = TrustedFriendsListId.toLongLong();
 
-            request[QStringLiteral("method")]     = QStringLiteral("notes.get");
+            request[QStringLiteral("method")]     = QStringLiteral("friends.get");
             request[QStringLiteral("context")]    = QStringLiteral("sendData");
-            request[QStringLiteral("user_data")]  = user_data_string;
             request[QStringLiteral("parameters")] = parameters;
         }
 
@@ -822,10 +791,13 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
             if (json_response.contains(QStringLiteral("count")) && json_response.contains(QStringLiteral("items"))) {
                 int         offset      = 0;
                 int         notes_count = json_response.value(QStringLiteral("count")).toInt();
-                QStringList notes_to_delete;
+                QStringList trusted_friends, notes_to_delete;
 
                 if (resp_request.contains(QStringLiteral("parameters")) && resp_request[QStringLiteral("parameters")].toMap().contains(QStringLiteral("offset"))) {
                     offset = (resp_request[QStringLiteral("parameters")].toMap())[QStringLiteral("offset")].toInt();
+                }
+                if (resp_request.contains(QStringLiteral("trusted_friends"))) {
+                    trusted_friends = resp_request[QStringLiteral("trusted_friends")].toString().split(QStringLiteral(","));
                 }
                 if (resp_request.contains(QStringLiteral("notes_to_delete"))) {
                     notes_to_delete = resp_request[QStringLiteral("notes_to_delete")].toString().split(QStringLiteral(","));
@@ -846,48 +818,84 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                     }
                 }
 
-                if (resp_request.contains(QStringLiteral("user_data"))) {
-                    QVariantMap request, parameters;
+                QVariantMap request, parameters;
 
-                    if (json_items.count() > 0 && offset + json_items.count() < notes_count) {
-                        parameters[QStringLiteral("count")]  = MAX_NOTES_GET_COUNT;
-                        parameters[QStringLiteral("offset")] = offset + json_items.count();
-                        parameters[QStringLiteral("sort")]   = 0;
+                if (json_items.count() > 0 && offset + json_items.count() < notes_count) {
+                    parameters[QStringLiteral("count")]  = MAX_NOTES_GET_COUNT;
+                    parameters[QStringLiteral("offset")] = offset + json_items.count();
+                    parameters[QStringLiteral("sort")]   = 0;
 
-                        request[QStringLiteral("method")]    = QStringLiteral("notes.get");
-                        request[QStringLiteral("context")]   = resp_request[QStringLiteral("context")].toString();
-                        request[QStringLiteral("user_data")] = resp_request[QStringLiteral("user_data")].toString();
+                    request[QStringLiteral("method")]  = QStringLiteral("notes.get");
+                    request[QStringLiteral("context")] = resp_request[QStringLiteral("context")].toString();
 
-                        if (notes_to_delete.count() > 0) {
-                            request[QStringLiteral("notes_to_delete")] = notes_to_delete.join(QStringLiteral(","));
-                        }
-
-                        request[QStringLiteral("parameters")] = parameters;
-                    } else {
-                        parameters[QStringLiteral("title")]           = DATA_NOTE_TITLE;
-                        parameters[QStringLiteral("text")]            = resp_request[QStringLiteral("user_data")].toString();
-                        parameters[QStringLiteral("privacy_comment")] = QStringLiteral("nobody");
-
-                        if (TrustedFriendsListId == QLatin1String("")) {
-                            parameters[QStringLiteral("privacy_view")] = QStringLiteral("nobody");
-                        } else {
-                            parameters[QStringLiteral("privacy_view")] = QStringLiteral("list%1").arg(TrustedFriendsListId);
-                        }
-
-                        request[QStringLiteral("method")]  = QStringLiteral("notes.add");
-                        request[QStringLiteral("context")] = resp_request[QStringLiteral("context")].toString();
-
-                        if (notes_to_delete.count() > 0) {
-                            request[QStringLiteral("notes_to_delete")] = notes_to_delete.join(QStringLiteral(","));
-                        }
-
-                        request[QStringLiteral("parameters")] = parameters;
+                    if (trusted_friends.count() > 0) {
+                        request[QStringLiteral("trusted_friends")] = trusted_friends.join(QStringLiteral(","));
+                    }
+                    if (notes_to_delete.count() > 0) {
+                        request[QStringLiteral("notes_to_delete")] = notes_to_delete.join(QStringLiteral(","));
                     }
 
-                    EnqueueRequest(request);
+                    request[QStringLiteral("parameters")] = parameters;
                 } else {
-                    qWarning() << "HandleNotesGetResponse() : invalid request";
+                    QString note_text;
+
+                    if (EncryptionEnabled) {
+                        QVariantList encrypted_payload;
+
+                        for (const QString &user_id : trusted_friends) {
+                            QString friend_key = CryptoHelper::GetInstance().getPublicKeyOfFriend(user_id);
+
+                            if (friend_key != QLatin1String("")) {
+                                QVariantMap payload_item;
+
+                                payload_item[QStringLiteral("payload_cookie")] = ENCRYPTED_PAYLOAD_COOKIE;
+                                payload_item[QStringLiteral("data")]           = CurrentData;
+
+                                QByteArray encrypted_payload_item = CryptoHelper::GetInstance().EncryptWithRSA(QByteArray::fromBase64(friend_key.toUtf8()),
+                                                                                                               QJsonDocument::fromVariant(payload_item)
+                                                                                                               .toJson(QJsonDocument::Compact));
+
+                                if (!encrypted_payload_item.isEmpty()) {
+                                    encrypted_payload.append(QString::fromUtf8(encrypted_payload_item.toBase64()));
+                                }
+                            }
+                        }
+
+                        QVariantMap note_data;
+
+                        note_data[QStringLiteral("encryption")]        = QStringLiteral("RSA-2048");
+                        note_data[QStringLiteral("encrypted_payload")] = encrypted_payload;
+
+                        note_text = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(note_data)
+                                                                                     .toJson(QJsonDocument::Compact)
+                                                                                     .toBase64()));
+                    } else {
+                        note_text = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
+                                                                                     .toJson(QJsonDocument::Compact)
+                                                                                     .toBase64()));
+                    }
+
+                    parameters[QStringLiteral("title")]           = DATA_NOTE_TITLE;
+                    parameters[QStringLiteral("text")]            = note_text;
+                    parameters[QStringLiteral("privacy_comment")] = QStringLiteral("nobody");
+
+                    if (TrustedFriendsListId == QLatin1String("")) {
+                        parameters[QStringLiteral("privacy_view")] = QStringLiteral("nobody");
+                    } else {
+                        parameters[QStringLiteral("privacy_view")] = QStringLiteral("list%1").arg(TrustedFriendsListId);
+                    }
+
+                    request[QStringLiteral("method")]  = QStringLiteral("notes.add");
+                    request[QStringLiteral("context")] = resp_request[QStringLiteral("context")].toString();
+
+                    if (notes_to_delete.count() > 0) {
+                        request[QStringLiteral("notes_to_delete")] = notes_to_delete.join(QStringLiteral(","));
+                    }
+
+                    request[QStringLiteral("parameters")] = parameters;
                 }
+
+                EnqueueRequest(request);
             } else {
                 qWarning() << "HandleNotesGetResponse() : invalid response";
             }
@@ -1051,7 +1059,83 @@ void VKHelper::HandleNotesDeleteError(const QVariantMap &err_request)
 
 void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantMap &resp_request)
 {
-    if (resp_request[QStringLiteral("context")].toString() == QStringLiteral("updateFriends")) {
+    if (resp_request[QStringLiteral("context")].toString() == QStringLiteral("sendData")) {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains(QStringLiteral("response"))) {
+            QJsonObject json_response = json_document.object().value(QStringLiteral("response")).toObject();
+
+            if (json_response.contains(QStringLiteral("count")) && json_response.contains(QStringLiteral("items"))) {
+                int         offset        = 0;
+                int         friends_count = json_response.value(QStringLiteral("count")).toInt();
+                QString     list_id;
+                QStringList trusted_friends;
+
+                if (resp_request.contains(QStringLiteral("parameters")) && resp_request[QStringLiteral("parameters")].toMap().contains(QStringLiteral("offset"))) {
+                    offset = (resp_request[QStringLiteral("parameters")].toMap())[QStringLiteral("offset")].toInt();
+                }
+                if (resp_request.contains(QStringLiteral("parameters")) && resp_request[QStringLiteral("parameters")].toMap().contains(QStringLiteral("list_id"))) {
+                    list_id = (resp_request[QStringLiteral("parameters")].toMap())[QStringLiteral("list_id")].toString();
+                }
+                if (resp_request.contains(QStringLiteral("trusted_friends"))) {
+                    trusted_friends = resp_request[QStringLiteral("trusted_friends")].toString().split(QStringLiteral(","));
+                }
+
+                if (list_id != QLatin1String("")) {
+                    QJsonArray json_items = json_response.value(QStringLiteral("items")).toArray();
+
+                    if (list_id == TrustedFriendsListId) {
+                        for (const QJsonValueRef &json_item : json_items) {
+                            QString user_id = QString::number(json_item.toVariant().toLongLong());
+
+                            if (user_id != QLatin1String("")) {
+                                trusted_friends.append(user_id);
+                            }
+                        }
+                    } else {
+                        qWarning() << "HandleFriendsGetResponse() : unknown list id";
+                    }
+
+                    QVariantMap request, parameters;
+
+                    if (json_items.count() > 0 && offset + json_items.count() < friends_count) {
+                        parameters[QStringLiteral("count")]   = MAX_FRIENDS_GET_COUNT;
+                        parameters[QStringLiteral("offset")]  = offset + json_items.count();
+                        parameters[QStringLiteral("list_id")] = list_id.toLongLong();
+
+                        request[QStringLiteral("method")]  = QStringLiteral("friends.get");
+                        request[QStringLiteral("context")] = resp_request[QStringLiteral("context")].toString();
+
+                        if (trusted_friends.count() > 0) {
+                            request[QStringLiteral("trusted_friends")] = trusted_friends.join(QStringLiteral(","));
+                        }
+
+                        request[QStringLiteral("parameters")] = parameters;
+                    } else {
+                        parameters[QStringLiteral("count")] = MAX_NOTES_GET_COUNT;
+                        parameters[QStringLiteral("sort")]  = 0;
+
+                        request[QStringLiteral("method")]  = QStringLiteral("notes.get");
+                        request[QStringLiteral("context")] = resp_request[QStringLiteral("context")].toString();
+
+                        if (trusted_friends.count() > 0) {
+                            request[QStringLiteral("trusted_friends")] = trusted_friends.join(QStringLiteral(","));
+                        }
+
+                        request[QStringLiteral("parameters")] = parameters;
+                    }
+
+                    EnqueueRequest(request);
+                } else {
+                    qWarning() << "HandleFriendsGetResponse() : invalid request";
+                }
+            } else {
+                qWarning() << "HandleFriendsGetResponse() : invalid response";
+            }
+        } else {
+            qWarning() << "HandleFriendsGetResponse() : invalid json";
+        }
+    } else if (resp_request[QStringLiteral("context")].toString() == QStringLiteral("updateFriends")) {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains(QStringLiteral("response"))) {
@@ -1259,28 +1343,23 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
                     }
                 }
 
-                if (resp_request.contains(QStringLiteral("user_data"))) {
-                    if (trusted_friends_list_id != QLatin1String("")) {
-                        TrustedFriendsListId = trusted_friends_list_id;
-                    }
-                    if (tracked_friends_list_id != QLatin1String("")) {
-                        TrackedFriendsListId = tracked_friends_list_id;
-                    }
-
-                    QVariantMap request, parameters;
-
-                    parameters[QStringLiteral("count")] = MAX_NOTES_GET_COUNT;
-                    parameters[QStringLiteral("sort")]  = 0;
-
-                    request[QStringLiteral("method")]     = QStringLiteral("notes.get");
-                    request[QStringLiteral("context")]    = resp_request[QStringLiteral("context")].toString();
-                    request[QStringLiteral("user_data")]  = resp_request[QStringLiteral("user_data")].toString();
-                    request[QStringLiteral("parameters")] = parameters;
-
-                    EnqueueRequest(request);
-                } else {
-                    qWarning() << "HandleFriendsGetListsResponse() : invalid request";
+                if (trusted_friends_list_id != QLatin1String("")) {
+                    TrustedFriendsListId = trusted_friends_list_id;
                 }
+                if (tracked_friends_list_id != QLatin1String("")) {
+                    TrackedFriendsListId = tracked_friends_list_id;
+                }
+
+                QVariantMap request, parameters;
+
+                parameters[QStringLiteral("count")]   = MAX_FRIENDS_GET_COUNT;
+                parameters[QStringLiteral("list_id")] = TrustedFriendsListId.toLongLong();
+
+                request[QStringLiteral("method")]     = QStringLiteral("friends.get");
+                request[QStringLiteral("context")]    = resp_request[QStringLiteral("context")].toString();
+                request[QStringLiteral("parameters")] = parameters;
+
+                EnqueueRequest(request);
             } else {
                 qWarning() << "HandleFriendsGetListsResponse() : invalid response";
             }
