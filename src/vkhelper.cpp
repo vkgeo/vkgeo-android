@@ -1337,12 +1337,21 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
 
                 QVariantMap request, parameters;
 
-                parameters[QStringLiteral("count")]   = MAX_FRIENDS_GET_COUNT;
-                parameters[QStringLiteral("list_id")] = TrustedFriendsListId.toLongLong();
+                if (TrustedFriendsListId != QLatin1String("")) {
+                    parameters[QStringLiteral("count")]   = MAX_FRIENDS_GET_COUNT;
+                    parameters[QStringLiteral("list_id")] = TrustedFriendsListId.toLongLong();
 
-                request[QStringLiteral("method")]     = QStringLiteral("friends.get");
-                request[QStringLiteral("context")]    = resp_request[QStringLiteral("context")].toString();
-                request[QStringLiteral("parameters")] = parameters;
+                    request[QStringLiteral("method")]     = QStringLiteral("friends.get");
+                    request[QStringLiteral("context")]    = resp_request[QStringLiteral("context")].toString();
+                    request[QStringLiteral("parameters")] = parameters;
+                } else {
+                    parameters[QStringLiteral("count")] = MAX_NOTES_GET_COUNT;
+                    parameters[QStringLiteral("sort")]  = 0;
+
+                    request[QStringLiteral("method")]     = QStringLiteral("notes.get");
+                    request[QStringLiteral("context")]    = resp_request[QStringLiteral("context")].toString();
+                    request[QStringLiteral("parameters")] = parameters;
+                }
 
                 EnqueueRequest(request);
             } else {
