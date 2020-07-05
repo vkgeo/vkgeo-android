@@ -70,11 +70,10 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 VKHelper::VKHelper(QObject *parent) :
     QObject                         (parent),
     EncryptionEnabled               (false),
-    CurrentDataState                (DataNotUpdated),
+    CurrentDataState                (StateNoNewData),
     AuthState                       (VKAuthState::StateUnknown),
     MaxTrustedFriendsCount          (0),
     MaxTrackedFriendsCount          (0),
-    SendDataTryNumber               (0),
     LastSendDataTime                (0),
     LastUpdateTrackedFriendsDataTime(0),
     NextRequestQueueTimerTimeout    (0),
@@ -234,7 +233,7 @@ void VKHelper::logout()
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
 {
-    CurrentDataState                           = DataUpdated;
+    CurrentDataState                           = StateNewDataArrived;
     CurrentData[QStringLiteral("update_time")] = QDateTime::currentSecsSinceEpoch();
     CurrentData[QStringLiteral("latitude")]    = latitude;
     CurrentData[QStringLiteral("longitude")]   = longitude;
@@ -246,7 +245,7 @@ void VKHelper::updateLocation(qreal latitude, qreal longitude)
 
 void VKHelper::updateBatteryStatus(const QString &status, int level)
 {
-    CurrentDataState                              = DataUpdated;
+    CurrentDataState                              = StateNewDataArrived;
     CurrentData[QStringLiteral("update_time")]    = QDateTime::currentSecsSinceEpoch();
     CurrentData[QStringLiteral("battery_status")] = status;
     CurrentData[QStringLiteral("battery_level")]  = level;
@@ -621,24 +620,16 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
 void VKHelper::handleSendDataTimerTimeout()
 {
-    if (CurrentDataState == DataUpdated || (CurrentDataState == DataUpdatedAndSent && SendDataTryNumber < MAX_SEND_DATA_TRIES_COUNT)) {
+    if (CurrentDataState == StateNewDataArrived || CurrentDataState == StateDataIsBeingSent) {
         qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
 
-        if ((elapsed < 0 || elapsed > SEND_DATA_INTERVAL) && SendData()) {
-            if (CurrentDataState == DataUpdatedAndSent) {
-                SendDataTryNumber = SendDataTryNumber + 1;
-            } else {
-                SendDataTryNumber = 1;
-            }
-
-            CurrentDataState = DataUpdatedAndSent;
+        if (elapsed < 0 || elapsed > SEND_DATA_INTERVAL) {
+            SendData();
         }
 
         if (!SendDataTimer.isActive()) {
             SendDataTimer.start();
         }
-    } else {
-        SendDataTimer.stop();
     }
 }
 
@@ -702,7 +693,7 @@ void VKHelper::Cleanup()
     emit friendsUpdated();
 }
 
-bool VKHelper::SendData()
+void VKHelper::SendData()
 {
     if (!ContextHasActiveRequests(QStringLiteral("sendData"))) {
         QVariantMap request, parameters;
@@ -720,10 +711,6 @@ bool VKHelper::SendData()
         }
 
         EnqueueRequest(request);
-
-        return true;
-    } else {
-        return false;
     }
 }
 
@@ -893,6 +880,8 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                     }
 
                     request[QStringLiteral("parameters")] = parameters;
+
+                    CurrentDataState = StateDataIsBeingSent;
                 }
 
                 EnqueueRequest(request);
@@ -1031,8 +1020,8 @@ void VKHelper::HandleNotesAddResponse(const QString &response, const QVariantMap
 
         LastSendDataTime = QDateTime::currentSecsSinceEpoch();
 
-        if (CurrentDataState != DataUpdated) {
-            CurrentDataState = DataNotUpdated;
+        if (CurrentDataState == StateDataIsBeingSent) {
+            CurrentDataState = StateNoNewData;
 
             SendDataTimer.stop();
         }
