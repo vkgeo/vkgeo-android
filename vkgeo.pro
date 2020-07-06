@@ -130,6 +130,7 @@ android {
         android/source/3rdparty/libsodium/armeabi-v7a/libsodium.la \
         android/source/3rdparty/libsodium/armeabi-v7a/libsodium.so \
         android/source/3rdparty/libsodium/armeabi-v7a/pkgconfig/libsodium.pc \
+        android/source/3rdparty/openssl/LICENSE \
         android/source/3rdparty/openssl/arm64-v8a/libcrypto_1_1.so \
         android/source/3rdparty/openssl/arm64-v8a/libssl_1_1.so \
         android/source/3rdparty/openssl/armeabi-v7a/libcrypto_1_1.so \
