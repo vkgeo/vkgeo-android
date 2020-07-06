@@ -836,9 +836,9 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                                 payload_item[QStringLiteral("payload_cookie")] = ENCRYPTED_PAYLOAD_COOKIE;
                                 payload_item[QStringLiteral("data")]           = CurrentData;
 
-                                QByteArray encrypted_payload_item = CryptoHelper::GetInstance().EncryptWithRSA(QByteArray::fromBase64(friend_key.toUtf8()),
-                                                                                                               QJsonDocument::fromVariant(payload_item)
-                                                                                                               .toJson(QJsonDocument::Compact));
+                                QByteArray encrypted_payload_item = CryptoHelper::GetInstance().EncryptWithCryptoBox(friend_key,
+                                                                                                                     QJsonDocument::fromVariant(payload_item)
+                                                                                                                     .toJson(QJsonDocument::Compact));
 
                                 if (!encrypted_payload_item.isEmpty()) {
                                     encrypted_payload.append(QString::fromUtf8(encrypted_payload_item.toBase64()));
@@ -848,7 +848,7 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
 
                         QVariantMap note_data;
 
-                        note_data[QStringLiteral("encryption")]        = QStringLiteral("RSA-2048");
+                        note_data[QStringLiteral("encryption")]        = QStringLiteral("X25519-XSALSA20-POLY1305");
                         note_data[QStringLiteral("encrypted_payload")] = encrypted_payload;
 
                         note_text = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(note_data)
@@ -926,15 +926,15 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                                 QVariantMap friend_data = QJsonDocument::fromJson(QByteArray::fromBase64(base64_regexp.cap(1).toUtf8())).toVariant().toMap();
 
                                 if (friend_data.contains(QStringLiteral("encryption"))) {
-                                    if (friend_data[QStringLiteral("encryption")] == QStringLiteral("RSA-2048")) {
+                                    if (friend_data[QStringLiteral("encryption")] == QStringLiteral("X25519-XSALSA20-POLY1305")) {
                                         if (friend_data.contains(QStringLiteral("encrypted_payload"))) {
-                                            QByteArray   raw_private_key   = QByteArray::fromBase64(CryptoHelper::GetInstance().privateKey().toUtf8());
                                             QVariantList encrypted_payload = friend_data[QStringLiteral("encrypted_payload")].toList();
 
                                             for (const QVariant &variant_item : encrypted_payload) {
                                                 QByteArray  encrypted_payload_item = QByteArray::fromBase64(variant_item.toString().toUtf8());
-                                                QVariantMap payload_item           = QJsonDocument::fromJson(CryptoHelper::GetInstance().DecryptRSA(raw_private_key,
-                                                                                                                                                    encrypted_payload_item))
+                                                QVariantMap payload_item           = QJsonDocument::fromJson(CryptoHelper::GetInstance().DecryptCryptoBox(CryptoHelper::GetInstance().publicKey(),
+                                                                                                                                                          CryptoHelper::GetInstance().privateKey(),
+                                                                                                                                                          encrypted_payload_item))
                                                                                                                                         .toVariant().toMap();
 
                                                 if (payload_item.contains(QStringLiteral("payload_cookie")) &&
