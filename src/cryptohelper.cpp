@@ -1,13 +1,20 @@
+#include <cstdlib>
+
 #include <QtCore/QLatin1String>
 #include <QtCore/QDebug>
 
-#include <qrsaencryption.h>
+#include <sodium.h>
 
 #include "cryptohelper.h"
 
 CryptoHelper::CryptoHelper(QObject *parent) :
     QObject(parent)
 {
+    if (sodium_init() < 0) {
+        qCritical() << "CryptoHelper() : sodium_init() failed";
+
+        abort();
+    }
 }
 
 CryptoHelper &CryptoHelper::GetInstance()
@@ -61,21 +68,35 @@ void CryptoHelper::setPublicKeysOfFriends(const QVariantMap &keys)
 
 bool CryptoHelper::validateKeyPair(const QString &public_key, const QString &private_key) const
 {
-    const QByteArray test_payload("TEST PAYLOAD FOR KEY PAIR VALIDATION");
+    const QByteArray text("TEXT FOR KEY PAIR VALIDATION");
 
-    QRSAEncryption rsa(QRSAEncryption::Rsa::RSA_2048);
+    const QByteArray raw_public_key  = QByteArray::fromBase64(public_key.toUtf8()),
+                     raw_private_key = QByteArray::fromBase64(private_key.toUtf8());
 
-    return rsa.decode(rsa.encode(test_payload, QByteArray::fromBase64(public_key.toUtf8())),
-                      QByteArray::fromBase64(private_key.toUtf8())) == test_payload;
+    QByteArray encrypted(text.size() + crypto_box_SEALBYTES, 0),
+               decrypted(text.size(),                        0);
+
+    return (raw_public_key.size()  == crypto_box_PUBLICKEYBYTES &&
+            raw_private_key.size() == crypto_box_SECRETKEYBYTES &&
+            crypto_box_seal(reinterpret_cast<unsigned char *>(encrypted.data()),
+                            reinterpret_cast<const unsigned char *>(text.data()),
+                            text.size(),
+                            reinterpret_cast<const unsigned char *>(raw_public_key.data())) == 0 &&
+            crypto_box_seal_open(reinterpret_cast<unsigned char *>(decrypted.data()),
+                                 reinterpret_cast<unsigned char *>(encrypted.data()),
+                                 encrypted.size(),
+                                 reinterpret_cast<const unsigned char *>(raw_public_key.data()),
+                                 reinterpret_cast<const unsigned char *>(raw_private_key.data())) == 0 &&
+            text == decrypted);
 }
 
 void CryptoHelper::regenerateKeyPair()
 {
-    QRSAEncryption rsa(QRSAEncryption::Rsa::RSA_2048);
+    QByteArray raw_public_key (crypto_box_PUBLICKEYBYTES, 0),
+               raw_private_key(crypto_box_SECRETKEYBYTES, 0);
 
-    QByteArray raw_public_key, raw_private_key;
-
-    if (rsa.generatePairKey(raw_public_key, raw_private_key)) {
+    if (crypto_box_keypair(reinterpret_cast<unsigned char *>(raw_public_key.data()),
+                           reinterpret_cast<unsigned char *>(raw_private_key.data())) == 0) {
         QString public_key  = QString::fromUtf8(raw_public_key.toBase64());
         QString private_key = QString::fromUtf8(raw_private_key.toBase64());
 
@@ -90,7 +111,7 @@ void CryptoHelper::regenerateKeyPair()
             emit privateKeyChanged(PrivateKey);
         }
     } else {
-        qWarning() << "regenerateKeyPair() : QRSAEncryption::generatePairKey() failed";
+        qWarning() << "regenerateKeyPair() : crypto_box_keypair() failed";
     }
 }
 
@@ -131,16 +152,39 @@ void CryptoHelper::clearPublicKeysOfFriends()
     }
 }
 
-QByteArray CryptoHelper::EncryptWithRSA(const QByteArray &public_key, const QByteArray &payload) const
+QByteArray CryptoHelper::EncryptWithCryptoBox(const QString &public_key, const QByteArray &payload) const
 {
-    QRSAEncryption rsa(QRSAEncryption::Rsa::RSA_2048);
+    const QByteArray raw_public_key = QByteArray::fromBase64(public_key.toUtf8());
 
-    return rsa.encode(payload, public_key);
+    QByteArray result(payload.size() + crypto_box_SEALBYTES, 0);
+
+    if (raw_public_key.size() == crypto_box_PUBLICKEYBYTES &&
+        crypto_box_seal(reinterpret_cast<unsigned char *>(result.data()),
+                        reinterpret_cast<const unsigned char *>(payload.data()),
+                        payload.size(),
+                        reinterpret_cast<const unsigned char *>(raw_public_key.data())) == 0) {
+        return result;
+    } else {
+        return QByteArray();
+    }
 }
 
-QByteArray CryptoHelper::DecryptRSA(const QByteArray &private_key, const QByteArray &encrypted_payload) const
+QByteArray CryptoHelper::DecryptCryptoBox(const QString &public_key, const QString &private_key, const QByteArray &encrypted_payload) const
 {
-    QRSAEncryption rsa(QRSAEncryption::Rsa::RSA_2048);
+    const QByteArray raw_public_key  = QByteArray::fromBase64(public_key.toUtf8()),
+                     raw_private_key = QByteArray::fromBase64(private_key.toUtf8());
 
-    return rsa.decode(encrypted_payload, private_key);
+    QByteArray result(encrypted_payload.size() - crypto_box_SEALBYTES, 0);
+
+    if (raw_public_key.size()  == crypto_box_PUBLICKEYBYTES &&
+        raw_private_key.size() == crypto_box_SECRETKEYBYTES &&
+        crypto_box_seal_open(reinterpret_cast<unsigned char *>(result.data()),
+                             reinterpret_cast<const unsigned char *>(encrypted_payload.data()),
+                             encrypted_payload.size(),
+                             reinterpret_cast<const unsigned char *>(raw_public_key.data()),
+                             reinterpret_cast<const unsigned char *>(raw_private_key.data())) == 0) {
+        return result;
+    } else {
+        return QByteArray();
+    }
 }

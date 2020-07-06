@@ -263,7 +263,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                qsTr("<b>Pass this public key</b> to trusted and tracked friends who use encryption and <b>whose location you want to see</b>. Press and hold down your finger on the partial public key text below to copy the public key to the clipboard.")
+                text:                qsTr("<b>Pass this public key</b> to trusted and tracked friends who use encryption and <b>whose location you want to see</b>. Press and hold down your finger on the public key text below to copy it to the clipboard.")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
@@ -281,7 +281,7 @@ Rectangle {
             Text {
                 leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
                 rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
-                text:                textText(CryptoHelper.publicKey)
+                text:                CryptoHelper.publicKey
                 color:               textColor(UIHelper.darkTheme, VKHelper.encryptionEnabled)
                 font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 20)
                 font.family:         "Helvetica"
@@ -294,10 +294,6 @@ Rectangle {
                 textFormat:          Text.PlainText
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
-
-                function textText(key) {
-                    return "%1 **** %2".arg(key.slice(0, 8)).arg(key.slice(-8));
-                }
 
                 function textColor(dark_theme, encryption_enabled) {
                     if (encryption_enabled) {

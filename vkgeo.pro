@@ -7,13 +7,9 @@ CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
 INCLUDEPATH += \
-    3rdparty/qt-secret/src/mini-gmp/src \
-    3rdparty/qt-secret/src/Qt-RSA
+    3rdparty/libsodium/include
 
 SOURCES += \
-    3rdparty/qt-secret/src/mini-gmp/src/bigint.cpp \
-    3rdparty/qt-secret/src/mini-gmp/src/mini-gmp.c \
-    3rdparty/qt-secret/src/Qt-RSA/qrsaencryption.cpp \
     src/admobhelper.cpp \
     src/androidgw.cpp \
     src/appsettings.cpp \
@@ -25,10 +21,69 @@ SOURCES += \
     src/vkservice.cpp
 
 HEADERS += \
-    3rdparty/qt-secret/src/mini-gmp/src/bigint.h \
-    3rdparty/qt-secret/src/mini-gmp/src/mini-gmp.h \
-    3rdparty/qt-secret/src/mini-gmp/src/minigmp_global.h \
-    3rdparty/qt-secret/src/Qt-RSA/qrsaencryption.h \
+    3rdparty/libsodium/include/sodium.h \
+    3rdparty/libsodium/include/sodium/core.h \
+    3rdparty/libsodium/include/sodium/crypto_aead_aes256gcm.h \
+    3rdparty/libsodium/include/sodium/crypto_aead_chacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_aead_xchacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_auth.h \
+    3rdparty/libsodium/include/sodium/crypto_auth_hmacsha256.h \
+    3rdparty/libsodium/include/sodium/crypto_auth_hmacsha512.h \
+    3rdparty/libsodium/include/sodium/crypto_auth_hmacsha512256.h \
+    3rdparty/libsodium/include/sodium/crypto_box.h \
+    3rdparty/libsodium/include/sodium/crypto_box_curve25519xchacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_box_curve25519xsalsa20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_core_ed25519.h \
+    3rdparty/libsodium/include/sodium/crypto_core_hchacha20.h \
+    3rdparty/libsodium/include/sodium/crypto_core_hsalsa20.h \
+    3rdparty/libsodium/include/sodium/crypto_core_ristretto255.h \
+    3rdparty/libsodium/include/sodium/crypto_core_salsa20.h \
+    3rdparty/libsodium/include/sodium/crypto_core_salsa2012.h \
+    3rdparty/libsodium/include/sodium/crypto_core_salsa208.h \
+    3rdparty/libsodium/include/sodium/crypto_generichash.h \
+    3rdparty/libsodium/include/sodium/crypto_generichash_blake2b.h \
+    3rdparty/libsodium/include/sodium/crypto_hash.h \
+    3rdparty/libsodium/include/sodium/crypto_hash_sha256.h \
+    3rdparty/libsodium/include/sodium/crypto_hash_sha512.h \
+    3rdparty/libsodium/include/sodium/crypto_kdf.h \
+    3rdparty/libsodium/include/sodium/crypto_kdf_blake2b.h \
+    3rdparty/libsodium/include/sodium/crypto_kx.h \
+    3rdparty/libsodium/include/sodium/crypto_onetimeauth.h \
+    3rdparty/libsodium/include/sodium/crypto_onetimeauth_poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_pwhash.h \
+    3rdparty/libsodium/include/sodium/crypto_pwhash_argon2i.h \
+    3rdparty/libsodium/include/sodium/crypto_pwhash_argon2id.h \
+    3rdparty/libsodium/include/sodium/crypto_pwhash_scryptsalsa208sha256.h \
+    3rdparty/libsodium/include/sodium/crypto_scalarmult.h \
+    3rdparty/libsodium/include/sodium/crypto_scalarmult_curve25519.h \
+    3rdparty/libsodium/include/sodium/crypto_scalarmult_ed25519.h \
+    3rdparty/libsodium/include/sodium/crypto_scalarmult_ristretto255.h \
+    3rdparty/libsodium/include/sodium/crypto_secretbox.h \
+    3rdparty/libsodium/include/sodium/crypto_secretbox_xchacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_secretbox_xsalsa20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_secretstream_xchacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_shorthash.h \
+    3rdparty/libsodium/include/sodium/crypto_shorthash_siphash24.h \
+    3rdparty/libsodium/include/sodium/crypto_sign.h \
+    3rdparty/libsodium/include/sodium/crypto_sign_ed25519.h \
+    3rdparty/libsodium/include/sodium/crypto_sign_edwards25519sha512batch.h \
+    3rdparty/libsodium/include/sodium/crypto_stream.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_chacha20.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_salsa20.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_salsa2012.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_salsa208.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_xchacha20.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_xsalsa20.h \
+    3rdparty/libsodium/include/sodium/crypto_verify_16.h \
+    3rdparty/libsodium/include/sodium/crypto_verify_32.h \
+    3rdparty/libsodium/include/sodium/crypto_verify_64.h \
+    3rdparty/libsodium/include/sodium/export.h \
+    3rdparty/libsodium/include/sodium/randombytes.h \
+    3rdparty/libsodium/include/sodium/randombytes_internal_random.h \
+    3rdparty/libsodium/include/sodium/randombytes_sysrandom.h \
+    3rdparty/libsodium/include/sodium/runtime.h \
+    3rdparty/libsodium/include/sodium/utils.h \
+    3rdparty/libsodium/include/sodium/version.h \
     src/admobhelper.h \
     src/androidgw.h \
     src/appsettings.h \
@@ -66,6 +121,15 @@ android {
         android/source/gradlew \
         android/source/gradlew.bat \
         android/source/settings.gradle \
+        android/source/3rdparty/libsodium/LICENSE \
+        android/source/3rdparty/libsodium/arm64-v8a/libsodium.a \
+        android/source/3rdparty/libsodium/arm64-v8a/libsodium.la \
+        android/source/3rdparty/libsodium/arm64-v8a/libsodium.so \
+        android/source/3rdparty/libsodium/arm64-v8a/pkgconfig/libsodium.pc \
+        android/source/3rdparty/libsodium/armeabi-v7a/libsodium.a \
+        android/source/3rdparty/libsodium/armeabi-v7a/libsodium.la \
+        android/source/3rdparty/libsodium/armeabi-v7a/libsodium.so \
+        android/source/3rdparty/libsodium/armeabi-v7a/pkgconfig/libsodium.pc \
         android/source/3rdparty/openssl/arm64-v8a/libcrypto_1_1.so \
         android/source/3rdparty/openssl/arm64-v8a/libssl_1_1.so \
         android/source/3rdparty/openssl/armeabi-v7a/libcrypto_1_1.so \
@@ -256,13 +320,19 @@ android {
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android/source
 
     contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+        LIBS += -L$$PWD/android/source/3rdparty/libsodium/armeabi-v7a -lsodium
+
         ANDROID_EXTRA_LIBS = \
+            $$PWD/android/source/3rdparty/libsodium/armeabi-v7a/libsodium.so \
             $$PWD/android/source/3rdparty/openssl/armeabi-v7a/libcrypto_1_1.so \
             $$PWD/android/source/3rdparty/openssl/armeabi-v7a/libssl_1_1.so
     }
 
     contains(ANDROID_TARGET_ARCH,arm64-v8a) {
+        LIBS += -L$$PWD/android/source/3rdparty/libsodium/arm64-v8a -lsodium
+
         ANDROID_EXTRA_LIBS = \
+            $$PWD/android/source/3rdparty/libsodium/arm64-v8a/libsodium.so \
             $$PWD/android/source/3rdparty/openssl/arm64-v8a/libcrypto_1_1.so \
             $$PWD/android/source/3rdparty/openssl/arm64-v8a/libssl_1_1.so
     }
