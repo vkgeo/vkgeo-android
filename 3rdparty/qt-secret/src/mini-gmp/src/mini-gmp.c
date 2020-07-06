@@ -50,6 +50,7 @@ see https://www.gnu.org/licenses/.  */
 
 #include "mini-gmp.h"
 
+#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 
 /* Macros */
 #define GMP_LIMB_BITS (sizeof(mp_limb_t) * CHAR_BIT)
