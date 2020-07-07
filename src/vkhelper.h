@@ -188,8 +188,7 @@ private:
                          DEFAULT_PHOTO_URL,
                          DATA_NOTE_TITLE,
                          TRUSTED_FRIENDS_LIST_NAME,
-                         TRACKED_FRIENDS_LIST_NAME,
-                         ENCRYPTED_PAYLOAD_COOKIE;
+                         TRACKED_FRIENDS_LIST_NAME;
 
     enum DataState {
         StateNoNewData,

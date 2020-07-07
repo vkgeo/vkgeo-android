@@ -152,7 +152,7 @@ void CryptoHelper::clearPublicKeysOfFriends()
     }
 }
 
-QByteArray CryptoHelper::EncryptWithCryptoBox(const QString &public_key, const QByteArray &payload) const
+QByteArray CryptoHelper::EncryptWithSealedBox(const QString &public_key, const QByteArray &payload) const
 {
     const QByteArray raw_public_key = QByteArray::fromBase64(public_key.toUtf8());
 
@@ -169,7 +169,7 @@ QByteArray CryptoHelper::EncryptWithCryptoBox(const QString &public_key, const Q
     }
 }
 
-QByteArray CryptoHelper::DecryptCryptoBox(const QString &public_key, const QString &private_key, const QByteArray &encrypted_payload) const
+QByteArray CryptoHelper::DecryptSealedBox(const QString &public_key, const QString &private_key, const QByteArray &encrypted_payload) const
 {
     const QByteArray raw_public_key  = QByteArray::fromBase64(public_key.toUtf8()),
                      raw_private_key = QByteArray::fromBase64(private_key.toUtf8());
