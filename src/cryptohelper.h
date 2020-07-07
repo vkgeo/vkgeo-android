@@ -44,8 +44,8 @@ public:
     Q_INVOKABLE void removePublicKeyOfFriend(const QString &friend_user_id);
     Q_INVOKABLE void clearPublicKeysOfFriends();
 
-    QByteArray EncryptWithCryptoBox(const QString &public_key, const QByteArray &payload) const;
-    QByteArray DecryptCryptoBox(const QString &public_key, const QString &private_key, const QByteArray &encrypted_payload) const;
+    QByteArray EncryptWithSealedBox(const QString &public_key, const QByteArray &payload) const;
+    QByteArray DecryptSealedBox(const QString &public_key, const QString &private_key, const QByteArray &encrypted_payload) const;
 
 signals:
     void publicKeyChanged(const QString &publicKey);

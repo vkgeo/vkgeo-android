@@ -22,7 +22,6 @@ const QString VKHelper::DEFAULT_PHOTO_URL        (QStringLiteral("https://vk.com
 const QString VKHelper::DATA_NOTE_TITLE          (QStringLiteral("VKGeo Data"));
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME(QStringLiteral("VKGeo Trusted Friends"));
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME(QStringLiteral("VKGeo Tracked Friends"));
-const QString VKHelper::ENCRYPTED_PAYLOAD_COOKIE (QStringLiteral("VKGeo Payload Cookie"));
 
 QAndroidJniObject VKHelper::AndroidContext;
 
@@ -831,13 +830,8 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                             QString friend_key = CryptoHelper::GetInstance().getPublicKeyOfFriend(user_id);
 
                             if (friend_key != QLatin1String("")) {
-                                QVariantMap payload_item;
-
-                                payload_item[QStringLiteral("payload_cookie")] = ENCRYPTED_PAYLOAD_COOKIE;
-                                payload_item[QStringLiteral("data")]           = CurrentData;
-
-                                QByteArray encrypted_payload_item = CryptoHelper::GetInstance().EncryptWithCryptoBox(friend_key,
-                                                                                                                     QJsonDocument::fromVariant(payload_item)
+                                QByteArray encrypted_payload_item = CryptoHelper::GetInstance().EncryptWithSealedBox(friend_key,
+                                                                                                                     QJsonDocument::fromVariant(CurrentData)
                                                                                                                      .toJson(QJsonDocument::Compact));
 
                                 if (!encrypted_payload_item.isEmpty()) {
@@ -848,7 +842,6 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
 
                         QVariantMap note_data;
 
-                        note_data[QStringLiteral("encryption")]        = QStringLiteral("X25519-XSALSA20-POLY1305");
                         note_data[QStringLiteral("encrypted_payload")] = encrypted_payload;
 
                         note_text = QStringLiteral("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(note_data)
@@ -925,31 +918,21 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                             if (base64_regexp.indexIn(note_text) != -1) {
                                 QVariantMap friend_data = QJsonDocument::fromJson(QByteArray::fromBase64(base64_regexp.cap(1).toUtf8())).toVariant().toMap();
 
-                                if (friend_data.contains(QStringLiteral("encryption"))) {
-                                    if (friend_data[QStringLiteral("encryption")] == QStringLiteral("X25519-XSALSA20-POLY1305")) {
-                                        if (friend_data.contains(QStringLiteral("encrypted_payload"))) {
-                                            QVariantList encrypted_payload = friend_data[QStringLiteral("encrypted_payload")].toList();
+                                if (friend_data.contains(QStringLiteral("encrypted_payload"))) {
+                                    QVariantList encrypted_payload = friend_data[QStringLiteral("encrypted_payload")].toList();
 
-                                            for (const QVariant &variant_item : encrypted_payload) {
-                                                QByteArray  encrypted_payload_item = QByteArray::fromBase64(variant_item.toString().toUtf8());
-                                                QVariantMap payload_item           = QJsonDocument::fromJson(CryptoHelper::GetInstance().DecryptCryptoBox(CryptoHelper::GetInstance().publicKey(),
-                                                                                                                                                          CryptoHelper::GetInstance().privateKey(),
-                                                                                                                                                          encrypted_payload_item))
-                                                                                                                                        .toVariant().toMap();
+                                    for (const QVariant &variant_item : encrypted_payload) {
+                                        QByteArray  encrypted_payload_item = QByteArray::fromBase64(variant_item.toString().toUtf8());
+                                        QVariantMap payload_data           = QJsonDocument::fromJson(CryptoHelper::GetInstance().DecryptSealedBox(CryptoHelper::GetInstance().publicKey(),
+                                                                                                                                                  CryptoHelper::GetInstance().privateKey(),
+                                                                                                                                                  encrypted_payload_item))
+                                                                                                                                .toVariant().toMap();
 
-                                                if (payload_item.contains(QStringLiteral("payload_cookie")) &&
-                                                    payload_item.contains(QStringLiteral("data")) &&
-                                                    payload_item[QStringLiteral("payload_cookie")] == ENCRYPTED_PAYLOAD_COOKIE) {
-                                                    emit trackedFriendDataUpdated(user_id, payload_item[QStringLiteral("data")].toMap());
+                                        if (!payload_data.isEmpty()) {
+                                            emit trackedFriendDataUpdated(user_id, payload_data);
 
-                                                    break;
-                                                }
-                                            }
-                                        } else {
-                                            qWarning() << "HandleNotesGetResponse() : invalid user data";
+                                            break;
                                         }
-                                    } else {
-                                        qWarning() << "HandleNotesGetResponse() : unknown encryption method";
                                     }
                                 } else {
                                     emit trackedFriendDataUpdated(user_id, friend_data);
