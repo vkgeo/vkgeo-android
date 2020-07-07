@@ -70,8 +70,8 @@ bool CryptoHelper::validateKeyPair(const QString &public_key, const QString &pri
 {
     const QByteArray text("TEXT FOR KEY PAIR VALIDATION");
 
-    const QByteArray raw_public_key  = QByteArray::fromBase64(public_key.toUtf8()),
-                     raw_private_key = QByteArray::fromBase64(private_key.toUtf8());
+    QByteArray raw_public_key  = QByteArray::fromBase64(public_key.toUtf8()),
+               raw_private_key = QByteArray::fromBase64(private_key.toUtf8());
 
     QByteArray encrypted(text.size() + crypto_box_SEALBYTES, 0),
                decrypted(text.size(),                        0);
@@ -81,12 +81,12 @@ bool CryptoHelper::validateKeyPair(const QString &public_key, const QString &pri
             crypto_box_seal(reinterpret_cast<unsigned char *>(encrypted.data()),
                             reinterpret_cast<const unsigned char *>(text.data()),
                             text.size(),
-                            reinterpret_cast<const unsigned char *>(raw_public_key.data())) == 0 &&
+                            reinterpret_cast<unsigned char *>(raw_public_key.data())) == 0 &&
             crypto_box_seal_open(reinterpret_cast<unsigned char *>(decrypted.data()),
                                  reinterpret_cast<unsigned char *>(encrypted.data()),
                                  encrypted.size(),
-                                 reinterpret_cast<const unsigned char *>(raw_public_key.data()),
-                                 reinterpret_cast<const unsigned char *>(raw_private_key.data())) == 0 &&
+                                 reinterpret_cast<unsigned char *>(raw_public_key.data()),
+                                 reinterpret_cast<unsigned char *>(raw_private_key.data())) == 0 &&
             text == decrypted);
 }
 
@@ -154,7 +154,7 @@ void CryptoHelper::clearPublicKeysOfFriends()
 
 QByteArray CryptoHelper::EncryptWithSealedBox(const QString &public_key, const QByteArray &payload) const
 {
-    const QByteArray raw_public_key = QByteArray::fromBase64(public_key.toUtf8());
+    QByteArray raw_public_key = QByteArray::fromBase64(public_key.toUtf8());
 
     QByteArray result(payload.size() + crypto_box_SEALBYTES, 0);
 
@@ -162,7 +162,7 @@ QByteArray CryptoHelper::EncryptWithSealedBox(const QString &public_key, const Q
         crypto_box_seal(reinterpret_cast<unsigned char *>(result.data()),
                         reinterpret_cast<const unsigned char *>(payload.data()),
                         payload.size(),
-                        reinterpret_cast<const unsigned char *>(raw_public_key.data())) == 0) {
+                        reinterpret_cast<unsigned char *>(raw_public_key.data())) == 0) {
         return result;
     } else {
         return QByteArray();
@@ -171,8 +171,8 @@ QByteArray CryptoHelper::EncryptWithSealedBox(const QString &public_key, const Q
 
 QByteArray CryptoHelper::DecryptSealedBox(const QString &public_key, const QString &private_key, const QByteArray &encrypted_payload) const
 {
-    const QByteArray raw_public_key  = QByteArray::fromBase64(public_key.toUtf8()),
-                     raw_private_key = QByteArray::fromBase64(private_key.toUtf8());
+    QByteArray raw_public_key  = QByteArray::fromBase64(public_key.toUtf8()),
+               raw_private_key = QByteArray::fromBase64(private_key.toUtf8());
 
     QByteArray result(encrypted_payload.size() - crypto_box_SEALBYTES, 0);
 
@@ -181,8 +181,8 @@ QByteArray CryptoHelper::DecryptSealedBox(const QString &public_key, const QStri
         crypto_box_seal_open(reinterpret_cast<unsigned char *>(result.data()),
                              reinterpret_cast<const unsigned char *>(encrypted_payload.data()),
                              encrypted_payload.size(),
-                             reinterpret_cast<const unsigned char *>(raw_public_key.data()),
-                             reinterpret_cast<const unsigned char *>(raw_private_key.data())) == 0) {
+                             reinterpret_cast<unsigned char *>(raw_public_key.data()),
+                             reinterpret_cast<unsigned char *>(raw_private_key.data())) == 0) {
         return result;
     } else {
         return QByteArray();
