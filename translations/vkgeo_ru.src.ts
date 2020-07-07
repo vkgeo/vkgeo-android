@@ -172,11 +172,6 @@
         <translation>Список отслеживаемых друзей</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="266"/>
-        <source>&lt;b&gt;Pass this public key&lt;/b&gt; to trusted and tracked friends who use encryption and &lt;b&gt;whose location you want to see&lt;/b&gt;. Press and hold down your finger on the public key text below to copy it to the clipboard.</source>
-        <translation>&lt;b&gt;Передайте этот открытый ключ&lt;/b&gt; доверенным и отслеживаемым друзьям, которые используют шифрование, и &lt;b&gt;местоположение которых вы хотите видеть&lt;/b&gt;. Вы можете скопировать открытый ключ в буфер обмена длительным нажатием пальца на приведенном ниже тексте этого ключа.</translation>
-    </message>
-    <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="322"/>
         <source>Encryption settings</source>
         <translation>Настройки шифрования</translation>
@@ -275,6 +270,11 @@
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="248"/>
         <source>You can enable encryption of your location data. If you do this, &lt;b&gt;your location will only be visible&lt;/b&gt; to trusted friends &lt;b&gt;whose public keys you have&lt;/b&gt;.</source>
         <translation>Вы можете включить шифрование данных о вашем местоположении. Если вы сделаете это, &lt;b&gt;ваше местоположение будет видно&lt;/b&gt; только тем доверенным друзьям, &lt;b&gt;чьи открытые ключи у вас есть&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="266"/>
+        <source>&lt;b&gt;Pass this public key&lt;/b&gt; to trusted and tracked friends who use encryption and &lt;b&gt;whose location you want to see&lt;/b&gt;. Press and hold down your finger on the public key text to copy it to the clipboard.</source>
+        <translation>&lt;b&gt;Передайте этот открытый ключ&lt;/b&gt; доверенным и отслеживаемым друзьям, которые используют шифрование, и &lt;b&gt;местоположение которых вы хотите видеть&lt;/b&gt;. Вы можете скопировать открытый ключ в буфер обмена длительным нажатием пальца на тексте этого ключа.</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="350"/>
