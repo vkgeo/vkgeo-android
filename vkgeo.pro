@@ -123,20 +123,6 @@ android {
         android/source/gradlew \
         android/source/gradlew.bat \
         android/source/settings.gradle \
-        android/source/3rdparty/libsodium/LICENSE \
-        android/source/3rdparty/libsodium/arm64-v8a/libsodium.a \
-        android/source/3rdparty/libsodium/arm64-v8a/libsodium.la \
-        android/source/3rdparty/libsodium/arm64-v8a/libsodium.so \
-        android/source/3rdparty/libsodium/arm64-v8a/pkgconfig/libsodium.pc \
-        android/source/3rdparty/libsodium/armeabi-v7a/libsodium.a \
-        android/source/3rdparty/libsodium/armeabi-v7a/libsodium.la \
-        android/source/3rdparty/libsodium/armeabi-v7a/libsodium.so \
-        android/source/3rdparty/libsodium/armeabi-v7a/pkgconfig/libsodium.pc \
-        android/source/3rdparty/openssl/LICENSE \
-        android/source/3rdparty/openssl/arm64-v8a/libcrypto_1_1.so \
-        android/source/3rdparty/openssl/arm64-v8a/libssl_1_1.so \
-        android/source/3rdparty/openssl/armeabi-v7a/libcrypto_1_1.so \
-        android/source/3rdparty/openssl/armeabi-v7a/libssl_1_1.so \
         android/source/3rdparty/vksdk_library/LICENSE \
         android/source/3rdparty/vksdk_library/build.gradle \
         android/source/3rdparty/vksdk_library/gradle.properties \
@@ -323,20 +309,20 @@ android {
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android/source
 
     contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
-        LIBS += -L$$PWD/android/source/3rdparty/libsodium/armeabi-v7a -lsodium
+        LIBS += -L$$PWD/android/3rdparty/libsodium/armeabi-v7a -lsodium
 
         ANDROID_EXTRA_LIBS = \
-            $$PWD/android/source/3rdparty/libsodium/armeabi-v7a/libsodium.so \
-            $$PWD/android/source/3rdparty/openssl/armeabi-v7a/libcrypto_1_1.so \
-            $$PWD/android/source/3rdparty/openssl/armeabi-v7a/libssl_1_1.so
+            $$PWD/android/3rdparty/libsodium/armeabi-v7a/libsodium.so \
+            $$PWD/android/3rdparty/openssl/armeabi-v7a/libcrypto_1_1.so \
+            $$PWD/android/3rdparty/openssl/armeabi-v7a/libssl_1_1.so
     }
 
     contains(ANDROID_TARGET_ARCH,arm64-v8a) {
-        LIBS += -L$$PWD/android/source/3rdparty/libsodium/arm64-v8a -lsodium
+        LIBS += -L$$PWD/android/3rdparty/libsodium/arm64-v8a -lsodium
 
         ANDROID_EXTRA_LIBS = \
-            $$PWD/android/source/3rdparty/libsodium/arm64-v8a/libsodium.so \
-            $$PWD/android/source/3rdparty/openssl/arm64-v8a/libcrypto_1_1.so \
-            $$PWD/android/source/3rdparty/openssl/arm64-v8a/libssl_1_1.so
+            $$PWD/android/3rdparty/libsodium/arm64-v8a/libsodium.so \
+            $$PWD/android/3rdparty/openssl/arm64-v8a/libcrypto_1_1.so \
+            $$PWD/android/3rdparty/openssl/arm64-v8a/libssl_1_1.so
     }
 }
