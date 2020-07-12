@@ -73,6 +73,7 @@ VKHelper::VKHelper(QObject *parent) :
     AuthState                       (VKAuthState::StateUnknown),
     MaxTrustedFriendsCount          (0),
     MaxTrackedFriendsCount          (0),
+    SendDataAttemptNumber           (0),
     LastSendDataTime                (0),
     LastUpdateTrackedFriendsDataTime(0),
     NextRequestQueueTimerTimeout    (0),
@@ -619,14 +620,24 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
 void VKHelper::handleSendDataTimerTimeout()
 {
-    qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
+    if (CurrentDataState == StateNewDataAvailable || (CurrentDataState == StateDataIsBeingSent && SendDataAttemptNumber < MAX_SEND_DATA_ATTEMPTS_COUNT)) {
+        qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
 
-    if (elapsed < 0 || elapsed > SEND_DATA_INTERVAL) {
-        SendData();
-    }
+        if ((elapsed < 0 || elapsed > SEND_DATA_INTERVAL) && SendData()) {
+            if (CurrentDataState == StateDataIsBeingSent) {
+                SendDataAttemptNumber = SendDataAttemptNumber + 1;
+            } else {
+                SendDataAttemptNumber = 1;
+            }
 
-    if (!SendDataTimer.isActive()) {
-        SendDataTimer.start();
+            CurrentDataState = StateDataIsBeingSent;
+        }
+
+        if (!SendDataTimer.isActive()) {
+            SendDataTimer.start();
+        }
+    } else {
+        SendDataTimer.stop();
     }
 }
 
@@ -690,7 +701,7 @@ void VKHelper::Cleanup()
     emit friendsUpdated();
 }
 
-void VKHelper::SendData()
+bool VKHelper::SendData()
 {
     if (!ContextHasActiveRequests(QStringLiteral("sendData"))) {
         QVariantMap request, parameters;
@@ -708,6 +719,10 @@ void VKHelper::SendData()
         }
 
         EnqueueRequest(request);
+
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -871,8 +886,6 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                     }
 
                     request[QStringLiteral("parameters")] = parameters;
-
-                    CurrentDataState = StateNoNewData;
                 }
 
                 EnqueueRequest(request);
@@ -1001,7 +1014,9 @@ void VKHelper::HandleNotesAddResponse(const QString &response, const QVariantMap
 
         LastSendDataTime = QDateTime::currentSecsSinceEpoch();
 
-        if (CurrentDataState == StateNoNewData) {
+        if (CurrentDataState != StateNewDataAvailable) {
+            CurrentDataState = StateNoNewData;
+
             SendDataTimer.stop();
         }
 
