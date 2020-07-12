@@ -951,7 +951,7 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                                     emit trackedFriendDataUpdated(user_id, friend_data);
                                 }
                             } else {
-                                qWarning() << "HandleNotesGetResponse() : invalid user data";
+                                qWarning() << "HandleNotesGetResponse() : invalid note data";
                             }
 
                             break;
