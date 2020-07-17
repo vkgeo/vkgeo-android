@@ -84,7 +84,7 @@ void VKService::handleTrackedFriendDataUpdate(const QString &friend_user_id, con
                 QGeoCoordinate my_coordinate(VKHelper::GetInstance().latitude(), VKHelper::GetInstance().longitude());
                 QGeoCoordinate friend_coordinate(latitude, longitude);
 
-                if (my_coordinate.distanceTo(friend_coordinate) < NEARBY_DISTANCE) {
+                if (my_coordinate.isValid() && friend_coordinate.isValid() && my_coordinate.distanceTo(friend_coordinate) < NEARBY_DISTANCE) {
                     if (!frnd.contains(QStringLiteral("nearby")) || !frnd[QStringLiteral("nearby")].toBool()) {
                         frnd[QStringLiteral("nearby")] = true;
 
