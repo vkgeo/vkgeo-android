@@ -2,8 +2,6 @@ language: android
 
 os: linux
 
-jdk: oraclejdk8
-
 android:
   components:
     - tools
@@ -22,7 +20,7 @@ install:
     echo && \
     echo "------ INSTALLATION OF LINUX PACKAGES -----" && \
     echo && \
-    sudo apt-get -y install p7zip-full && \
+    sudo apt-get -y install p7zip-full oracle-java8-installer openjdk-11-jdk && \
     echo && \
     echo "------- INSTALLATION OF ANDROID NDK -------" && \
     echo && \
@@ -40,6 +38,7 @@ script:
     echo && \
     echo "---------- ENVIRONMENT VARIABLES ----------" && \
     echo && \
+    export JAVA_HOME=/usr/lib/jvm/java-8-oracle && \
     export ANDROID_SDK_ROOT=/usr/local/android-sdk && \
     export ANDROID_NDK_ROOT=/usr/local/android-sdk/ndk/21.0.6113669 && \
     export ANDROID_NDK_HOST=linux-x86_64 && \
@@ -79,6 +78,7 @@ script:
         echo "-------------- SONAR SCANNER --------------" && \
         echo && \
         cd .. && \
+        export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 && \
         sonar-scanner -Dsonar.projectKey=vkgeo_vkgeo-android \
                       -Dsonar.projectName="VKGeo Android" \
                       -Dsonar.sources=. \
