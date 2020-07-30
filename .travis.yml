@@ -30,7 +30,7 @@ install:
     echo && \
     echo "------- INSTALLATION OF QT PACKAGES -------" && \
     echo && \
-    bash tools/install-qt.sh --version 5.12.9 --target android --toolchain android_armv7 --directory "$TRAVIS_BUILD_DIR/Qt" qtbase qtdeclarative qtquickcontrols2 qtlocation qtpurchasing qtandroidextras && \
+    bash tools/install-qt.sh --version 5.12.9 --target android --toolchain android_armv7 --directory "$HOME/Qt" qtbase qtdeclarative qtquickcontrols2 qtlocation qtpurchasing qtandroidextras && \
     echo && \
     echo "----------- END OF INSTALLATION -----------" && \
     echo
@@ -44,7 +44,7 @@ script:
     export ANDROID_NDK_ROOT=/usr/local/android-sdk/ndk/21.0.6113669 && \
     export ANDROID_NDK_HOST=linux-x86_64 && \
     export ANDROID_PLATFORM=android-29 && \
-    export PATH=$TRAVIS_BUILD_DIR/Qt/5.12.9/android_armv7/bin:$ANDROID_NDK_ROOT/prebuilt/$ANDROID_NDK_HOST/bin:$PATH && \
+    export PATH=$HOME/Qt/5.12.9/android_armv7/bin:$ANDROID_NDK_ROOT/prebuilt/$ANDROID_NDK_HOST/bin:$PATH && \
     echo && \
     echo "--------- UNSHALLOW GIT FOR SONAR ---------" && \
     echo && \
