@@ -1,0 +1,91 @@
+language: android
+
+os: linux
+
+jdk: oraclejdk8
+
+android:
+  components:
+    - tools
+    - build-tools-29.0.2
+    - platform-tools
+    - android-29
+
+addons:
+  sonarcloud:
+    organization: "vkgeo-github"
+    token:
+      secure: "eWoSLf9oVwJm9NPBSCioVKdqshdq3oT+8DJxV/hhTFdaLat1U9U9se6ogiZeB+FVtm1Xig3yT1/O/zHp7kWnBT36N1wr2IQ2ne+sWbEE5+I2wTcGXMeDiMLeoBOdVL41lx0+40MRFmeo7D+TgcZqznmT+lqVuIV1W4+Jr19BzfgQsfp946dyFiVL74SnSTu27oF5OslezZ5Z+QdLhFTzD+VOZVogBoS6fSHDREyWggW1BcMo8WsVxSwoFcaIPBX+jDZfayM2gv9kEDaqJNblYv8XT0xpMmuAb6vLEmEIi8GtenO7Xp0qTXbaH4M40W8bLwqAPpWuMzlbzYbC1cTXp4XwU7V5UQvWonh9V4vbrvLM61CQet/7qaLrMLY8AnnhBuomH5rS2FqG4C7LxUZPwxLfdNDwtskI4zwqVEy2IpA0jze6bukqlwzlR5jmUIcFVbwFdER/NjGjxexfEyghZ5jJN/Z5NflotWKDhvt7Y/DCPpNGIz5T5TOG0JpswgD/U4MwKTseYwr9CELgtLz19uVpWhMMLTDtas8Hd0YVpEaKCw4hjFX24uYsTytOoo4f2LtvHWHVCzqeg+ZE7/UiIEaVncHPAkOHAoqyucUJLFGazT8bkYiKKzVSzgFh9h/CswMoB13AuMsN6yEEpQ7pypWpIP9k0CmKpujc1IFrPQo="
+
+install:
+  - |
+    echo && \
+    echo "------ INSTALLATION OF LINUX PACKAGES -----" && \
+    echo && \
+    sudo apt-get -y install p7zip-full && \
+    echo && \
+    echo "------- INSTALLATION OF ANDROID NDK -------" && \
+    echo && \
+    yes | sdkmanager --verbose "ndk;21.0.6113669" && \
+    echo && \
+    echo "------- INSTALLATION OF QT PACKAGES -------" && \
+    echo && \
+    bash tools/install-qt.sh --version 5.12.9 --target android --toolchain android_armv7 --directory "$TRAVIS_BUILD_DIR/Qt" qtbase qtdeclarative qtquickcontrols2 qtlocation qtpurchasing qtandroidextras && \
+    echo && \
+    echo "----------- END OF INSTALLATION -----------" && \
+    echo
+
+script:
+  - |
+    echo && \
+    echo "---------- ENVIRONMENT VARIABLES ----------" && \
+    echo && \
+    export ANDROID_SDK_ROOT=/usr/local/android-sdk && \
+    export ANDROID_NDK_ROOT=/usr/local/android-sdk/ndk/21.0.6113669 && \
+    export ANDROID_NDK_HOST=linux-x86_64 && \
+    export ANDROID_PLATFORM=android-29 && \
+    export PATH=$TRAVIS_BUILD_DIR/Qt/5.12.9/android_armv7/bin:$ANDROID_NDK_ROOT/prebuilt/$ANDROID_NDK_HOST/bin:$PATH && \
+    echo && \
+    echo "--------- UNSHALLOW GIT FOR SONAR ---------" && \
+    echo && \
+    git fetch --unshallow && \
+    echo && \
+    echo "---------- CREATE BUILD DIRECTORY ---------" && \
+    echo && \
+    mkdir .build && \
+    cd .build && \
+    echo && \
+    echo "------------------ QMAKE ------------------" && \
+    echo && \
+    qmake ../vkgeo.pro && \
+    echo && \
+    echo "------------------ MAKE -------------------" && \
+    echo && \
+    make "CFLAGS=-Werror" all && \
+    echo && \
+    echo "-------------- MAKE INSTALL ---------------" && \
+    echo && \
+    make install INSTALL_ROOT=android-build && \
+    echo && \
+    echo "------------- ANDROIDDEPLOYQT -------------" && \
+    echo && \
+    androiddeployqt --input android-libvkgeo.so-deployment-settings.json --output android-build --android-platform $ANDROID_PLATFORM --deployment bundled --gradle --no-gdbserver && \
+    if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then \
+        echo && \
+        echo "-------------- SONAR WRAPPER --------------" && \
+        echo && \
+        build-wrapper-linux-x86-64 --out-dir bw-output make clean all && \
+        echo && \
+        echo "-------------- SONAR SCANNER --------------" && \
+        echo && \
+        cd .. && \
+        sonar-scanner -Dsonar.projectKey=vkgeo_vkgeo-android \
+                      -Dsonar.projectName="VKGeo Android" \
+                      -Dsonar.sources=. \
+                      -Dsonar.sourceEncoding=UTF-8 \
+                      -Dsonar.exclusions="3rdparty/**/*,android/source/3rdparty/**/*,qml/**/*,translations/*" \
+                      -Dsonar.cfamily.build-wrapper-output=.build/bw-output \
+                      -Dsonar.cfamily.cache.enabled=false \
+                      -Dsonar.java.source=1.7 \
+                      -Dsonar.java.binaries=.build; \
+    fi
