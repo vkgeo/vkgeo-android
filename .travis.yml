@@ -86,6 +86,7 @@ script:
                       -Dsonar.exclusions="3rdparty/**/*,android/source/3rdparty/**/*,qml/**/*,translations/*" \
                       -Dsonar.cfamily.build-wrapper-output=.build/bw-output \
                       -Dsonar.cfamily.cache.enabled=false \
+                      -Dsonar.cfamily.threads=1 \
                       -Dsonar.java.source=1.7 \
                       -Dsonar.java.binaries=.build; \
     fi
