@@ -101,6 +101,10 @@ RESOURCES += \
 TRANSLATIONS += \
     translations/vkgeo_ru.ts
 
+QMAKE_CFLAGS += $$(QMAKE_CFLAGS_ENV)
+QMAKE_CXXFLAGS += $$(QMAKE_CXXFLAGS_ENV)
+QMAKE_LFLAGS += $$(QMAKE_LFLAGS_ENV)
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
