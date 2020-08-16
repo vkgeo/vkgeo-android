@@ -73,18 +73,18 @@ bool CryptoHelper::validateKeyPair(const QString &public_key, const QString &pri
     QByteArray raw_public_key  = QByteArray::fromBase64(public_key.toUtf8()),
                raw_private_key = QByteArray::fromBase64(private_key.toUtf8());
 
-    QByteArray encrypted(text.size() + crypto_box_SEALBYTES, 0),
-               decrypted(text.size(),                        0);
+    QByteArray encrypted(text.size() + static_cast<int>(crypto_box_SEALBYTES), 0),
+               decrypted(text.size(),                                          0);
 
     return (raw_public_key.size()  == crypto_box_PUBLICKEYBYTES &&
             raw_private_key.size() == crypto_box_SECRETKEYBYTES &&
             crypto_box_seal(reinterpret_cast<unsigned char *>(encrypted.data()),
                             reinterpret_cast<const unsigned char *>(text.data()),
-                            text.size(),
+                            static_cast<unsigned long long int>(text.size()),
                             reinterpret_cast<unsigned char *>(raw_public_key.data())) == 0 &&
             crypto_box_seal_open(reinterpret_cast<unsigned char *>(decrypted.data()),
                                  reinterpret_cast<unsigned char *>(encrypted.data()),
-                                 encrypted.size(),
+                                 static_cast<unsigned long long int>(encrypted.size()),
                                  reinterpret_cast<unsigned char *>(raw_public_key.data()),
                                  reinterpret_cast<unsigned char *>(raw_private_key.data())) == 0 &&
             text == decrypted);
@@ -156,12 +156,12 @@ QByteArray CryptoHelper::EncryptWithSealedBox(const QString &public_key, const Q
 {
     QByteArray raw_public_key = QByteArray::fromBase64(public_key.toUtf8());
 
-    QByteArray result(payload.size() + crypto_box_SEALBYTES, 0);
+    QByteArray result(payload.size() + static_cast<int>(crypto_box_SEALBYTES), 0);
 
     if (raw_public_key.size() == crypto_box_PUBLICKEYBYTES &&
         crypto_box_seal(reinterpret_cast<unsigned char *>(result.data()),
                         reinterpret_cast<const unsigned char *>(payload.data()),
-                        payload.size(),
+                        static_cast<unsigned long long int>(payload.size()),
                         reinterpret_cast<unsigned char *>(raw_public_key.data())) == 0) {
         return result;
     } else {
@@ -174,13 +174,13 @@ QByteArray CryptoHelper::DecryptSealedBox(const QString &public_key, const QStri
     QByteArray raw_public_key  = QByteArray::fromBase64(public_key.toUtf8()),
                raw_private_key = QByteArray::fromBase64(private_key.toUtf8());
 
-    QByteArray result(encrypted_payload.size() - crypto_box_SEALBYTES, 0);
+    QByteArray result(encrypted_payload.size() - static_cast<int>(crypto_box_SEALBYTES), 0);
 
     if (raw_public_key.size()  == crypto_box_PUBLICKEYBYTES &&
         raw_private_key.size() == crypto_box_SECRETKEYBYTES &&
         crypto_box_seal_open(reinterpret_cast<unsigned char *>(result.data()),
                              reinterpret_cast<const unsigned char *>(encrypted_payload.data()),
-                             encrypted_payload.size(),
+                             static_cast<unsigned long long int>(encrypted_payload.size()),
                              reinterpret_cast<unsigned char *>(raw_public_key.data()),
                              reinterpret_cast<unsigned char *>(raw_private_key.data())) == 0) {
         return result;
