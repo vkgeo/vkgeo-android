@@ -15,8 +15,8 @@ SOURCES += \
     src/appsettings.cpp \
     src/batteryhelper.cpp \
     src/cryptohelper.cpp \
+    src/gplayhelper.cpp \
     src/main.cpp \
-    src/storehelper.cpp \
     src/uihelper.cpp \
     src/vkhelper.cpp \
     src/vkservice.cpp
@@ -90,7 +90,7 @@ HEADERS += \
     src/appsettings.h \
     src/batteryhelper.h \
     src/cryptohelper.h \
-    src/storehelper.h \
+    src/gplayhelper.h \
     src/uihelper.h \
     src/vkhelper.h \
     src/vkservice.h

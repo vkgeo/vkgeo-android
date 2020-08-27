@@ -24,7 +24,6 @@ ApplicationWindow {
     property bool enableEncryption:            false
     property bool enableTrackedFriends:        false
     property bool increaseTrackingLimits:      false
-    property bool appRated:                    false
 
     property string configuredTheme:           ""
     property string adMobConsent:              ""
@@ -107,10 +106,6 @@ ApplicationWindow {
         AppSettings.increaseTrackingLimits = increaseTrackingLimits;
 
         updateFeatures();
-    }
-
-    onAppRatedChanged: {
-        AppSettings.appRated = appRated;
     }
 
     onConfiguredThemeChanged: {
@@ -333,7 +328,6 @@ ApplicationWindow {
         enableEncryption       = AppSettings.enableEncryption;
         enableTrackedFriends   = AppSettings.enableTrackedFriends;
         increaseTrackingLimits = AppSettings.increaseTrackingLimits;
-        appRated               = AppSettings.appRated;
         configuredTheme        = AppSettings.configuredTheme;
         adMobConsent           = AppSettings.adMobConsent;
 

@@ -229,24 +229,6 @@ Rectangle {
         }
     }
 
-    MessageDialog {
-        id:              requestReviewMessageDialog
-        title:           qsTr("Rate application")
-        icon:            StandardIcon.Question
-        text:            qsTr("If you enjoy VKGeo Friends on Map, please take a moment to rate it. Do you want to do this now?")
-        standardButtons: StandardButton.Yes | StandardButton.No
-
-        onYes: {
-            Qt.openUrlExternally("market://details?id=%1".arg(StoreHelper.getPackageName()));
-
-            mainWindow.appRated = true;
-        }
-
-        onNo: {
-            mainWindow.appRated = true;
-        }
-    }
-
     Connections {
         target: VKHelper
 
@@ -310,12 +292,8 @@ Rectangle {
                 map.trackMapItem(map.myMapItem);
             }
 
-            if (map.mapItems.length > 1) {
-                if (Math.random() < 0.10) {
-                    if (!mainWindow.appRated) {
-                        requestReviewMessageDialog.open();
-                    }
-                }
+            if (map.mapItems.length > 1 && Math.random() < 0.10) {
+                GPlayHelper.requestReview();
             }
         }
 

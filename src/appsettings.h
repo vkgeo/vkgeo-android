@@ -14,7 +14,6 @@ class AppSettings : public QObject
     Q_PROPERTY(bool        enableEncryption       READ enableEncryption       WRITE setEnableEncryption)
     Q_PROPERTY(bool        enableTrackedFriends   READ enableTrackedFriends   WRITE setEnableTrackedFriends)
     Q_PROPERTY(bool        increaseTrackingLimits READ increaseTrackingLimits WRITE setIncreaseTrackingLimits)
-    Q_PROPERTY(bool        appRated               READ appRated               WRITE setAppRated)
     Q_PROPERTY(QString     configuredTheme        READ configuredTheme        WRITE setConfiguredTheme)
     Q_PROPERTY(QString     adMobConsent           READ adMobConsent           WRITE setAdMobConsent)
     Q_PROPERTY(QString     publicKey              READ publicKey              WRITE setPublicKey)
@@ -45,9 +44,6 @@ public:
 
     bool increaseTrackingLimits();
     void setIncreaseTrackingLimits(bool increase);
-
-    bool appRated();
-    void setAppRated(bool rated);
 
     QString configuredTheme();
     void setConfiguredTheme(const QString &theme);

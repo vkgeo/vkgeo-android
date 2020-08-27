@@ -32,6 +32,12 @@ import org.json.JSONObject;
 
 import org.qtproject.qt5.android.bindings.QtActivity;
 
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.Task;
+
 import com.google.ads.mediation.admob.AdMobAdapter;
 
 import com.google.android.gms.ads.AdListener;
@@ -233,6 +239,35 @@ public class VKGeoActivity extends QtActivity
             startActivity(Intent.createChooser(intent, getResources().getString(R.string.send_invitation_chooser_title)));
         } catch (Exception ex) {
             Log.e("VKGeoActivity", "sendInvitation() : " + ex.toString());
+        }
+    }
+
+    public void requestReview()
+    {
+        final Activity f_activity = this;
+
+        try {
+            final ReviewManager f_manager = ReviewManagerFactory.create(this);
+
+            f_manager.requestReviewFlow().addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+                @Override
+                public void onComplete(Task<ReviewInfo> task) {
+                    if (task.isSuccessful()) {
+                        f_manager.launchReviewFlow(f_activity, task.getResult()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(Task<Void> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.e("VKGeoActivity", "requestReview() : launchReviewFlow() failed");
+                                }
+                            }
+                        });
+                    } else {
+                        Log.e("VKGeoActivity", "requestReview() : requestReviewFlow() failed");
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            Log.e("VKGeoActivity", "requestReview() : " + ex.toString());
         }
     }
 

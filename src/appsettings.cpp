@@ -94,26 +94,6 @@ void AppSettings::setIncreaseTrackingLimits(bool increase)
     emit settingsUpdated();
 }
 
-bool AppSettings::appRated()
-{
-    Settings.sync();
-
-    if (Settings.contains(QStringLiteral("AppRated"))) {
-        return Settings.value(QStringLiteral("AppRated")).toBool();
-    } else {
-        return false;
-    }
-}
-
-void AppSettings::setAppRated(bool rated)
-{
-    Settings.setValue(QStringLiteral("AppRated"), rated);
-
-    Settings.sync();
-
-    emit settingsUpdated();
-}
-
 QString AppSettings::configuredTheme()
 {
     Settings.sync();
