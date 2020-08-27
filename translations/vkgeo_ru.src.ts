@@ -90,16 +90,6 @@
         <source>Do you want to update location data in your VK profile now?</source>
         <translation>Вы действительно хотите сейчас обновить данные о местоположении в вашем профиле ВКонтакте?</translation>
     </message>
-    <message>
-        <location filename="../qml/Core/Main/MapSwipe.qml" line="234"/>
-        <source>Rate application</source>
-        <translation>Оценить приложение</translation>
-    </message>
-    <message>
-        <location filename="../qml/Core/Main/MapSwipe.qml" line="236"/>
-        <source>If you enjoy VKGeo Friends on Map, please take a moment to rate it. Do you want to do this now?</source>
-        <translation>Если вам нравится VKGeo Друзья на Карте, пожалуйста, найдите минутку, чтобы оценить его. Вы хотите сделать это сейчас?</translation>
-    </message>
 </context>
 <context>
     <name>ProfilePage</name>
@@ -397,8 +387,8 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="209"/>
-        <location filename="../qml/main.qml" line="212"/>
+        <location filename="../qml/main.qml" line="204"/>
+        <location filename="../qml/main.qml" line="207"/>
         <source>BUY</source>
         <translation>КУПИТЬ</translation>
     </message>
