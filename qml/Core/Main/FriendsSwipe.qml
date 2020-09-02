@@ -35,18 +35,11 @@ Rectangle {
             if (user_id === "") {
                 var my_profile_page = mainStackView.push(component);
 
-                my_profile_page.userId            = VKHelper.userId;
-                my_profile_page.editable          = false;
-                my_profile_page.online            = false;
-                my_profile_page.dataAvailable     = false;
-                my_profile_page.locationAvailable = false;
-                my_profile_page.firstName         = VKHelper.firstName;
-                my_profile_page.lastName          = VKHelper.lastName;
-                my_profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
-                my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
-                my_profile_page.status            = "";
-                my_profile_page.batteryStatus     = "";
-                my_profile_page.publicKey         = "";
+                my_profile_page.userId      = VKHelper.userId;
+                my_profile_page.firstName   = VKHelper.firstName;
+                my_profile_page.lastName    = VKHelper.lastName;
+                my_profile_page.bigPhotoUrl = VKHelper.bigPhotoUrl;
+                my_profile_page.screenName  = "id%1".arg(VKHelper.userId);
             } else {
                 for (var i = 0; i < friendsListModel.count; i++) {
                     var frnd = friendsListModel.get(i);
@@ -54,7 +47,6 @@ Rectangle {
                     if (user_id === frnd.userId) {
                         var profile_page = mainStackView.push(component);
 
-                        profile_page.userId            = frnd.userId;
                         profile_page.editable          = true;
                         profile_page.online            = frnd.online;
                         profile_page.dataAvailable     = frnd.dataAvailable;
@@ -63,6 +55,7 @@ Rectangle {
                         profile_page.latitude          = frnd.latitude;
                         profile_page.longitude         = frnd.longitude;
                         profile_page.updateTime        = frnd.updateTime;
+                        profile_page.userId            = frnd.userId;
                         profile_page.firstName         = frnd.firstName;
                         profile_page.lastName          = frnd.lastName;
                         profile_page.bigPhotoUrl       = frnd.bigPhotoUrl;

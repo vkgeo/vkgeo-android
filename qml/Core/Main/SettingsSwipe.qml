@@ -450,18 +450,11 @@ Rectangle {
                     if (component.status === Component.Ready) {
                         var my_profile_page = mainStackView.push(component);
 
-                        my_profile_page.userId            = VKHelper.userId;
-                        my_profile_page.editable          = false;
-                        my_profile_page.online            = false;
-                        my_profile_page.dataAvailable     = false;
-                        my_profile_page.locationAvailable = false;
-                        my_profile_page.firstName         = VKHelper.firstName;
-                        my_profile_page.lastName          = VKHelper.lastName;
-                        my_profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
-                        my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
-                        my_profile_page.status            = "";
-                        my_profile_page.batteryStatus     = "";
-                        my_profile_page.publicKey         = "";
+                        my_profile_page.userId      = VKHelper.userId;
+                        my_profile_page.firstName   = VKHelper.firstName;
+                        my_profile_page.lastName    = VKHelper.lastName;
+                        my_profile_page.bigPhotoUrl = VKHelper.bigPhotoUrl;
+                        my_profile_page.screenName  = "id%1".arg(VKHelper.userId);
                     } else {
                         console.error(component.errorString());
                     }
