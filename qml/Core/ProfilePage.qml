@@ -132,7 +132,7 @@ Page {
                     height:   UtilScript.dp(UIHelper.screenDpi, 24)
                     source:   imageSource(profilePage.batteryStatus, profilePage.batteryLevel)
                     fillMode: Image.PreserveAspectFit
-                    visible:  imageVisible(profilePage.batteryStatus)
+                    visible:  imageVisible(profilePage.dataAvailable, profilePage.batteryStatus)
 
                     readonly property real angle: Math.PI / 4
 
@@ -164,8 +164,8 @@ Page {
                         }
                     }
 
-                    function imageVisible(battery_status) {
-                        return (battery_status === "CHARGING" || battery_status === "DISCHARGING");
+                    function imageVisible(data_available, battery_status) {
+                        return (data_available && (battery_status === "CHARGING" || battery_status === "DISCHARGING"));
                     }
                 }
             }
@@ -229,7 +229,7 @@ Page {
                 implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
                 implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Locate on map")
-                visible:          profilePage.locationAvailable
+                visible:          profilePage.dataAvailable && profilePage.locationAvailable
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
@@ -243,7 +243,7 @@ Page {
                 implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
                 implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Get directions")
-                visible:          profilePage.locationAvailable
+                visible:          profilePage.dataAvailable && profilePage.locationAvailable
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
