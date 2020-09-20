@@ -237,7 +237,7 @@ Rectangle {
                 map.myMapItem.coordinate = QtPositioning.coordinate(VKHelper.latitude, VKHelper.longitude);
                 map.myMapItem.updateTime = VKHelper.updateTime;
 
-                if (!map.wasTouched && map.trackedMapItem === null) {
+                if (!map.wasTouched && !map.trackedMapItem) {
                     map.centerOnMyMapItemOnce();
                 }
             }
@@ -316,7 +316,7 @@ Rectangle {
                 }
             }
 
-            if (!map.wasTouched && map.trackedMapItem === null) {
+            if (!map.wasTouched && !map.trackedMapItem) {
                 map.showAllMapItems();
             }
         }
