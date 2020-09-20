@@ -121,7 +121,7 @@ ApplicationWindow {
     }
 
     function openLoginPage() {
-        if (loginPage === null) {
+        if (!loginPage) {
             var component = Qt.createComponent("Core/LoginPage.qml");
 
             if (component.status === Component.Ready) {
