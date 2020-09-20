@@ -98,13 +98,13 @@ Rectangle {
         }
 
         function trackMapItem(map_item) {
-            if (trackedMapItem !== null) {
+            if (trackedMapItem) {
                 trackedMapItem.coordinateChanged.disconnect(centerOnTrackedMapItem);
             }
 
             trackedMapItem = map_item;
 
-            if (trackedMapItem !== null) {
+            if (trackedMapItem) {
                 trackedMapItem.coordinateChanged.connect(centerOnTrackedMapItem);
             }
 
@@ -112,7 +112,7 @@ Rectangle {
         }
 
         function centerOnTrackedMapItem() {
-            if (trackedMapItem !== null) {
+            if (trackedMapItem) {
                 autoAction = true;
 
                 for (var i = 0; i < autoActionRepetitionsCount; i++) {
@@ -127,7 +127,7 @@ Rectangle {
         }
 
         function centerOnMyMapItemOnce() {
-            if (!wasCenterOnMyMapItem && myMapItem !== null) {
+            if (!wasCenterOnMyMapItem && myMapItem) {
                 autoAction = true;
 
                 for (var i = 0; i < autoActionRepetitionsCount; i++) {
@@ -185,7 +185,7 @@ Rectangle {
         source:                   enabled ? "qrc:/resources/images/main/button_update.png" :
                                             "qrc:/resources/images/main/button_update_disabled.png"
         fillMode:                 Image.PreserveAspectFit
-        enabled:                  map.myMapItem !== null && map.myMapItem.visible
+        enabled:                  map.myMapItem && map.myMapItem.visible
 
         MouseArea {
             anchors.fill: parent
@@ -207,7 +207,7 @@ Rectangle {
         source:               enabled ? "qrc:/resources/images/main/button_track.png" :
                                         "qrc:/resources/images/main/button_track_disabled.png"
         fillMode:             Image.PreserveAspectFit
-        enabled:              map.myMapItem !== null && map.myMapItem.visible
+        enabled:              map.myMapItem && map.myMapItem.visible
 
         MouseArea {
             anchors.fill: parent
@@ -233,7 +233,7 @@ Rectangle {
         target: VKHelper
 
         onLocationUpdated: {
-            if (VKHelper.locationValid && map.myMapItem !== null) {
+            if (VKHelper.locationValid && map.myMapItem) {
                 map.myMapItem.coordinate = QtPositioning.coordinate(VKHelper.latitude, VKHelper.longitude);
                 map.myMapItem.updateTime = VKHelper.updateTime;
 
@@ -246,7 +246,7 @@ Rectangle {
         onFriendsUpdated: {
             var tracked_map_item_id = null;
 
-            if (map.trackedMapItem !== null) {
+            if (map.trackedMapItem) {
                 tracked_map_item_id = map.trackedMapItem.userId;
             }
 
