@@ -10,12 +10,10 @@ class AppSettings : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool        disableAds             READ disableAds             WRITE setDisableAds)
     Q_PROPERTY(bool        enableEncryption       READ enableEncryption       WRITE setEnableEncryption)
     Q_PROPERTY(bool        enableTrackedFriends   READ enableTrackedFriends   WRITE setEnableTrackedFriends)
     Q_PROPERTY(bool        increaseTrackingLimits READ increaseTrackingLimits WRITE setIncreaseTrackingLimits)
     Q_PROPERTY(QString     configuredTheme        READ configuredTheme        WRITE setConfiguredTheme)
-    Q_PROPERTY(QString     adMobConsent           READ adMobConsent           WRITE setAdMobConsent)
     Q_PROPERTY(QString     publicKey              READ publicKey              WRITE setPublicKey)
     Q_PROPERTY(QString     privateKey             READ privateKey             WRITE setPrivateKey)
     Q_PROPERTY(QVariantMap publicKeysOfFriends    READ publicKeysOfFriends    WRITE setPublicKeysOfFriends)
@@ -33,9 +31,6 @@ public:
 
     static AppSettings &GetInstance();
 
-    bool disableAds();
-    void setDisableAds(bool disable);
-
     bool enableEncryption();
     void setEnableEncryption(bool enable);
 
@@ -47,9 +42,6 @@ public:
 
     QString configuredTheme();
     void setConfiguredTheme(const QString &theme);
-
-    QString adMobConsent();
-    void setAdMobConsent(const QString &consent);
 
     QString publicKey();
     void setPublicKey(const QString &key);

@@ -14,26 +14,6 @@ AppSettings &AppSettings::GetInstance()
     return instance;
 }
 
-bool AppSettings::disableAds()
-{
-    Settings.sync();
-
-    if (Settings.contains(QStringLiteral("DisableAds"))) {
-        return Settings.value(QStringLiteral("DisableAds")).toBool();
-    } else {
-        return false;
-    }
-}
-
-void AppSettings::setDisableAds(bool disable)
-{
-    Settings.setValue(QStringLiteral("DisableAds"), disable);
-
-    Settings.sync();
-
-    emit settingsUpdated();
-}
-
 bool AppSettings::enableEncryption()
 {
     Settings.sync();
@@ -108,26 +88,6 @@ QString AppSettings::configuredTheme()
 void AppSettings::setConfiguredTheme(const QString &theme)
 {
     Settings.setValue(QStringLiteral("ConfiguredTheme"), theme);
-
-    Settings.sync();
-
-    emit settingsUpdated();
-}
-
-QString AppSettings::adMobConsent()
-{
-    Settings.sync();
-
-    if (Settings.contains(QStringLiteral("AdMobConsent"))) {
-        return Settings.value(QStringLiteral("AdMobConsent")).toString();
-    } else {
-        return QLatin1String("");
-    }
-}
-
-void AppSettings::setAdMobConsent(const QString &consent)
-{
-    Settings.setValue(QStringLiteral("AdMobConsent"), consent);
 
     Settings.sync();
 

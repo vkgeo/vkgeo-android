@@ -23,11 +23,6 @@ extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, deviceC
     emit AndroidGW::GetInstance().deviceConfigurationUpdated();
 }
 
-extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, bannerViewHeightUpdated)(JNIEnv *, jclass, jint height)
-{
-    emit AndroidGW::GetInstance().bannerViewHeightUpdated(height);
-}
-
 extern "C" JNIEXPORT void JNICALL JAVA_NATIVE_METHOD_NAME(VKGeoActivity, vkAuthUpdated)(JNIEnv *, jclass, jboolean authorized)
 {
     if (authorized) {

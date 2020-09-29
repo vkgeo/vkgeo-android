@@ -8,7 +8,6 @@
 #include <QtAndroidExtras/QtAndroid>
 #include <QtAndroidExtras/QAndroidService>
 
-#include "admobhelper.h"
 #include "androidgw.h"
 #include "appsettings.h"
 #include "batteryhelper.h"
@@ -35,7 +34,6 @@ int main(int argc, char *argv[])
         });
 
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::deviceConfigurationUpdated, &UIHelper::GetInstance(),    &UIHelper::handleDeviceConfigurationUpdate);
-        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::bannerViewHeightUpdated,    &AdMobHelper::GetInstance(), &AdMobHelper::setBannerViewHeight);
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::authStateUpdated,           &VKHelper::GetInstance(),    &VKHelper::setAuthState);
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestCompleted,         &VKHelper::GetInstance(),    &VKHelper::handleResponse);
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestFailed,            &VKHelper::GetInstance(),    &VKHelper::handleError);
@@ -47,7 +45,6 @@ int main(int argc, char *argv[])
 
         QQmlApplicationEngine engine;
 
-        engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), &AdMobHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("AppSettings"), &AppSettings::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
         engine.rootContext()->setContextProperty(QStringLiteral("CryptoHelper"), &CryptoHelper::GetInstance());

@@ -10,11 +10,6 @@ import "../Util.js" as UtilScript
 Page {
     id: mainPage
 
-    header: Rectangle {
-        height: mainPage.bannerViewHeight
-        color:  UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
-    }
-
     background: Rectangle {
         color: UIHelper.darkTheme ? "black" : "white"
     }
@@ -75,7 +70,6 @@ Page {
     readonly property bool appInForeground: Qt.application.state === Qt.ApplicationActive
     readonly property bool pageActive:      StackView.status === StackView.Active
 
-    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
     readonly property int vkAuthState:      VKHelper.authState
 
     property bool componentCompleted:       false

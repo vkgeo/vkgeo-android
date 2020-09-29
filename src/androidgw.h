@@ -24,7 +24,6 @@ public:
 
 signals:
     void deviceConfigurationUpdated();
-    void bannerViewHeightUpdated(int bannerViewHeight);
     void authStateUpdated(int authState);
     void vkRequestCompleted(const QString &response, const QString &request);
     void vkRequestFailed(const QString &errorMessage, const QString &request);
