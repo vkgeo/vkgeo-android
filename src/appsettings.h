@@ -12,7 +12,6 @@ class AppSettings : public QObject
 
     Q_PROPERTY(bool        enableEncryption    READ enableEncryption    WRITE setEnableEncryption)
     Q_PROPERTY(QString     configuredTheme     READ configuredTheme     WRITE setConfiguredTheme)
-    Q_PROPERTY(QString     adMobConsent        READ adMobConsent        WRITE setAdMobConsent)
     Q_PROPERTY(QString     publicKey           READ publicKey           WRITE setPublicKey)
     Q_PROPERTY(QString     privateKey          READ privateKey          WRITE setPrivateKey)
     Q_PROPERTY(QVariantMap publicKeysOfFriends READ publicKeysOfFriends WRITE setPublicKeysOfFriends)
@@ -35,9 +34,6 @@ public:
 
     QString configuredTheme();
     void setConfiguredTheme(const QString &theme);
-
-    QString adMobConsent();
-    void setAdMobConsent(const QString &consent);
 
     QString publicKey();
     void setPublicKey(const QString &key);

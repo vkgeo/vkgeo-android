@@ -10,7 +10,6 @@ INCLUDEPATH += \
     3rdparty/libsodium/include
 
 SOURCES += \
-    src/admobhelper.cpp \
     src/androidgw.cpp \
     src/appsettings.cpp \
     src/batteryhelper.cpp \
@@ -84,7 +83,6 @@ HEADERS += \
     3rdparty/libsodium/include/sodium/runtime.h \
     3rdparty/libsodium/include/sodium/utils.h \
     3rdparty/libsodium/include/sodium/version.h \
-    src/admobhelper.h \
     src/androidgw.h \
     src/appsettings.h \
     src/batteryhelper.h \

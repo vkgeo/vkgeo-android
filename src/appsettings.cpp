@@ -54,26 +54,6 @@ void AppSettings::setConfiguredTheme(const QString &theme)
     emit settingsUpdated();
 }
 
-QString AppSettings::adMobConsent()
-{
-    Settings.sync();
-
-    if (Settings.contains(QStringLiteral("AdMobConsent"))) {
-        return Settings.value(QStringLiteral("AdMobConsent")).toString();
-    } else {
-        return QLatin1String("");
-    }
-}
-
-void AppSettings::setAdMobConsent(const QString &consent)
-{
-    Settings.setValue(QStringLiteral("AdMobConsent"), consent);
-
-    Settings.sync();
-
-    emit settingsUpdated();
-}
-
 QString AppSettings::publicKey()
 {
     Settings.sync();

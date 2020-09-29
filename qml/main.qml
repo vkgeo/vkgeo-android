@@ -10,7 +10,6 @@ ApplicationWindow {
     title:   qsTr("Friends on Map")
     visible: true
 
-    readonly property int screenDpi:           UIHelper.screenDpi
     readonly property int vkAuthState:         VKHelper.authState
 
     readonly property string publicKey:        CryptoHelper.publicKey
@@ -22,17 +21,8 @@ ApplicationWindow {
     property bool enableEncryption:            false
 
     property string configuredTheme:           ""
-    property string adMobConsent:              ""
 
     property var loginPage:                    null
-
-    onScreenDpiChanged: {
-        if (mainStackView.depth > 0 && typeof mainStackView.currentItem.bannerViewHeight === "number") {
-            AdMobHelper.showBannerView();
-        } else {
-            AdMobHelper.hideBannerView();
-        }
-    }
 
     onVkAuthStateChanged: {
         if (componentCompleted) {
@@ -88,12 +78,6 @@ ApplicationWindow {
         updateFeatures();
     }
 
-    onAdMobConsentChanged: {
-        AppSettings.adMobConsent = adMobConsent;
-
-        updateFeatures();
-    }
-
     function openLoginPage() {
         if (!loginPage) {
             var component = Qt.createComponent("Core/LoginPage.qml");
@@ -116,18 +100,6 @@ ApplicationWindow {
     }
 
     function updateFeatures() {
-        if (adMobConsent === "PERSONALIZED" || adMobConsent === "NON_PERSONALIZED") {
-            AdMobHelper.setPersonalization(adMobConsent === "PERSONALIZED");
-
-            AdMobHelper.initAds();
-        }
-
-        if (mainStackView.depth > 0 && typeof mainStackView.currentItem.bannerViewHeight === "number") {
-            AdMobHelper.showBannerView();
-        } else {
-            AdMobHelper.hideBannerView();
-        }
-
         VKHelper.encryptionEnabled      = enableEncryption;
         VKHelper.maxTrustedFriendsCount = 15;
         VKHelper.maxTrackedFriendsCount = 15;
@@ -139,10 +111,6 @@ ApplicationWindow {
         } else {
             UIHelper.configuredTheme = UITheme.ThemeAuto;
         }
-    }
-
-    function showInterstitial() {
-        AdMobHelper.showInterstitial();
     }
 
     StackView {
@@ -160,14 +128,6 @@ ApplicationWindow {
 
             if (depth > 0) {
                 currentItem.forceActiveFocus();
-
-                if (typeof currentItem.bannerViewHeight === "number") {
-                    AdMobHelper.showBannerView();
-                } else {
-                    AdMobHelper.hideBannerView();
-                }
-            } else {
-                AdMobHelper.hideBannerView();
             }
         }
     }
@@ -176,18 +136,6 @@ ApplicationWindow {
         anchors.fill: parent
         z:            1
         enabled:      mainStackView.busy
-    }
-
-    AdMobConsentDialog {
-        id: adMobConsentDialog
-
-        onPersonalizedAdsSelected: {
-            mainWindow.adMobConsent = "PERSONALIZED";
-        }
-
-        onNonPersonalizedAdsSelected: {
-            mainWindow.adMobConsent = "NON_PERSONALIZED";
-        }
     }
 
     Component.onCompleted: {
@@ -202,7 +150,6 @@ ApplicationWindow {
 
         enableEncryption = AppSettings.enableEncryption;
         configuredTheme  = AppSettings.configuredTheme;
-        adMobConsent     = AppSettings.adMobConsent;
 
         updateFeatures();
 
@@ -212,10 +159,6 @@ ApplicationWindow {
             mainStackView.push(component);
         } else {
             console.error(component.errorString());
-        }
-
-        if (adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
-            adMobConsentDialog.open();
         }
 
         componentCompleted = true;
