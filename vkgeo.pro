@@ -298,7 +298,7 @@ android {
         android/source/res/values/libs.xml \
         android/source/res/values/numbers.xml \
         android/source/res/values/strings.xml \
-        android/source/res/values/themes.xml \
+        android/source/res/values/styles.xml \
         android/source/res/values-ru/strings.xml \
         android/source/res/xml/backup_content.xml \
         android/source/src/com/derevenetz/oleg/vkgeo/stdalone/VKGeoActivity.java \
