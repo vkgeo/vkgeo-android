@@ -18,5 +18,5 @@
     <string name="gps_location_provider">GPS</string>
     <string name="network_location_provider">cellular, Wi-Fi</string>
     <string name="passive_location_provider">passive mode</string>
-    <string name="com_vk_sdk_ApiVersion" translatable="false">5.120</string>
+    <string name="com_vk_sdk_ApiVersion" translatable="false">5.124</string>
 </resources>
