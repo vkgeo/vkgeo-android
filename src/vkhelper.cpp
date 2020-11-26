@@ -219,16 +219,24 @@ void VKHelper::initVK() const
 
 void VKHelper::login() const
 {
-    QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
+    if (AndroidContext == QtAndroid::androidActivity()) {
+        QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
 
-    AndroidContext.callMethod<void>("loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
+        AndroidContext.callMethod<void>("loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
+    } else {
+        qWarning() << "login() : was called not from an activity";
+    }
 }
 
 void VKHelper::logout()
 {
-    AndroidContext.callMethod<void>("logoutVK");
+    if (AndroidContext == QtAndroid::androidActivity()) {
+        AndroidContext.callMethod<void>("logoutVK");
 
-    setAuthState(VKAuthState::StateNotAuthorized);
+        setAuthState(VKAuthState::StateNotAuthorized);
+    } else {
+        qWarning() << "logout() : was called not from an activity";
+    }
 }
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
