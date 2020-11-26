@@ -295,16 +295,6 @@ public class VKGeoService extends QtService implements LocationListener
         });
     }
 
-    public void loginVK(String auth_scope)
-    {
-        // Ignore
-    }
-
-    public void logoutVK()
-    {
-        // Ignore
-    }
-
     public void executeVKBatch(String request_list)
     {
         final String f_request_list = request_list;
