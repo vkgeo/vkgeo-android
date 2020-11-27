@@ -9,7 +9,6 @@
 #include <QtCore/QMap>
 #include <QtCore/QVariantMap>
 #include <QtCore/QTimer>
-#include <QtAndroidExtras/QAndroidJniObject>
 
 class VKAuthState
 {
@@ -99,8 +98,6 @@ public:
     Q_INVOKABLE void updateTrackedFriendsData(bool immediately);
 
     Q_INVOKABLE void joinGroup(const QString &group_id);
-
-    static QAndroidJniObject AndroidContext;
 
 public slots:
     void setAuthState(int state);

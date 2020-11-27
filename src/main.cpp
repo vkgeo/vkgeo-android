@@ -27,8 +27,6 @@ int main(int argc, char *argv[])
             QGuiApplication::installTranslator(&translator);
         }
 
-        VKHelper::AndroidContext = QtAndroid::androidActivity();
-
         QObject::connect(&AppSettings::GetInstance(), &AppSettings::settingsUpdated, [] () {
             QtAndroid::androidActivity().callMethod<void>("notifyServiceAboutSettingsUpdate");
         });
@@ -65,8 +63,6 @@ int main(int argc, char *argv[])
         }
     } else if (argc == 2 && QString::fromUtf8(argv[1]) == QStringLiteral("-service")) {
         QAndroidService app(argc, argv);
-
-        VKHelper::AndroidContext = QtAndroid::androidService();
 
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::authStateUpdated,                  &VKHelper::GetInstance(),  &VKHelper::setAuthState);
         QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestCompleted,                &VKHelper::GetInstance(),  &VKHelper::handleResponse);
