@@ -12,6 +12,7 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>
 #include <QtAndroidExtras/QtAndroid>
+#include <QtAndroidExtras/QAndroidJniObject>
 
 #include "cryptohelper.h"
 
@@ -22,8 +23,6 @@ const QString VKHelper::DEFAULT_PHOTO_URL        (QStringLiteral("https://vk.com
 const QString VKHelper::DATA_NOTE_TITLE          (QStringLiteral("VKGeo Data"));
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME(QStringLiteral("VKGeo Trusted Friends"));
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME(QStringLiteral("VKGeo Tracked Friends"));
-
-QAndroidJniObject VKHelper::AndroidContext;
 
 namespace {
 
@@ -214,15 +213,15 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
 
 void VKHelper::initVK() const
 {
-    AndroidContext.callMethod<void>("initVK");
+    QtAndroid::androidContext().callMethod<void>("initVK");
 }
 
 void VKHelper::login() const
 {
-    if (AndroidContext == QtAndroid::androidActivity()) {
+    if (QtAndroid::androidContext() == QtAndroid::androidActivity()) {
         QAndroidJniObject j_auth_scope = QAndroidJniObject::fromString(AUTH_SCOPE);
 
-        AndroidContext.callMethod<void>("loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
+        QtAndroid::androidContext().callMethod<void>("loginVK", "(Ljava/lang/String;)V", j_auth_scope.object<jstring>());
     } else {
         qWarning() << "login() : was called not from an activity";
     }
@@ -230,8 +229,8 @@ void VKHelper::login() const
 
 void VKHelper::logout()
 {
-    if (AndroidContext == QtAndroid::androidActivity()) {
-        AndroidContext.callMethod<void>("logoutVK");
+    if (QtAndroid::androidContext() == QtAndroid::androidActivity()) {
+        QtAndroid::androidContext().callMethod<void>("logoutVK");
 
         setAuthState(VKAuthState::StateNotAuthorized);
     } else {
@@ -613,7 +612,7 @@ void VKHelper::handleRequestQueueTimerTimeout()
         if (!request_list.isEmpty()) {
             QAndroidJniObject j_request_list = QAndroidJniObject::fromString(QString::fromUtf8(QJsonDocument::fromVariant(request_list).toJson(QJsonDocument::Compact)));
 
-            AndroidContext.callMethod<void>("executeVKBatch", "(Ljava/lang/String;)V", j_request_list.object<jstring>());
+            QtAndroid::androidContext().callMethod<void>("executeVKBatch", "(Ljava/lang/String;)V", j_request_list.object<jstring>());
         }
     }
 
@@ -695,7 +694,7 @@ void VKHelper::Cleanup()
 
     RequestQueueTimer.stop();
 
-    AndroidContext.callMethod<void>("cancelAllVKRequests");
+    QtAndroid::androidContext().callMethod<void>("cancelAllVKRequests");
 
     int prev_friends_count = FriendsData.count();
 
