@@ -5,7 +5,7 @@ os: linux
 android:
   components:
     - tools
-    - build-tools-29.0.2
+    - build-tools-29.0.3
     - platform-tools
     - android-29
 
