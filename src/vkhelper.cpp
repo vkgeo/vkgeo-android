@@ -510,48 +510,48 @@ void VKHelper::handleError(const QString &error_message, const QString &err_requ
         ContextTrackerDelRequest(err_request);
 
         if (err_request[QStringLiteral("method")].toString() == QStringLiteral("notes.get")) {
-            qWarning() << QStringLiteral("handleError() : %1 request failed : %2").arg(err_request[QStringLiteral("method")].toString(),
-                                                                                       error_message);
+            qWarning() << QStringLiteral("handleError() : %1 request failed: %2").arg(err_request[QStringLiteral("method")].toString(),
+                                                                                      error_message);
 
             HandleNotesGetError(err_request);
         } else if (err_request[QStringLiteral("method")].toString() == QStringLiteral("notes.add")) {
-            qWarning() << QStringLiteral("handleError() : %1 request failed : %2").arg(err_request[QStringLiteral("method")].toString(),
-                                                                                       error_message);
+            qWarning() << QStringLiteral("handleError() : %1 request failed: %2").arg(err_request[QStringLiteral("method")].toString(),
+                                                                                      error_message);
 
             HandleNotesAddError(err_request);
         } else if (err_request[QStringLiteral("method")].toString() == QStringLiteral("notes.delete")) {
-            qWarning() << QStringLiteral("handleError() : %1 request failed : %2").arg(err_request[QStringLiteral("method")].toString(),
-                                                                                       error_message);
+            qWarning() << QStringLiteral("handleError() : %1 request failed: %2").arg(err_request[QStringLiteral("method")].toString(),
+                                                                                      error_message);
 
             HandleNotesDeleteError(err_request);
         } else if (err_request[QStringLiteral("method")].toString() == QStringLiteral("friends.get")) {
-            qWarning() << QStringLiteral("handleError() : %1 request failed : %2").arg(err_request[QStringLiteral("method")].toString(),
-                                                                                       error_message);
+            qWarning() << QStringLiteral("handleError() : %1 request failed: %2").arg(err_request[QStringLiteral("method")].toString(),
+                                                                                      error_message);
 
             HandleFriendsGetError(err_request);
         } else if (err_request[QStringLiteral("method")].toString() == QStringLiteral("friends.getLists")) {
-            qWarning() << QStringLiteral("handleError() : %1 request failed : %2").arg(err_request[QStringLiteral("method")].toString(),
-                                                                                       error_message);
+            qWarning() << QStringLiteral("handleError() : %1 request failed: %2").arg(err_request[QStringLiteral("method")].toString(),
+                                                                                      error_message);
 
             HandleFriendsGetListsError(err_request);
         } else if (err_request[QStringLiteral("method")].toString() == QStringLiteral("friends.addList")) {
-            qWarning() << QStringLiteral("handleError() : %1 request failed : %2").arg(err_request[QStringLiteral("method")].toString(),
-                                                                                       error_message);
+            qWarning() << QStringLiteral("handleError() : %1 request failed: %2").arg(err_request[QStringLiteral("method")].toString(),
+                                                                                      error_message);
 
             HandleFriendsAddListError(err_request);
         } else if (err_request[QStringLiteral("method")].toString() == QStringLiteral("friends.editList")) {
-            qWarning() << QStringLiteral("handleError() : %1 request failed : %2").arg(err_request[QStringLiteral("method")].toString(),
-                                                                                       error_message);
+            qWarning() << QStringLiteral("handleError() : %1 request failed: %2").arg(err_request[QStringLiteral("method")].toString(),
+                                                                                      error_message);
 
             HandleFriendsEditListError(err_request);
         } else if (err_request[QStringLiteral("method")].toString() == QStringLiteral("groups.join")) {
-            qWarning() << QStringLiteral("handleError() : %1 request failed : %2").arg(err_request[QStringLiteral("method")].toString(),
-                                                                                       error_message);
+            qWarning() << QStringLiteral("handleError() : %1 request failed: %2").arg(err_request[QStringLiteral("method")].toString(),
+                                                                                      error_message);
 
             HandleGroupsJoinError(err_request);
         } else if (err_request[QStringLiteral("method")].toString() == QStringLiteral("users.get")) {
-            qWarning() << QStringLiteral("handleError() : %1 request failed : %2").arg(err_request[QStringLiteral("method")].toString(),
-                                                                                       error_message);
+            qWarning() << QStringLiteral("handleError() : %1 request failed: %2").arg(err_request[QStringLiteral("method")].toString(),
+                                                                                      error_message);
 
             HandleUsersGetError(err_request);
         } else {
