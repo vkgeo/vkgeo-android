@@ -16,7 +16,7 @@ VKGeo  –  лучшее мобильное приложение для опре
 
 ---
 
-[![Travis Build Status](https://travis-ci.com/vkgeo/vkgeo-android.svg?branch=master)](https://travis-ci.com/vkgeo/vkgeo-android)
+[![Build Status](https://github.com/vkgeo/vkgeo-android/workflows/Build/badge.svg)](https://github.com/vkgeo/vkgeo-android/actions?query=workflow%3A%22Build%22)
 [![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-android&metric=alert_status)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-android)
 
 [![SonarCloud Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-android&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-android)
