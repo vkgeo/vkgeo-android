@@ -582,23 +582,7 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
             if (request.contains(QStringLiteral("method")) && request.contains(QStringLiteral("context"))) {
                 if (AuthState == VKAuthState::StateAuthorized) {
-                    //
-                    // Workaround for issue when friends.get with list_id parameter returns empty
-                    // items list if combined with list-related operation in the same batch.
-                    //
-                    if (request[QStringLiteral("method")] == QStringLiteral("friends.getLists") ||
-                        request[QStringLiteral("method")] == QStringLiteral("friends.addList") ||
-                        request[QStringLiteral("method")] == QStringLiteral("friends.editList")) {
-                        if (i == 0) {
-                            request_list.append(request);
-                        } else {
-                            RequestQueue.insert(0, request);
-                        }
-
-                        break;
-                    } else {
-                        request_list.append(request);
-                    }
+                    request_list.append(request);
                 } else {
                     ContextTrackerDelRequest(request);
                 }
