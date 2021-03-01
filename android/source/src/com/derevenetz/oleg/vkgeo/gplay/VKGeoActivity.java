@@ -47,7 +47,7 @@ public class VKGeoActivity extends QtActivity
     private Messenger          serviceMessenger = null;
     private HashSet<VKRequest> vkRequestTracker = new HashSet<>();
 
-    private ServiceConnection connection = new ServiceConnection() {
+    private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service)
         {
@@ -106,14 +106,14 @@ public class VKGeoActivity extends QtActivity
     {
         super.onCreate(savedInstanceState);
 
-        bindService(new Intent(this, VKGeoService.class), connection, Context.BIND_AUTO_CREATE);
+        bindService(new Intent(this, VKGeoService.class), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onDestroy()
     {
         if (serviceMessenger != null) {
-            unbindService(connection);
+            unbindService(serviceConnection);
         }
 
         super.onDestroy();
