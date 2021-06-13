@@ -5,7 +5,7 @@ android {
     buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 14
     }
 }
 
@@ -14,6 +14,6 @@ configurations {
 }
 
 dependencies {
-    javadocDeps 'androidx.annotation:annotation:1.1.0'
+    javadocDeps 'androidx.annotation:annotation:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
