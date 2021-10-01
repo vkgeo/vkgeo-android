@@ -306,7 +306,9 @@ android {
         android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoActivity.java \
         android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoApplication.java \
         android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoReceiver.java \
-        android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoService.java
+        android/source/src/com/derevenetz/oleg/vkgeo/gplay/VKGeoService.java \
+        android/source/src/com/derevenetz/oleg/vkgeo/gplay/util/VKBatchRequestCallback.java \
+        android/source/src/com/derevenetz/oleg/vkgeo/gplay/util/VKBatchRequestManager.java
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android/source
 
