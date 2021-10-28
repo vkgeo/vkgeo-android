@@ -30,10 +30,10 @@ int main(int argc, char *argv[])
             QtAndroid::androidActivity().callMethod<void>("notifyServiceAboutSettingsUpdate");
         });
 
-        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::deviceConfigurationUpdated, &UIHelper::GetInstance(),    &UIHelper::handleDeviceConfigurationUpdate);
-        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::authStateUpdated,           &VKHelper::GetInstance(),    &VKHelper::setAuthState);
-        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestCompleted,         &VKHelper::GetInstance(),    &VKHelper::handleResponse);
-        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestFailed,            &VKHelper::GetInstance(),    &VKHelper::handleError);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::deviceConfigurationUpdated, &UIHelper::GetInstance(), &UIHelper::handleDeviceConfigurationUpdate);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::authStateUpdated,           &VKHelper::GetInstance(), &VKHelper::setAuthState);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestCompleted,         &VKHelper::GetInstance(), &VKHelper::handleResponse);
+        QObject::connect(&AndroidGW::GetInstance(), &AndroidGW::vkRequestFailed,            &VKHelper::GetInstance(), &VKHelper::handleError);
 
         VKHelper::GetInstance().initVK();
 
