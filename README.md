@@ -20,7 +20,7 @@ GPS  координаты  друзей  на  карте, отслеживая 
 
 ---
 
-[![Build Status](https://github.com/vkgeo/vkgeo-android/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/vkgeo/vkgeo-android/actions/workflows/build.yml)
+[![Build Status](https://github.com/vkgeo/vkgeo-android/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/vkgeo/vkgeo-android/actions/workflows/build.yml?query=branch%3Amaster)
 [![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-android&metric=alert_status)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-android)
 
 [![SonarCloud Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-android&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-android)
