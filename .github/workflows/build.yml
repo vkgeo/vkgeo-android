@@ -4,10 +4,12 @@ on:
   push:
     branches:
     - master
+    - stdalone
 
   pull_request:
     branches:
     - master
+    - stdalone
 
   schedule:
   - cron: "0 10 * * 6"
