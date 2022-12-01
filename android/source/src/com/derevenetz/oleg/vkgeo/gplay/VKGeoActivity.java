@@ -106,7 +106,7 @@ public class VKGeoActivity extends QtActivity
     }
 
     @Override
-    public void onDestroy()
+    protected void onDestroy()
     {
         if (serviceMessenger != null) {
             unbindService(serviceConnection);
